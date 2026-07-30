@@ -1,0 +1,31 @@
+{
+    "replay_id": "53627c06-9aa3-4701-96c8-8f744845fddc",
+    "detections": [
+        {
+            "label": "Cruise Ship",
+            "confidence": 1.0,
+            "bounding_box": {
+                "x_min": 204.4015655517578,
+                "y_min": 215.3844757080078,
+                "x_max": 621.3070678710938,
+                "y_max": 418.1345520019531
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 100.0
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.0
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.0
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

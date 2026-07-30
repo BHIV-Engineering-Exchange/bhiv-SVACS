@@ -1,0 +1,78 @@
+{
+  "cargo": {
+    "trace_id": "e27fe3c2-fde8-48f1-accc-94037a05f55d",
+    "scenario_id": 1,
+    "timestamp": 1776923510.3317678,
+    "samples": [
+      -0.033648793769428226,
+      0.14896487819885854,
+      0.46022139498675113,
+      0.4538696206666779,
+      0.3729590106419654,
+      "... (4000 total floats) ..."
+    ],
+    "sample_rate": 4000,
+    "vessel_type": "cargo",
+    "expected_label": {
+      "vessel_type": "cargo",
+      "confidence_range": [
+        0.8,
+        1.0
+      ],
+      "scenario_type": "normal_classification",
+      "anomaly_flag": false
+    },
+    "metadata": {
+      "freq_hz": 166.09,
+      "amplitude": 1.0,
+      "noise_level": 0.08,
+      "confidence_expected": "high",
+      "scenario_tag": "normal_cargo"
+    },
+    "hybrid": true,
+    "noise_floor_db": -18.99,
+    "snr_db": 16.3
+  },
+  "anomaly": {
+    "trace_id": "9c8b0f51-b12c-4e45-b9b4-1b59795d295b",
+    "scenario_id": 5,
+    "timestamp": 1776923510.3344617,
+    "samples": [
+      -0.1255905934054892,
+      0.3368713385784887,
+      -0.37490680422164113,
+      -0.05556443820718807,
+      0.1496694398960587,
+      "... (4000 total floats) ..."
+    ],
+    "sample_rate": 4000,
+    "vessel_type": "anomaly",
+    "expected_label": {
+      "vessel_type": "anomaly",
+      "confidence_range": [
+        0.0,
+        0.3
+      ],
+      "scenario_type": "anomaly",
+      "anomaly_flag": true
+    },
+    "metadata": {
+      "freq_hz": "mixed",
+      "component_freqs_hz": [
+        666.72,
+        1194.42,
+        1254.94,
+        1382.91,
+        1813.23
+      ],
+      "amplitude": "variable",
+      "noise_level": 0.5,
+      "confidence_expected": "unknown",
+      "scenario_tag": "anomaly_unknown_pattern",
+      "anomaly_reason": "Multi-peak frequency spectrum with random burst artifacts. Does not match cargo (50-200 Hz), speedboat (500-1500 Hz), or submarine (20-100 Hz) propulsion profiles."
+    },
+    "hybrid": true,
+    "noise_floor_db": -19.48,
+    "snr_db": 19.14
+  }
+}

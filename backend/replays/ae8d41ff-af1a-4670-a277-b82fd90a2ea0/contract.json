@@ -1,0 +1,31 @@
+{
+    "replay_id": "ae8d41ff-af1a-4670-a277-b82fd90a2ea0",
+    "detections": [
+        {
+            "label": "Chemical Tanker (Very Low Confidence)",
+            "confidence": 0.3705,
+            "bounding_box": {
+                "x_min": 200.64157104492188,
+                "y_min": 11.44101619720459,
+                "x_max": 839.5560913085938,
+                "y_max": 877.0360717773438
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Chemical Tanker",
+                    "confidence": 37.05
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 22.31
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 15.06
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

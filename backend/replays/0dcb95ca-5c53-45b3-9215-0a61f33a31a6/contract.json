@@ -1,0 +1,17 @@
+{
+    "replay_id": "0dcb95ca-5c53-45b3-9215-0a61f33a31a6",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "TMON",
+            "confidence": 0.036776505410671234,
+            "bounding_box": {
+                "x_min": 1274.0,
+                "y_min": 2422.0,
+                "x_max": 1355.0,
+                "y_max": 2439.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

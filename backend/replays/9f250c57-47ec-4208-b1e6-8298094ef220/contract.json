@@ -1,0 +1,92 @@
+{
+    "replay_id": "9f250c57-47ec-4208-b1e6-8298094ef220",
+    "detections": [
+        {
+            "label": "Fishing Vessel",
+            "confidence": 0.9398000000000001,
+            "bounding_box": {
+                "x_min": 431.0996398925781,
+                "y_min": 247.67041015625,
+                "x_max": 1075.568115234375,
+                "y_max": 924.997314453125
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 93.98
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 1.89
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 1.69
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "",
+            "confidence": 0.0,
+            "bounding_box": {
+                "x_min": 11.0,
+                "y_min": 625.0,
+                "x_max": 95.0,
+                "y_max": 711.0
+            }
+        },
+        {
+            "text": "Ad",
+            "confidence": 0.1461214853656087,
+            "bounding_box": {
+                "x_min": 64.03883864861817,
+                "y_min": -0.34862145709293735,
+                "x_max": 229.96116135138183,
+                "y_max": 176.34862145709295
+            }
+        },
+        {
+            "text": "U",
+            "confidence": 0.0036885255477765583,
+            "bounding_box": {
+                "x_min": 980.385563631792,
+                "y_min": 59.057738223637244,
+                "x_max": 1116.6144363682079,
+                "y_max": 199.94226177636276
+            }
+        },
+        {
+            "text": "Stod/",
+            "confidence": 0.08124918005592965,
+            "bounding_box": {
+                "x_min": 353.8038311742151,
+                "y_min": 157.00018676176464,
+                "x_max": 552.1961688257849,
+                "y_max": 366.99981323823533
+            }
+        },
+        {
+            "text": "8",
+            "confidence": 0.631087990314029,
+            "bounding_box": {
+                "x_min": 181.24356134859948,
+                "y_min": 297.08184616701107,
+                "x_max": 417.7564386514005,
+                "y_max": 537.9181538329889
+            }
+        },
+        {
+            "text": "",
+            "confidence": 0.0,
+            "bounding_box": {
+                "x_min": 258.8956847392515,
+                "y_min": 716.9286350304734,
+                "x_max": 455.1043152607485,
+                "y_max": 929.0713649695266
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

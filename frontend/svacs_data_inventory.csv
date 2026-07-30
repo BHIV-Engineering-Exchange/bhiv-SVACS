@@ -1,0 +1,25 @@
+item_id,system,component,type,location,status,quality_status,last_verified,owner,risk_level,notes
+SVACS-INV-001,SVACS,cargo signal generation,Signal data,services/data_layer/signal_generator.py,LIVE,GOOD,21/05/2026,Nupur,LOW,50-200Hz, SNR 15-25dB, deterministic seed
+SVACS-INV-002,SVACS,speedboat signal generation,Signal data,services/data_layer/signal_generator.py,LIVE,GOOD,21/05/2026,Nupur,LOW,500-1500Hz + 2nd harmonic, SNR 10-20dB
+SVACS-INV-003,SVACS,submarine signal generation,Signal data,services/data_layer/signal_generator.py,LIVE,GOOD,21/05/2026,Nupur,MEDIUM,20-100Hz masked, SNR 5-10dB. Boundary at 33Hz → unknown
+SVACS-INV-004,SVACS,low_confidence signal generation,Signal data,services/data_layer/signal_generator.py,LIVE,GOOD,21/05/2026,Nupur,LOW,<5dB SNR, buried in noise
+SVACS-INV-005,SVACS,anomaly signal generation,Signal data,services/data_layer/signal_generator.py,LIVE,GOOD,21/05/2026,Nupur,LOW,Multi-peak + burst spikes, variable SNR
+SVACS-INV-006,SVACS,ocean_noise noisy scenarios,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,3 scenarios, seed=42, deterministic
+SVACS-INV-007,SVACS,weather_noise noisy scenarios,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,2 scenarios
+SVACS-INV-008,SVACS,sensor_dropout noisy scenarios,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,2 scenarios
+SVACS-INV-009,SVACS,multi_vessel_overlap scenarios,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,2 scenarios
+SVACS-INV-010,SVACS,ais_inconsistency scenario,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,1 scenario - acoustic truth overrides AIS label
+SVACS-INV-011,SVACS,anomaly_injection scenarios,Noisy scenario,services/data_layer/noisy_scenario_builder.py,LIVE,GOOD,21/05/2026,Nupur,LOW,2 scenarios
+SVACS-INV-012,SVACS,NICAI intelligence layer,Pipeline stage,Ankita's ngrok endpoint,LIVE,GOOD,21/05/2026,Ankita,MEDIUM,Ngrok-based - not always on. NOAA/USCG AIS data integrated
+SVACS-INV-013,SVACS,State Engine,Pipeline stage,Raj's ngrok endpoint,LIVE,GOOD,21/05/2026,Raj,MEDIUM,Ngrok-based - coordination required
+SVACS-INV-014,SVACS,Bucket artifact storage,Pipeline stage,https://bhiv-bucket.onrender.com,LIVE,GOOD,21/05/2026,Soham/Siddhesh,LOW,Render hosted - stable. Occasional cold-start timeout on perception writes
+SVACS-INV-015,SVACS,full_pipeline_log.jsonl,Log file,services/data_layer/full_pipeline_log.jsonl,LIVE,GOOD,21/05/2026,Nupur,LOW,Complete pipeline run per chunk
+SVACS-INV-016,SVACS,execution_observability.jsonl,Log file,services/data_layer/execution_observability.jsonl,LIVE,GOOD,21/05/2026,Nupur,LOW,Unified event log
+SVACS-INV-017,SVACS,bucket_verification_log.jsonl,Log file,services/data_layer/bucket_verification_log.jsonl,LIVE,GOOD,21/05/2026,Nupur,LOW,hash_sent == hash_read confirmed
+SVACS-INV-018,SVACS,incident_timelines.jsonl,Log file,services/data_layer/incident_timelines.jsonl,LIVE,GOOD,21/05/2026,Nupur,LOW,5 UI-ready timelines exported for Nikhil
+SVACS-INV-019,SVACS,replay_log.jsonl,Log file,services/data_layer/replay_log.jsonl,LIVE,GOOD,09/05/2026,Nupur,LOW,5 lifecycle reconstructions
+SVACS-INV-020,SVACS,noisy_pipeline_log.jsonl,Log file,services/data_layer/noisy_pipeline_log.jsonl,LIVE,GOOD,21/05/2026,Nupur,LOW,12 noisy scenario runs with geo enrichment
+SVACS-INV-021,SVACS,vessel_registry.json,Knowledge base,services/data_layer/vessel_registry.json,LIVE,GOOD,08/05/2026,Nupur,LOW,6 vessel types with acoustic profiles + risk classification
+SVACS-INV-022,SVACS,geo_event_schema.json,Schema contract,services/data_layer/geo_event_schema.json,LIVE,GOOD,08/05/2026,Nupur,LOW,Geospatial event contract for Nikhil's UI
+SVACS-INV-023,SVACS,Real AIS coordinates,Data gap,N/A - not integrated,MISSING,N/A,N/A,Ankita (future),MEDIUM,All geo data simulated. Ankita working toward live AIS
+SVACS-INV-024,SVACS,Real noisy sensor datasets,Data gap,N/A - synthetic only,MISSING,N/A,N/A,Ankita (future),MEDIUM,Ankita confirmed gap - synthetic overlays dominate edge cases

@@ -1,0 +1,17 @@
+{
+    "replay_id": "7e9dbcfc-14fd-426b-bdb6-0866933b3dcc",
+    "detections": [
+        {
+            "label": "Container Ship",
+            "confidence": 0.6089696288108826,
+            "bounding_box": {
+                "x_min": 261.3832092285156,
+                "y_min": 144.88572692871094,
+                "x_max": 465.385986328125,
+                "y_max": 191.41453552246094
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

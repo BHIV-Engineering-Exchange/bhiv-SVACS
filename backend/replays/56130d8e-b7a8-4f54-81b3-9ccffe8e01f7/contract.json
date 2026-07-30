@@ -1,0 +1,37 @@
+{
+    "replay_id": "56130d8e-b7a8-4f54-81b3-9ccffe8e01f7",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "gettyimages",
+            "confidence": 0.9999893967918059,
+            "bounding_box": {
+                "x_min": 422.0,
+                "y_min": 292.0,
+                "x_max": 560.0,
+                "y_max": 322.0
+            }
+        },
+        {
+            "text": "Credit: Stewart Sutton",
+            "confidence": 0.46414602562353424,
+            "bounding_box": {
+                "x_min": 425.0,
+                "y_min": 322.0,
+                "x_max": 593.0,
+                "y_max": 343.0
+            }
+        },
+        {
+            "text": "612",
+            "confidence": 0.9952248329770395,
+            "bounding_box": {
+                "x_min": 639.0,
+                "y_min": 451.0,
+                "x_max": 665.0,
+                "y_max": 463.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

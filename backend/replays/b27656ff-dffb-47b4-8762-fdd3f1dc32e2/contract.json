@@ -1,0 +1,55 @@
+{
+    "replay_id": "b27656ff-dffb-47b4-8762-fdd3f1dc32e2",
+    "detections": [
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9174,
+            "bounding_box": {
+                "x_min": 4.9302978515625,
+                "y_min": 119.05572509765625,
+                "x_max": 604.8898315429688,
+                "y_max": 479.288818359375
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 91.74
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 4.39
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 2.65
+                }
+            ]
+        },
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9858,
+            "bounding_box": {
+                "x_min": 1.59765625,
+                "y_min": 57.12901306152344,
+                "x_max": 626.4459228515625,
+                "y_max": 480.0
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 98.58
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 1.14
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.13
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,47 @@
+=================================================================
+  SVACS — PHASE 5: FULL PIPELINE DRY RUN
+  Endpoint : http://localhost:8000/ingest/signal
+  Run at   : 2026-04-30T10:27:13Z
+=================================================================
+
+  [HEALTH CHECK — BEFORE]
+  Status          : alive
+  Chunks received : 15
+  Chunks rejected : 0
+
+  Sending 3 chunks per vessel (15 total)...
+  ────────────────────────────────────────────────────────────
+  [cargo           ] chunk 1 -> HTTP 200 | trace=match | anomaly=False | OK
+  [cargo           ] chunk 2 -> HTTP 200 | trace=match | anomaly=False | OK
+  [cargo           ] chunk 3 -> HTTP 200 | trace=match | anomaly=False | OK
+  [speedboat       ] chunk 1 -> HTTP 200 | trace=match | anomaly=False | OK
+  [speedboat       ] chunk 2 -> HTTP 200 | trace=match | anomaly=False | OK
+  [speedboat       ] chunk 3 -> HTTP 200 | trace=match | anomaly=False | OK
+  [submarine       ] chunk 1 -> HTTP 200 | trace=match | anomaly=False | OK
+  [submarine       ] chunk 2 -> HTTP 200 | trace=match | anomaly=False | OK
+  [submarine       ] chunk 3 -> HTTP 200 | trace=match | anomaly=False | OK
+  [low_confidence  ] chunk 1 -> HTTP 200 | trace=match | anomaly=False | OK
+  [low_confidence  ] chunk 2 -> HTTP 200 | trace=match | anomaly=False | OK
+  [low_confidence  ] chunk 3 -> HTTP 200 | trace=match | anomaly=False | OK
+  [anomaly         ] chunk 1 -> HTTP 200 | trace=match | anomaly=True | OK
+  [anomaly         ] chunk 2 -> HTTP 200 | trace=match | anomaly=True | OK
+  [anomaly         ] chunk 3 -> HTTP 200 | trace=match | anomaly=True | OK
+
+  [HEALTH CHECK — AFTER]
+  Status          : alive
+  Chunks received : 30
+  Chunks rejected : 0
+  Log file        : C:\svacs-demo\api\ingestion_server\ingestion_log.jsonl
+  Trace log       : C:\svacs-demo\api\ingestion_server\trace_log.jsonl
+
+=================================================================
+  DRY RUN SUMMARY
+=================================================================
+  Chunks sent     : 15
+  Passed          : 15
+  Failed          : 0
+  Unique trace_ids: YES
+
+  [PASS] FULL PIPELINE DRY RUN COMPLETE
+  Server is stable. All chunks accepted. All traces unique.
+=================================================================

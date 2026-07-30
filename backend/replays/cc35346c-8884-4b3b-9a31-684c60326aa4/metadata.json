@@ -1,0 +1,5 @@
+{
+    "timestamp": "2026-07-13T13:00:23.195275",
+    "model_version": "1.0.0",
+    "yolo_model": "yolov8n.pt"
+}

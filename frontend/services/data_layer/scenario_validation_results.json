@@ -1,0 +1,113 @@
+{
+  "run_at": "2026-04-29T11:23:22Z",
+  "overall_pass": true,
+  "passed": 5,
+  "total": 5,
+  "results": [
+    {
+      "scenario_id": 1,
+      "scenario_name": "Normal Cargo Ship",
+      "status": "PASS",
+      "checks": {
+        "trace_id": "PASS",
+        "signal_vessel_type": "PASS",
+        "confidence_label": "PASS",
+        "anomaly_flag": "PASS",
+        "rule_classify": "PASS - predicted=cargo",
+        "confidence_range": "PASS",
+        "pipeline_hints": "PASS"
+      },
+      "trace_id": "fc5a605a-f2a2-4e97-8535-1bd9d33058b6",
+      "vessel_type": "cargo",
+      "confidence": "high",
+      "anomaly_flag": false,
+      "rule_predicted": "cargo",
+      "rule_conf": 0.956,
+      "dom_freq_hz": 59.0
+    },
+    {
+      "scenario_id": 2,
+      "scenario_name": "Speedboat -- Clear Classification",
+      "status": "PASS",
+      "checks": {
+        "trace_id": "PASS",
+        "signal_vessel_type": "PASS",
+        "confidence_label": "PASS",
+        "anomaly_flag": "PASS",
+        "rule_classify": "PASS - predicted=speedboat",
+        "confidence_range": "PASS",
+        "pipeline_hints": "PASS"
+      },
+      "trace_id": "0d465847-57a2-4bd3-b0a1-3078ee564f3b",
+      "vessel_type": "speedboat",
+      "confidence": "medium_high",
+      "anomaly_flag": false,
+      "rule_predicted": "speedboat",
+      "rule_conf": 0.867,
+      "dom_freq_hz": 707.0
+    },
+    {
+      "scenario_id": 3,
+      "scenario_name": "Submarine / Stealth Object",
+      "status": "PASS",
+      "checks": {
+        "trace_id": "PASS",
+        "signal_vessel_type": "PASS",
+        "confidence_label": "PASS",
+        "anomaly_flag": "PASS",
+        "rule_classify": "PASS - predicted=submarine",
+        "confidence_range": "PASS",
+        "pipeline_hints": "PASS"
+      },
+      "trace_id": "a10f6c3d-29eb-4f08-af5a-a69e9ea69c56",
+      "vessel_type": "submarine",
+      "confidence": "medium",
+      "anomaly_flag": false,
+      "rule_predicted": "submarine",
+      "rule_conf": 0.805,
+      "dom_freq_hz": 30.0
+    },
+    {
+      "scenario_id": 4,
+      "scenario_name": "Low Confidence Signal",
+      "status": "PASS",
+      "checks": {
+        "trace_id": "PASS",
+        "signal_vessel_type": "PASS",
+        "confidence_label": "PASS",
+        "anomaly_flag": "PASS",
+        "rule_classify": "PASS - predicted=anomaly",
+        "confidence_range": "PASS",
+        "pipeline_hints": "PASS"
+      },
+      "trace_id": "ac65c0ea-e161-46ae-923c-6d039102abde",
+      "vessel_type": "unknown",
+      "confidence": "low",
+      "anomaly_flag": false,
+      "rule_predicted": "anomaly",
+      "rule_conf": 0.0,
+      "dom_freq_hz": 418.0
+    },
+    {
+      "scenario_id": 5,
+      "scenario_name": "Anomaly -- Unknown Pattern",
+      "status": "PASS",
+      "checks": {
+        "trace_id": "PASS",
+        "signal_vessel_type": "PASS",
+        "confidence_label": "PASS",
+        "anomaly_flag": "PASS",
+        "rule_classify": "PASS - predicted=anomaly",
+        "confidence_range": "PASS",
+        "pipeline_hints": "PASS"
+      },
+      "trace_id": "b047ec8c-fdc6-42d7-ad31-c6b197425386",
+      "vessel_type": "anomaly",
+      "confidence": "unknown",
+      "anomaly_flag": true,
+      "rule_predicted": "anomaly",
+      "rule_conf": 0.0,
+      "dom_freq_hz": 331.0
+    }
+  ]
+}

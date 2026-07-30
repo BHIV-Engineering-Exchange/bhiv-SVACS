@@ -1,0 +1,66 @@
+{
+    "replay_id": "4928d386-a285-48cb-8556-1adae7b2d694",
+    "detections": [
+        {
+            "label": "Oil Tanker",
+            "confidence": 0.9995999999999999,
+            "bounding_box": {
+                "x_min": 155.69351196289062,
+                "y_min": 392.8385009765625,
+                "x_max": 550.6087646484375,
+                "y_max": 463.06610107421875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 99.96
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.03
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 0.01
+                }
+            ]
+        },
+        {
+            "label": "Container Ship",
+            "confidence": 0.7990999999999999,
+            "bounding_box": {
+                "x_min": 725.3831787109375,
+                "y_min": 307.1721496582031,
+                "x_max": 814.0949096679688,
+                "y_max": 337.46942138671875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 79.91
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 17.38
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 2.17
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "057",
+            "confidence": 0.9767575176032259,
+            "bounding_box": {
+                "x_min": 611.0,
+                "y_min": 299.0,
+                "x_max": 641.0,
+                "y_max": 317.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,110 @@
+{
+    "replay_id": "27f5173c-512f-4ebe-afa7-96277a4327d6",
+    "detections": [
+        {
+            "label": "Chemical Tanker",
+            "confidence": 0.9809,
+            "bounding_box": {
+                "x_min": 52.16273498535156,
+                "y_min": 147.3802947998047,
+                "x_max": 801.782470703125,
+                "y_max": 411.9479675292969
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Chemical Tanker",
+                    "confidence": 98.09
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.62
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.47
+                }
+            ]
+        },
+        {
+            "label": "Oil Tanker",
+            "confidence": 0.9641,
+            "bounding_box": {
+                "x_min": 212.02088928222656,
+                "y_min": 294.024658203125,
+                "x_max": 225.55255126953125,
+                "y_max": 310.3082275390625
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 96.41
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 2.17
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 1.22
+                }
+            ]
+        },
+        {
+            "label": "Oil Tanker (Medium Confidence)",
+            "confidence": 0.8149,
+            "bounding_box": {
+                "x_min": 141.82362365722656,
+                "y_min": 285.78515625,
+                "x_max": 157.09634399414062,
+                "y_max": 309.14697265625
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 81.49
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 12.23
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 4.85
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "LE",
+            "confidence": 0.011738260294261752,
+            "bounding_box": {
+                "x_min": 160.0,
+                "y_min": 232.0,
+                "x_max": 182.0,
+                "y_max": 238.0
+            }
+        },
+        {
+            "text": "cofel",
+            "confidence": 0.2497296741455012,
+            "bounding_box": {
+                "x_min": 296.0,
+                "y_min": 246.0,
+                "x_max": 326.0,
+                "y_max": 254.0
+            }
+        },
+        {
+            "text": "CIp ILLI",
+            "confidence": 0.10506264582368934,
+            "bounding_box": {
+                "x_min": 85.0,
+                "y_min": 343.0,
+                "x_max": 117.0,
+                "y_max": 355.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

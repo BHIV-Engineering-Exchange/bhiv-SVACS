@@ -1,0 +1,29 @@
+{
+    "replay_id": "1fe98fae-aec6-4a5d-a670-c75ca4b03254",
+    "detections": [
+        {
+            "label": "Unknown",
+            "confidence": 0.5327867269515991,
+            "bounding_box": {
+                "x_min": 2502.820068359375,
+                "y_min": 1740.507080078125,
+                "x_max": 4220.0302734375,
+                "y_max": 1960.5150146484375
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "77",
+            "confidence": 0.10313622042760781,
+            "bounding_box": {
+                "x_min": 4023.0,
+                "y_min": 1819.0,
+                "x_max": 4083.0,
+                "y_max": 1839.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,57 @@
+{
+    "replay_id": "030f3618-aea4-4ea3-8a4e-057a53a9e90c",
+    "detections": [
+        {
+            "label": "Patrol Boat",
+            "confidence": 0.8794889450073242,
+            "bounding_box": {
+                "x_min": 862.6100463867188,
+                "y_min": 2251.98583984375,
+                "x_max": 2071.281982421875,
+                "y_max": 2761.38720703125
+            }
+        },
+        {
+            "label": "Rescue Vessel",
+            "confidence": 0.6369915008544922,
+            "bounding_box": {
+                "x_min": 2381.0,
+                "y_min": 2452.0126953125,
+                "x_max": 2592.308837890625,
+                "y_max": 2793.861328125
+            }
+        },
+        {
+            "label": "Pilot Boat",
+            "confidence": 0.5019513368606567,
+            "bounding_box": {
+                "x_min": 6.982626914978027,
+                "y_min": 2501.35986328125,
+                "x_max": 178.11709594726562,
+                "y_max": 2655.008544921875
+            }
+        },
+        {
+            "label": "High-Speed Craft",
+            "confidence": 0.10431553423404694,
+            "bounding_box": {
+                "x_min": 2038.2459716796875,
+                "y_min": 2508.626953125,
+                "x_max": 2157.6083984375,
+                "y_max": 2757.177734375
+            }
+        },
+        {
+            "label": "Dredger",
+            "confidence": 0.08556107431650162,
+            "bounding_box": {
+                "x_min": 2385.875,
+                "y_min": 2692.8583984375,
+                "x_max": 2568.541748046875,
+                "y_max": 2796.69873046875
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

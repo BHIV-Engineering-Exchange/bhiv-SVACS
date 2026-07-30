@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "description": "SVACS Vessel Knowledge Registry — deterministic acoustic classification metadata",
+  "vessels": {
+    "cargo": {
+      "vessel_category": "commercial_surface",
+      "displacement_class": "heavy",
+      "operational_signature": {
+        "freq_range_hz": [50, 200],
+        "dominant_freq_typical_hz": 100,
+        "amplitude_profile": "high_stable",
+        "noise_level": "low",
+        "harmonic_count": 1
+      },
+      "expected_acoustic_behavior": "Steady low-frequency propeller rotation. Single dominant FFT peak in 50-200Hz band. Low noise floor. Amplitude modulation minimal.",
+      "risk_profile": "LOW",
+      "snr_expected_db": "15-25",
+      "common_anomaly_patterns": [
+        "cargo_speed_anomaly",
+        "unexpected_course_change"
+      ],
+      "classification_confidence_expected": "high",
+      "classification_note": "Clean single FFT peak. Easiest vessel to classify correctly."
+    },
+    "speedboat": {
+      "vessel_category": "commercial_surface",
+      "displacement_class": "light",
+      "operational_signature": {
+        "freq_range_hz": [500, 1500],
+        "dominant_freq_typical_hz": 800,
+        "amplitude_profile": "high_irregular",
+        "noise_level": "high",
+        "harmonic_count": 2
+      },
+      "expected_acoustic_behavior": "High-frequency engine signature with second harmonic. Irregular amplitude from fast RPM. High noise floor from cavitation.",
+      "risk_profile": "MEDIUM",
+      "snr_expected_db": "10-20",
+      "common_anomaly_patterns": [
+        "rapid_approach",
+        "erratic_speed_pattern",
+        "multi_harmonic_spike"
+      ],
+      "classification_confidence_expected": "medium_high",
+      "classification_note": "Second harmonic at 2x dominant frequency is the key identifier."
+    },
+    "submarine": {
+      "vessel_category": "military_subsurface",
+      "displacement_class": "heavy",
+      "operational_signature": {
+        "freq_range_hz": [20, 100],
+        "dominant_freq_typical_hz": 40,
+        "amplitude_profile": "low_masked",
+        "noise_level": "very_low",
+        "harmonic_count": 1
+      },
+      "expected_acoustic_behavior": "Near-infrasonic low-energy signature. Stealth masking reduces amplitude to 25-60% of unmasked value. Near ocean noise floor. Energy distinctly below cargo range.",
+      "risk_profile": "CRITICAL",
+      "snr_expected_db": "5-10",
+      "common_anomaly_patterns": [
+        "stealth_detection",
+        "frequency_overlap_with_cargo",
+        "energy_below_threshold"
+      ],
+      "classification_confidence_expected": "medium",
+      "classification_note": "Overlaps with cargo at 50-100Hz. Energy threshold < 1,200,000 is the primary discriminator. Under noisy conditions may classify as unknown — this is expected and honest behavior."
+    },
+    "low_confidence": {
+      "vessel_category": "unknown_surface_or_subsurface",
+      "displacement_class": "unknown",
+      "operational_signature": {
+        "freq_range_hz": [80, 600],
+        "dominant_freq_typical_hz": null,
+        "amplitude_profile": "very_low_buried",
+        "noise_level": "very_high",
+        "harmonic_count": 0
+      },
+      "expected_acoustic_behavior": "Signal buried under heavy ocean noise. Amplitude 0.1-0.2, noise 0.5-0.8. No reliable dominant frequency. Could be distant vessel, degraded sensor, or heavy sea state.",
+      "risk_profile": "UNKNOWN",
+      "snr_expected_db": "<5",
+      "common_anomaly_patterns": [
+        "noise_dominated",
+        "sensor_degradation",
+        "distant_vessel",
+        "heavy_sea_state"
+      ],
+      "classification_confidence_expected": "low",
+      "classification_note": "Signal-to-noise ratio too low for reliable classification. System correctly outputs unknown with low confidence — this is honest behavior, not a failure."
+    },
+    "anomaly": {
+      "vessel_category": "unclassified_unknown",
+      "displacement_class": "unknown",
+      "operational_signature": {
+        "freq_range_hz": [10, 2000],
+        "dominant_freq_typical_hz": null,
+        "amplitude_profile": "variable_multi_peak",
+        "noise_level": "high",
+        "harmonic_count": "3-7"
+      },
+      "expected_acoustic_behavior": "Multi-frequency spike pattern with 3-7 components across non-standard bands. Random amplitude bursts at irregular positions. Does not match any known vessel propulsion profile.",
+      "risk_profile": "CRITICAL",
+      "snr_expected_db": "variable",
+      "common_anomaly_patterns": [
+        "multi_peak_detection",
+        "unknown_frequency_band",
+        "burst_artifacts",
+        "biologic_event",
+        "jamming_signal"
+      ],
+      "classification_confidence_expected": "unknown",
+      "classification_note": "May represent biologic event (whale), equipment malfunction, unknown vessel class, or jamming signal. Always flagged as anomaly regardless of which frequency band the dominant peak falls in."
+    },
+    "unknown": {
+      "vessel_category": "unclassified",
+      "displacement_class": "unknown",
+      "operational_signature": {
+        "freq_range_hz": "any",
+        "dominant_freq_typical_hz": null,
+        "amplitude_profile": "variable",
+        "noise_level": "variable",
+        "harmonic_count": "unknown"
+      },
+      "expected_acoustic_behavior": "Dominant frequency does not fall within any known vessel classification band. Could be submarine under noisy conditions, unknown vessel type, or signal artifact.",
+      "risk_profile": "HIGH",
+      "snr_expected_db": "variable",
+      "common_anomaly_patterns": [
+        "unclear_band",
+        "unrecognized_signature",
+        "possible_submarine_under_noise"
+      ],
+      "classification_confidence_expected": "low",
+      "classification_note": "This is the honest output when the system cannot classify. It means the signal exists but does not match known profiles — operator should investigate."
+    }
+  }
+}

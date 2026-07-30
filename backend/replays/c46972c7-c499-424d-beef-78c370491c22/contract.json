@@ -1,0 +1,27 @@
+{
+    "replay_id": "c46972c7-c499-424d-beef-78c370491c22",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "643",
+            "confidence": 0.993865966796875,
+            "bounding_box": {
+                "x_min": 631.0,
+                "y_min": 379.0,
+                "x_max": 657.0,
+                "y_max": 393.0
+            }
+        },
+        {
+            "text": "360",
+            "confidence": 0.999906191412006,
+            "bounding_box": {
+                "x_min": 665.0,
+                "y_min": 379.0,
+                "x_max": 687.0,
+                "y_max": 393.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,17 @@
+{
+    "replay_id": "781aec21-c4e4-4207-b7fb-2082c3621fee",
+    "detections": [
+        {
+            "label": "kite",
+            "confidence": 0.38943877816200256,
+            "bounding_box": {
+                "x_min": 4.293867588043213,
+                "y_min": 315.3851623535156,
+                "x_max": 192.4881591796875,
+                "y_max": 540.2412719726562
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

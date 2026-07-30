@@ -1,0 +1,53 @@
+{
+    "replay_id": "6d19a0c3-68ad-417b-8294-80de9bc28dd4",
+    "detections": [
+        {
+            "label": "Container Ship",
+            "confidence": 0.9193000000000001,
+            "bounding_box": {
+                "x_min": 862.6100463867188,
+                "y_min": 2251.98583984375,
+                "x_max": 2071.281982421875,
+                "y_max": 2761.38720703125
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 91.93
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 6.91
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.47
+                }
+            ]
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.6369915008544922,
+            "bounding_box": {
+                "x_min": 2381.0,
+                "y_min": 2452.0126953125,
+                "x_max": 2592.308837890625,
+                "y_max": 2793.861328125
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.5019513368606567,
+            "bounding_box": {
+                "x_min": 6.982626914978027,
+                "y_min": 2501.35986328125,
+                "x_max": 178.11709594726562,
+                "y_max": 2655.008544921875
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

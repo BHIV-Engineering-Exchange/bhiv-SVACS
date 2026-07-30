@@ -1,0 +1,47 @@
+{
+    "replay_id": "8300623c-0e35-4892-9bd9-1aebb4de0409",
+    "detections": [
+        {
+            "label": "Research Vessel",
+            "confidence": 0.707249104976654,
+            "bounding_box": {
+                "x_min": 203.87985229492188,
+                "y_min": 60.79502868652344,
+                "x_max": 1005.1593627929688,
+                "y_max": 471.9004821777344
+            }
+        },
+        {
+            "label": "Dredger",
+            "confidence": 0.4361747205257416,
+            "bounding_box": {
+                "x_min": 605.478759765625,
+                "y_min": 143.786865234375,
+                "x_max": 852.059326171875,
+                "y_max": 281.3132629394531
+            }
+        },
+        {
+            "label": "Naval Destroyer",
+            "confidence": 0.12410302460193634,
+            "bounding_box": {
+                "x_min": 258.0812072753906,
+                "y_min": 62.24794387817383,
+                "x_max": 877.9566040039062,
+                "y_max": 290.37530517578125
+            }
+        },
+        {
+            "label": "Research Vessel",
+            "confidence": 0.06360910087823868,
+            "bounding_box": {
+                "x_min": 337.6916809082031,
+                "y_min": 66.5145263671875,
+                "x_max": 576.6844482421875,
+                "y_max": 190.13331604003906
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

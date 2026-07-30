@@ -1,0 +1,112 @@
+[
+  {
+    "vessel_type": "cargo",
+    "trace_id": "25d3f7c3-ba2a-4bc9-af02-dc3446b03189",
+    "signal_event": {
+      "trace_id": "25d3f7c3-ba2a-4bc9-af02-dc3446b03189",
+      "vessel_type": "cargo",
+      "timestamp": 1777966987.4550245,
+      "sample_rate": 4000,
+      "snr_db": 23.32,
+      "noise_floor_db": -25.99,
+      "hybrid": true,
+      "n_samples": 4000
+    },
+    "perception_event": {
+      "trace_id": "25d3f7c3-ba2a-4bc9-af02-dc3446b03189",
+      "vessel_type": "cargo",
+      "confidence_score": 1.0,
+      "dominant_freq_hz": 126.0,
+      "anomaly_flag": false
+    },
+    "trace_match": true
+  },
+  {
+    "vessel_type": "speedboat",
+    "trace_id": "756f9f06-f904-4315-99f1-5506f98c8868",
+    "signal_event": {
+      "trace_id": "756f9f06-f904-4315-99f1-5506f98c8868",
+      "vessel_type": "speedboat",
+      "timestamp": 1777966987.4614232,
+      "sample_rate": 4000,
+      "snr_db": 24.82,
+      "noise_floor_db": -23.91,
+      "hybrid": true,
+      "n_samples": 4000
+    },
+    "perception_event": {
+      "trace_id": "756f9f06-f904-4315-99f1-5506f98c8868",
+      "vessel_type": "speedboat",
+      "confidence_score": 0.3969,
+      "dominant_freq_hz": 1021.0,
+      "anomaly_flag": false
+    },
+    "trace_match": true
+  },
+  {
+    "vessel_type": "submarine",
+    "trace_id": "2466c4aa-fefe-433b-b97b-d39dd99f0568",
+    "signal_event": {
+      "trace_id": "2466c4aa-fefe-433b-b97b-d39dd99f0568",
+      "vessel_type": "submarine",
+      "timestamp": 1777966987.4636762,
+      "sample_rate": 4000,
+      "snr_db": 15.88,
+      "noise_floor_db": -34.1,
+      "hybrid": true,
+      "n_samples": 4000
+    },
+    "perception_event": {
+      "trace_id": "2466c4aa-fefe-433b-b97b-d39dd99f0568",
+      "vessel_type": "unknown",
+      "confidence_score": 0.358,
+      "dominant_freq_hz": 33.0,
+      "anomaly_flag": true
+    },
+    "trace_match": true
+  },
+  {
+    "vessel_type": "low_confidence",
+    "trace_id": "fb381325-4292-4483-b66a-b55aa37a2fd2",
+    "signal_event": {
+      "trace_id": "fb381325-4292-4483-b66a-b55aa37a2fd2",
+      "vessel_type": "unknown",
+      "timestamp": 1777966987.4656947,
+      "sample_rate": 4000,
+      "snr_db": 17.25,
+      "noise_floor_db": -19.57,
+      "hybrid": true,
+      "n_samples": 4000
+    },
+    "perception_event": {
+      "trace_id": "fb381325-4292-4483-b66a-b55aa37a2fd2",
+      "vessel_type": "unknown",
+      "confidence_score": 0.0251,
+      "dominant_freq_hz": 325.0,
+      "anomaly_flag": true
+    },
+    "trace_match": true
+  },
+  {
+    "vessel_type": "anomaly",
+    "trace_id": "193f1e6c-d403-4bff-bbe4-9d4a7183d2ac",
+    "signal_event": {
+      "trace_id": "193f1e6c-d403-4bff-bbe4-9d4a7183d2ac",
+      "vessel_type": "anomaly",
+      "timestamp": 1777966987.4688246,
+      "sample_rate": 4000,
+      "snr_db": 21.12,
+      "noise_floor_db": -22.31,
+      "hybrid": true,
+      "n_samples": 4000
+    },
+    "perception_event": {
+      "trace_id": "193f1e6c-d403-4bff-bbe4-9d4a7183d2ac",
+      "vessel_type": "unknown",
+      "confidence_score": 0.1426,
+      "dominant_freq_hz": 1941.0,
+      "anomaly_flag": true
+    },
+    "trace_match": true
+  }
+]

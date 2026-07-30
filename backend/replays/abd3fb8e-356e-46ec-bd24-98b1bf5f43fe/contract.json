@@ -1,0 +1,42 @@
+{
+    "replay_id": "abd3fb8e-356e-46ec-bd24-98b1bf5f43fe",
+    "detections": [
+        {
+            "label": "Fishing Trawler",
+            "confidence": 0.9998999999999999,
+            "bounding_box": {
+                "x_min": 156.70480346679688,
+                "y_min": 32.48968505859375,
+                "x_max": 605.2398681640625,
+                "y_max": 466.8296813964844
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 99.99
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 0.01
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.0
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "T",
+            "confidence": 0.5723267086342645,
+            "bounding_box": {
+                "x_min": 264.0,
+                "y_min": 376.0,
+                "x_max": 313.0,
+                "y_max": 393.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

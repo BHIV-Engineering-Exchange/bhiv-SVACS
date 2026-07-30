@@ -1,0 +1,31 @@
+{
+    "replay_id": "a29cd74b-d5bf-4597-99cd-39ffcc679754",
+    "detections": [
+        {
+            "label": "Chemical Tanker",
+            "confidence": 0.8698,
+            "bounding_box": {
+                "x_min": 15.268853187561035,
+                "y_min": 19.36134910583496,
+                "x_max": 761.5396118164062,
+                "y_max": 523.8231201171875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Chemical Tanker",
+                    "confidence": 86.98
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 12.25
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.62
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

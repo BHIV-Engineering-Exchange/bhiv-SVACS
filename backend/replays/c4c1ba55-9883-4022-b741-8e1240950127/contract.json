@@ -1,0 +1,18 @@
+{
+    "replay_id": "c4c1ba55-9883-4022-b741-8e1240950127",
+    "detections": [
+        {
+            "label": "Unknown",
+            "confidence": 0.6089696288108826,
+            "bounding_box": {
+                "x_min": 261.3832092285156,
+                "y_min": 144.88572692871094,
+                "x_max": 465.385986328125,
+                "y_max": 191.41453552246094
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

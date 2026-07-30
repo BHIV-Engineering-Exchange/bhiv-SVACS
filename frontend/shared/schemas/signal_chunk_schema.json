@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "SignalChunk",
+  "description": "Schema for signal chunks emitted by the SVACS data layer streaming simulator",
+  "type": "object",
+  "required": ["trace_id", "timestamp", "samples", "sample_rate", "vessel_type"],
+  "properties": {
+    "trace_id":    { "type": "string", "format": "uuid", "description": "Unique ID per chunk — flows through entire pipeline unchanged" },
+    "scenario_id": { "type": ["integer", "null"] },
+    "timestamp":   { "type": "number", "description": "Unix epoch float" },
+    "samples":     { "type": "array", "items": { "type": "number" }, "description": "4000 audio sample floats" },
+    "sample_rate": { "type": "integer", "example": 4000 },
+    "vessel_type": { "type": "string", "enum": ["cargo", "ferry", "cruise", "roro", "passenger", "speedboat", "submarine", "low_confidence", "anomaly"] },
+    "expected_label": {
+      "type": "object",
+      "properties": {
+        "vessel_type":      { "type": "string" },
+        "confidence_range": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "scenario_type":    { "type": "string" },
+        "anomaly_flag":     { "type": "boolean" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "freq_hz":             { "type": "number" },
+        "amplitude":           { "type": "number" },
+        "noise_level":         { "type": "number" },
+        "confidence_expected": { "type": "string" },
+        "scenario_tag":        { "type": "string" }
+      }
+    },
+    "hybrid":         { "type": "boolean" },
+    "noise_floor_db": { "type": "number" },
+    "snr_db":         { "type": "number" }
+  },
+  "x-integration": {
+    "endpoint": "POST http://localhost:8000/ingest",
+    "content_type": "application/json"
+  }
+}

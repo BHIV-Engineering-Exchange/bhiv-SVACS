@@ -1,0 +1,70 @@
+{
+    "replay_id": "bdae1bd7-e299-4707-b651-a1e612e26c85",
+    "detections": [
+        {
+            "label": "Unknown",
+            "confidence": 0.5942390561103821,
+            "bounding_box": {
+                "x_min": 0.04290771484375,
+                "y_min": 12.47637939453125,
+                "x_max": 459.4815979003906,
+                "y_max": 262.5577087402344
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.5385531187057495,
+            "bounding_box": {
+                "x_min": 56.53533935546875,
+                "y_min": 38.39338684082031,
+                "x_max": 270.3475036621094,
+                "y_max": 132.75692749023438
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "largest cruise ship to set",
+            "confidence": 0.6066596581792167,
+            "bounding_box": {
+                "x_min": 3.0,
+                "y_min": 374.0,
+                "x_max": 303.0,
+                "y_max": 417.0
+            }
+        },
+        {
+            "text": "Visit",
+            "confidence": 0.974656727602726,
+            "bounding_box": {
+                "x_min": 366.0,
+                "y_min": 400.0,
+                "x_max": 412.0,
+                "y_max": 426.0
+            }
+        },
+        {
+            "text": "ndustry rebounds",
+            "confidence": 0.7467734425535585,
+            "bounding_box": {
+                "x_min": 0.0,
+                "y_min": 405.0,
+                "x_max": 219.0,
+                "y_max": 446.0
+            }
+        },
+        {
+            "text": "be subjeci t0 copyright Learn more",
+            "confidence": 0.4779139799068385,
+            "bounding_box": {
+                "x_min": 14.0,
+                "y_min": 448.0,
+                "x_max": 322.0,
+                "y_max": 476.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

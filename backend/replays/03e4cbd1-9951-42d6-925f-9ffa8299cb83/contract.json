@@ -1,0 +1,31 @@
+{
+    "replay_id": "03e4cbd1-9951-42d6-925f-9ffa8299cb83",
+    "detections": [
+        {
+            "label": "LPG Carrier",
+            "confidence": 0.9163,
+            "bounding_box": {
+                "x_min": 204.8849639892578,
+                "y_min": 161.66220092773438,
+                "x_max": 378.08465576171875,
+                "y_max": 193.1523895263672
+            },
+            "top_predictions": [
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 91.63
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 4.54
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 2.69
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,93 @@
+=================================================================
+  SVACS — PHASE 2: EDGE CASE SIMULATION
+  Role: Pretending to be Acoustic Node parser
+  Run at : 2026-04-28T16:11:30Z
+=================================================================
+
+─────────────────────────────────────────────────────────────────
+  --- Testing: CARGO ---
+  [CHECK 1] Field access          : PASS
+  [CHECK 2] Sample size           : PASS (4000)
+  [CHECK 3] Sample data types     : PASS (all float)
+  [CHECK 4] trace_id              : PASS (f03ca220...)
+  [CHECK 5] freq_hz type check    : PASS (167.66 Hz)
+  [CHECK 6] Sample normalization  : PASS (max abs = 1.0000)
+  [CHECK 7] expected_label fields : PASS | anomaly_flag=False (correct)
+
+  Summary -> vessel=cargo, samples=4000, trace=f03ca220...
+  Result  -> PASS
+
+─────────────────────────────────────────────────────────────────
+  --- Testing: SPEEDBOAT ---
+  [CHECK 1] Field access          : PASS
+  [CHECK 2] Sample size           : PASS (4000)
+  [CHECK 3] Sample data types     : PASS (all float)
+  [CHECK 4] trace_id              : PASS (14120c6f...)
+  [CHECK 5] freq_hz type check    : PASS (844.05 Hz)
+  [CHECK 6] Sample normalization  : PASS (max abs = 1.0000)
+  [CHECK 7] expected_label fields : PASS | anomaly_flag=False (correct)
+
+  Summary -> vessel=speedboat, samples=4000, trace=14120c6f...
+  Result  -> PASS
+
+─────────────────────────────────────────────────────────────────
+  --- Testing: SUBMARINE ---
+  [CHECK 1] Field access          : PASS
+  [CHECK 2] Sample size           : PASS (4000)
+  [CHECK 3] Sample data types     : PASS (all float)
+  [CHECK 4] trace_id              : PASS (189a2630...)
+  [CHECK 5] freq_hz type check    : PASS (42.98 Hz)
+  [CHECK 6] Sample normalization  : PASS (max abs = 1.0000)
+  [CHECK 7] expected_label fields : PASS | anomaly_flag=False (correct)
+
+  Summary -> vessel=submarine, samples=4000, trace=189a2630...
+  Result  -> PASS
+
+─────────────────────────────────────────────────────────────────
+  --- Testing: LOW_CONFIDENCE ---
+  [CHECK 1] Field access          : PASS
+  [CHECK 2] Sample size           : PASS (4000)
+  [CHECK 3] Sample data types     : PASS (all float)
+  [CHECK 4] trace_id              : PASS (71c6d3de...)
+  [CHECK 5] freq_hz type check    : PASS (382.08 Hz)
+  [CHECK 6] Sample normalization  : PASS (max abs = 1.0000)
+  [CHECK 7] expected_label fields : PASS | anomaly_flag=False (correct)
+
+  Summary -> vessel=unknown, samples=4000, trace=71c6d3de...
+  Result  -> PASS
+
+─────────────────────────────────────────────────────────────────
+  --- Testing: ANOMALY ---
+  [CHECK 1] Field access          : PASS
+  [CHECK 2] Sample size           : PASS (4000)
+  [CHECK 3] Sample data types     : PASS (all float)
+  [CHECK 4] trace_id              : PASS (50dca14c...)
+  [CHECK 5] Anomaly freq_hz       : PASS (value='mixed' - string type confirmed)
+             float() cast result  : Would raise ValueError
+             Safe pattern needed  : check isinstance(freq_hz,(int,float)) before casting
+  [CHECK 6] Sample normalization  : PASS (max abs = 1.0000)
+  [CHECK 7] expected_label fields : PASS | anomaly_flag=True (correct)
+
+  Summary -> vessel=anomaly, samples=4000, trace=50dca14c...
+  Result  -> PASS
+
+=================================================================
+  EDGE CASE VALIDATION SUMMARY
+=================================================================
+  VESSEL TYPE          RESULT   TRACE ID (first 8)
+  ───────────────────────────────────────────────────────
+  cargo                PASS     f03ca220...
+  speedboat            PASS     14120c6f...
+  submarine            PASS     189a2630...
+  low_confidence       PASS     71c6d3de...
+  anomaly              PASS     50dca14c...
+
+  Total: 5/5 vessel types passed all edge case checks
+
+  ALL EDGE CASES PASSED
+  Signal data is clean, predictable, and safe for Acoustic Node.
+  No schema or parsing issues found.
+
+  Log  : C:\svacs-demo\services\data_layer\test_edge_cases_log.txt
+  JSON : C:\svacs-demo\services\data_layer\test_edge_cases_results.json
+=================================================================

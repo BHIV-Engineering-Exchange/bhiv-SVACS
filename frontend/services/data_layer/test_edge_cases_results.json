@@ -1,0 +1,83 @@
+{
+  "run_at": "2026-04-28T16:11:30Z",
+  "overall_pass": true,
+  "passed": 5,
+  "total_tested": 5,
+  "results": [
+    {
+      "vessel_type": "cargo",
+      "status": "PASS",
+      "checks": {
+        "field_access": "PASS",
+        "sample_size": "PASS",
+        "sample_types": "PASS",
+        "trace_id": "PASS",
+        "anomaly_freq_handling": "PASS - numeric 167.66",
+        "normalization": "PASS",
+        "expected_label": "PASS"
+      },
+      "trace_id": "f03ca220-aeeb-4a8a-909d-b7bd130106d5",
+      "sample_count": 4000
+    },
+    {
+      "vessel_type": "speedboat",
+      "status": "PASS",
+      "checks": {
+        "field_access": "PASS",
+        "sample_size": "PASS",
+        "sample_types": "PASS",
+        "trace_id": "PASS",
+        "anomaly_freq_handling": "PASS - numeric 844.05",
+        "normalization": "PASS",
+        "expected_label": "PASS"
+      },
+      "trace_id": "14120c6f-5b77-4997-a28f-d2b8a1916d7a",
+      "sample_count": 4000
+    },
+    {
+      "vessel_type": "submarine",
+      "status": "PASS",
+      "checks": {
+        "field_access": "PASS",
+        "sample_size": "PASS",
+        "sample_types": "PASS",
+        "trace_id": "PASS",
+        "anomaly_freq_handling": "PASS - numeric 42.98",
+        "normalization": "PASS",
+        "expected_label": "PASS"
+      },
+      "trace_id": "189a2630-37ba-4f1e-8b32-1e6938480a2f",
+      "sample_count": 4000
+    },
+    {
+      "vessel_type": "low_confidence",
+      "status": "PASS",
+      "checks": {
+        "field_access": "PASS",
+        "sample_size": "PASS",
+        "sample_types": "PASS",
+        "trace_id": "PASS",
+        "anomaly_freq_handling": "PASS - numeric 382.08",
+        "normalization": "PASS",
+        "expected_label": "PASS"
+      },
+      "trace_id": "71c6d3de-ec69-42f3-96b0-dc81c17c111b",
+      "sample_count": 4000
+    },
+    {
+      "vessel_type": "anomaly",
+      "status": "PASS",
+      "checks": {
+        "field_access": "PASS",
+        "sample_size": "PASS",
+        "sample_types": "PASS",
+        "trace_id": "PASS",
+        "anomaly_freq_handling": "PASS - freq_hz='mixed', downstream must guard type",
+        "normalization": "PASS",
+        "expected_label": "PASS"
+      },
+      "trace_id": "50dca14c-90c4-4fd7-b524-509ee7f52260",
+      "sample_count": 4000
+    }
+  ]
+}

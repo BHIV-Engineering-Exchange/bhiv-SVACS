@@ -1,0 +1,85 @@
+=================================================================
+  SVACS — PHASE 5: STRESS TEST
+  Endpoint : http://localhost:8000/ingest/signal
+  Threads  : 3  |  Chunks per thread: 20  |  Total: 60
+  Run at   : 2026-04-30T10:35:02Z
+=================================================================
+  [T1] chunk 01 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T0] chunk 01 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T2] chunk 01 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T1] chunk 02 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T0] chunk 02 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T2] chunk 02 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T1] chunk 03 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T0] chunk 03 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T2] chunk 03 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T1] chunk 04 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T0] chunk 04 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T2] chunk 04 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T2] chunk 05 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T1] chunk 05 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T0] chunk 05 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T2] chunk 06 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T1] chunk 06 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T0] chunk 06 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T2] chunk 07 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T0] chunk 07 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T1] chunk 07 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T2] chunk 08 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T0] chunk 08 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T1] chunk 08 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T0] chunk 09 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T2] chunk 09 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T1] chunk 09 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T0] chunk 10 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T2] chunk 10 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T1] chunk 10 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T0] chunk 11 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T2] chunk 11 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T1] chunk 11 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T0] chunk 12 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T2] chunk 12 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T1] chunk 12 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T0] chunk 13 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T2] chunk 13 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T1] chunk 13 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T0] chunk 14 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T2] chunk 14 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T1] chunk 14 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T0] chunk 15 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T2] chunk 15 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T1] chunk 15 -> HTTP 200 | vessel=anomaly          | trace=OK
+  [T0] chunk 16 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T2] chunk 16 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T1] chunk 16 -> HTTP 200 | vessel=cargo            | trace=OK
+  [T0] chunk 17 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T2] chunk 17 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T1] chunk 17 -> HTTP 200 | vessel=speedboat        | trace=OK
+  [T2] chunk 18 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T0] chunk 18 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T1] chunk 18 -> HTTP 200 | vessel=submarine        | trace=OK
+  [T2] chunk 19 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T0] chunk 19 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T1] chunk 19 -> HTTP 200 | vessel=low_confidence   | trace=OK
+  [T0] chunk 20 -> HTTP 200 | vessel=anomaly          | trace=OK
+
+  [T0] Done — 20/20 passed
+  [T2] chunk 20 -> HTTP 200 | vessel=anomaly          | trace=OK
+
+  [T2] Done — 20/20 passed
+  [T1] chunk 20 -> HTTP 200 | vessel=anomaly          | trace=OK
+
+  [T1] Done — 20/20 passed
+
+=================================================================
+  STRESS TEST SUMMARY
+=================================================================
+  Total chunks sent   : 60
+  Passed (HTTP 200)   : 60
+  Failed              : 0
+  Elapsed time        : 40.92s
+  Throughput          : 1.5 chunks/sec
+
+  [PASS] STRESS TEST PASSED
+  Server handled concurrent load without errors.
+=================================================================

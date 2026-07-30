@@ -1,0 +1,79 @@
+{
+    "replay_id": "3987687f-80fa-4ede-b748-00ded25b40a1",
+    "detections": [
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9967,
+            "bounding_box": {
+                "x_min": 4.300885200500488,
+                "y_min": 156.00376892089844,
+                "x_max": 818.0,
+                "y_max": 392.8465576171875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 99.67
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 0.16
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 0.05
+                }
+            ]
+        },
+        {
+            "label": "Container Ship (Medium Confidence)",
+            "confidence": 0.7966,
+            "bounding_box": {
+                "x_min": 797.4385375976562,
+                "y_min": 303.32135009765625,
+                "x_max": 818.0,
+                "y_max": 375.83465576171875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 79.66
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 17.84
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 1.51
+                }
+            ]
+        },
+        {
+            "label": "Container Ship (Low Confidence)",
+            "confidence": 0.5775,
+            "bounding_box": {
+                "x_min": 374.59375,
+                "y_min": 155.7175750732422,
+                "x_max": 429.3067321777344,
+                "y_max": 236.48231506347656
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 57.75
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 31.3
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 7.03
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

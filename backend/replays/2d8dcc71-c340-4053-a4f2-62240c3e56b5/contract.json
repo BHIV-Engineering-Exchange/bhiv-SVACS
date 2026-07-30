@@ -1,0 +1,31 @@
+{
+    "replay_id": "2d8dcc71-c340-4053-a4f2-62240c3e56b5",
+    "detections": [
+        {
+            "label": "Cruise Ship",
+            "confidence": 0.996,
+            "bounding_box": {
+                "x_min": 86.1764144897461,
+                "y_min": 209.4135284423828,
+                "x_max": 572.5830688476562,
+                "y_max": 431.9144592285156
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 99.6
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 0.31
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 0.05
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

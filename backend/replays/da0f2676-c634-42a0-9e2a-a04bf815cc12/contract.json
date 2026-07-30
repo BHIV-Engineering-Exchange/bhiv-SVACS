@@ -1,0 +1,31 @@
+{
+    "replay_id": "da0f2676-c634-42a0-9e2a-a04bf815cc12",
+    "detections": [
+        {
+            "label": "Container Ship (Medium Confidence)",
+            "confidence": 0.7729,
+            "bounding_box": {
+                "x_min": 96.77903747558594,
+                "y_min": 162.7492218017578,
+                "x_max": 628.3225708007812,
+                "y_max": 281.8721618652344
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 77.29
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 18.91
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 3.28
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

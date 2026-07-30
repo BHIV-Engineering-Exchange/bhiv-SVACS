@@ -1,0 +1,28 @@
+{
+    "replay_id": "5cb3e569-2a89-4343-9f45-3276a940286b",
+    "detections": [
+        {
+            "label": "Naval Vessel",
+            "confidence": 0.8745412826538086,
+            "bounding_box": {
+                "x_min": 142.9698028564453,
+                "y_min": 2364.282958984375,
+                "x_max": 1890.670654296875,
+                "y_max": 3083.559326171875
+            }
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "TMON",
+            "confidence": 0.036776505410671234,
+            "bounding_box": {
+                "x_min": 1274.0,
+                "y_min": 2422.0,
+                "x_max": 1355.0,
+                "y_max": 2439.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

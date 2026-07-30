@@ -1,0 +1,27 @@
+{
+    "replay_id": "4e86ef17-6e8e-488a-994e-87f47ed07deb",
+    "detections": [
+        {
+            "label": "Ship",
+            "confidence": 0.6389910578727722,
+            "bounding_box": {
+                "x_min": 614.7293701171875,
+                "y_min": 2382.25146484375,
+                "x_max": 1724.156982421875,
+                "y_max": 2868.598388671875
+            }
+        },
+        {
+            "label": "Ship",
+            "confidence": 0.28999343514442444,
+            "bounding_box": {
+                "x_min": 2433.59130859375,
+                "y_min": 2626.816650390625,
+                "x_max": 2591.91162109375,
+                "y_max": 2906.085205078125
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

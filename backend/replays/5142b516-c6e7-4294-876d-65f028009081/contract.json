@@ -1,0 +1,31 @@
+{
+    "replay_id": "5142b516-c6e7-4294-876d-65f028009081",
+    "detections": [
+        {
+            "label": "Fishing Vessel",
+            "confidence": 0.9968,
+            "bounding_box": {
+                "x_min": 55.82302474975586,
+                "y_min": 370.60137939453125,
+                "x_max": 183.0838623046875,
+                "y_max": 430.32904052734375
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 99.68
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.1
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.06
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

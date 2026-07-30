@@ -1,0 +1,89 @@
+{
+  "run_at": "2026-04-28T16:12:47Z",
+  "total_sent": 10,
+  "passed": 10,
+  "all_unique": true,
+  "overall_pass": true,
+  "results": [
+    {
+      "vessel_type": "cargo",
+      "repeat": 1,
+      "sent": "17a201b6-b73f-4530-82de-48ab5b350d7b",
+      "returned": "17a201b6-b73f-4530-82de-48ab5b350d7b",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "cargo",
+      "repeat": 2,
+      "sent": "363697a5-a1ee-492e-997c-2bd5fac6ccbb",
+      "returned": "363697a5-a1ee-492e-997c-2bd5fac6ccbb",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "speedboat",
+      "repeat": 1,
+      "sent": "5029fddd-8dab-4b2c-8535-22b0481760a8",
+      "returned": "5029fddd-8dab-4b2c-8535-22b0481760a8",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "speedboat",
+      "repeat": 2,
+      "sent": "d1cb51ba-88a2-4920-a065-00e08fbbdd76",
+      "returned": "d1cb51ba-88a2-4920-a065-00e08fbbdd76",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "submarine",
+      "repeat": 1,
+      "sent": "03638d89-6a73-4ff5-9c4e-212038440512",
+      "returned": "03638d89-6a73-4ff5-9c4e-212038440512",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "submarine",
+      "repeat": 2,
+      "sent": "3bd50d72-d5c6-4da4-ad37-6a0d438e0080",
+      "returned": "3bd50d72-d5c6-4da4-ad37-6a0d438e0080",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "low_confidence",
+      "repeat": 1,
+      "sent": "83035a28-d6d9-4899-b2b0-2438cd27be0c",
+      "returned": "83035a28-d6d9-4899-b2b0-2438cd27be0c",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "low_confidence",
+      "repeat": 2,
+      "sent": "384f782a-5530-4b33-8281-495a1a05e979",
+      "returned": "384f782a-5530-4b33-8281-495a1a05e979",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "anomaly",
+      "repeat": 1,
+      "sent": "60dab16f-c024-4d0f-b58b-1ba5a1a1a987",
+      "returned": "60dab16f-c024-4d0f-b58b-1ba5a1a1a987",
+      "match": true,
+      "status": "PASS"
+    },
+    {
+      "vessel_type": "anomaly",
+      "repeat": 2,
+      "sent": "f02f68bb-4090-4473-aa03-0e9838a13d39",
+      "returned": "f02f68bb-4090-4473-aa03-0e9838a13d39",
+      "match": true,
+      "status": "PASS"
+    }
+  ]
+}

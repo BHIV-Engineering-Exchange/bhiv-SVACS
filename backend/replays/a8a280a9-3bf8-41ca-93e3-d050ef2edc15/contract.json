@@ -1,0 +1,79 @@
+{
+    "replay_id": "a8a280a9-3bf8-41ca-93e3-d050ef2edc15",
+    "detections": [
+        {
+            "label": "Cruise Ship",
+            "confidence": 0.9978,
+            "bounding_box": {
+                "x_min": 86.1764144897461,
+                "y_min": 209.4135284423828,
+                "x_max": 572.5830688476562,
+                "y_max": 431.9144592285156
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 99.78
+                },
+                {
+                    "class_name": "Chemical Tanker",
+                    "confidence": 0.11
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.06
+                }
+            ]
+        },
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9091,
+            "bounding_box": {
+                "x_min": 719.3106689453125,
+                "y_min": 289.2372741699219,
+                "x_max": 741.3687744140625,
+                "y_max": 305.9574890136719
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 90.91
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 5.01
+                },
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 1.62
+                }
+            ]
+        },
+        {
+            "label": "Oil Tanker (Medium Confidence)",
+            "confidence": 0.7354999999999999,
+            "bounding_box": {
+                "x_min": 210.912353515625,
+                "y_min": 370.476318359375,
+                "x_max": 223.691650390625,
+                "y_max": 391.98822021484375
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 73.55
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 24.88
+                },
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 0.71
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,27 @@
+{
+    "replay_id": "97474cb4-90d1-4180-8340-1a0836c9128c",
+    "detections": [
+        {
+            "label": "person",
+            "confidence": 0.6128565073013306,
+            "bounding_box": {
+                "x_min": 294.027587890625,
+                "y_min": 0.844879150390625,
+                "x_max": 639.2730102539062,
+                "y_max": 479.0116271972656
+            }
+        },
+        {
+            "label": "tv",
+            "confidence": 0.2575807571411133,
+            "bounding_box": {
+                "x_min": 0.174835205078125,
+                "y_min": 2.88250732421875,
+                "x_max": 314.80029296875,
+                "y_max": 317.5267333984375
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

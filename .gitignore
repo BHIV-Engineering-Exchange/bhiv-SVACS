@@ -1,0 +1,36 @@
+# Virtual environments
+.venv/
+backend/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Node
+node_modules/
+dist/
+
+# YOLO training outputs (optional)
+backend/runs/
+
+# Ignore only temporary training outputs, not your final model
+# backend/runs/detect/
+
+# If you WANT to keep best.pt in Git, DO NOT use:
+# *.pt
+
+# Node
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Python
+.venv/
+backend/.venv/
+
+# Python cache
+__pycache__/
+*.pyc

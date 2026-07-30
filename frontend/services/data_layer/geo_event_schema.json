@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "GeoEvent",
+  "description": "Geospatial event schema for SVACS — injected into perception, intelligence, and state events for map rendering",
+  "type": "object",
+  "required": ["trace_id", "timestamp", "latitude", "longitude", "vessel_type", "stage"],
+  "properties": {
+    "trace_id":          { "type": "string", "description": "UUID4 — same as pipeline trace_id" },
+    "timestamp":         { "type": "number", "description": "Unix epoch float" },
+    "latitude":          { "type": "number", "minimum": -90,  "maximum": 90  },
+    "longitude":         { "type": "number", "minimum": -180, "maximum": 180 },
+    "heading_degrees":   { "type": "number", "minimum": 0,    "maximum": 360, "description": "Direction vessel is moving" },
+    "speed_knots":       { "type": "number", "minimum": 0,    "description": "Vessel speed in knots" },
+    "operational_zone":  {
+      "type": "string",
+      "enum": ["coastal", "open_ocean", "restricted", "territorial", "international"],
+      "description": "Maritime zone classification"
+    },
+    "source_confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "How confident the position estimate is" },
+    "vessel_type":       { "type": "string", "description": "cargo / speedboat / submarine / unknown / anomaly" },
+    "stage":             { "type": "string", "enum": ["perception", "intelligence", "state"], "description": "Which pipeline stage this geo event belongs to" },
+    "geo_simulated":     { "type": "boolean", "description": "True = coordinates are simulated, not from real AIS" },
+    "anomaly_flag":      { "type": "boolean" },
+    "risk_level":        { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL", "UNKNOWN"] }
+  },
+  "x-svacs-note": "Coordinates are simulated for pipeline preparation. Real AIS integration is a future milestone."
+}

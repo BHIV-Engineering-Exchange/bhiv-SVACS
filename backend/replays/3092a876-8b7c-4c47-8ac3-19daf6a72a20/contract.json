@@ -1,0 +1,31 @@
+{
+    "replay_id": "3092a876-8b7c-4c47-8ac3-19daf6a72a20",
+    "detections": [
+        {
+            "label": "Passenger Ferry (Low Confidence)",
+            "confidence": 0.4943,
+            "bounding_box": {
+                "x_min": 200.64157104492188,
+                "y_min": 11.44101619720459,
+                "x_max": 839.5560913085938,
+                "y_max": 877.0360717773438
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 49.43
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 33.91
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 6.66
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

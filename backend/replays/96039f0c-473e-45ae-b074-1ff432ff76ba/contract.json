@@ -1,0 +1,53 @@
+{
+    "replay_id": "96039f0c-473e-45ae-b074-1ff432ff76ba",
+    "detections": [
+        {
+            "label": "LPG Carrier",
+            "confidence": 0.9839,
+            "bounding_box": {
+                "x_min": 178.30841064453125,
+                "y_min": 186.0294189453125,
+                "x_max": 729.554443359375,
+                "y_max": 310.74896240234375
+            },
+            "top_predictions": [
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 98.39
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.69
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.51
+                }
+            ]
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.5417976975440979,
+            "bounding_box": {
+                "x_min": 398.2354431152344,
+                "y_min": 334.8753967285156,
+                "x_max": 418.2325439453125,
+                "y_max": 383.81982421875
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.5021155476570129,
+            "bounding_box": {
+                "x_min": 304.75665283203125,
+                "y_min": 346.5719909667969,
+                "x_max": 314.2524719238281,
+                "y_max": 365.1542053222656
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

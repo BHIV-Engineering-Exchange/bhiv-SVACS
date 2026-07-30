@@ -1,0 +1,78 @@
+{
+    "replay_id": "8b500b2c-58f2-4330-bf6e-9eacb17a9623",
+    "detections": [
+        {
+            "label": "Dredger",
+            "confidence": 0.7853081226348877,
+            "bounding_box": {
+                "x_min": 228.71681213378906,
+                "y_min": 157.93023681640625,
+                "x_max": 517.7848510742188,
+                "y_max": 319.4217224121094
+            }
+        },
+        {
+            "label": "Naval Destroyer",
+            "confidence": 0.150527223944664,
+            "bounding_box": {
+                "x_min": 267.7480163574219,
+                "y_min": 194.5485076904297,
+                "x_max": 355.4183349609375,
+                "y_max": 227.06654357910156
+            }
+        },
+        {
+            "label": "Bulk Carrier",
+            "confidence": 0.06436469405889511,
+            "bounding_box": {
+                "x_min": 256.8240661621094,
+                "y_min": 215.93350219726562,
+                "x_max": 353.1727600097656,
+                "y_max": 236.28250122070312
+            }
+        },
+        {
+            "label": "Offshore Support Vessel",
+            "confidence": 0.06180178001523018,
+            "bounding_box": {
+                "x_min": 252.62319946289062,
+                "y_min": 245.43357849121094,
+                "x_max": 338.6207275390625,
+                "y_max": 267.48504638671875
+            }
+        },
+        {
+            "label": "Anchor Handling Tug Supply",
+            "confidence": 0.05918785184621811,
+            "bounding_box": {
+                "x_min": 261.1622619628906,
+                "y_min": 236.68955993652344,
+                "x_max": 340.39599609375,
+                "y_max": 259.09539794921875
+            }
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "643",
+            "confidence": 0.993865966796875,
+            "bounding_box": {
+                "x_min": 631.0,
+                "y_min": 379.0,
+                "x_max": 657.0,
+                "y_max": 393.0
+            }
+        },
+        {
+            "text": "360",
+            "confidence": 0.999906191412006,
+            "bounding_box": {
+                "x_min": 665.0,
+                "y_min": 379.0,
+                "x_max": 687.0,
+                "y_max": 393.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

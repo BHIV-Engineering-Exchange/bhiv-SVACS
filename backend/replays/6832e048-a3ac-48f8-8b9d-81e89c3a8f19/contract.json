@@ -1,0 +1,159 @@
+{
+    "replay_id": "6832e048-a3ac-48f8-8b9d-81e89c3a8f19",
+    "detections": [
+        {
+            "label": "Unknown",
+            "confidence": 0.3489588797092438,
+            "bounding_box": {
+                "x_min": 21.27532958984375,
+                "y_min": 0.0,
+                "x_max": 639.1859741210938,
+                "y_max": 478.9347229003906
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "rd$",
+            "confidence": 0.5510750972462035,
+            "bounding_box": {
+                "x_min": 0.0,
+                "y_min": 296.0,
+                "x_max": 44.0,
+                "y_max": 320.0
+            }
+        },
+        {
+            "text": "as",
+            "confidence": 0.48485129072074823,
+            "bounding_box": {
+                "x_min": 0.0,
+                "y_min": 321.0,
+                "x_max": 25.0,
+                "y_max": 341.0
+            }
+        },
+        {
+            "text": "cruise ship to set",
+            "confidence": 0.6476841050063541,
+            "bounding_box": {
+                "x_min": 103.0,
+                "y_min": 307.0,
+                "x_max": 253.0,
+                "y_max": 343.0
+            }
+        },
+        {
+            "text": "{rebounds_",
+            "confidence": 0.6335094904516336,
+            "bounding_box": {
+                "x_min": 96.0,
+                "y_min": 325.0,
+                "x_max": 189.0,
+                "y_max": 358.0
+            }
+        },
+        {
+            "text": "Copynont",
+            "confidence": 0.3084693803757277,
+            "bounding_box": {
+                "x_min": 130.0,
+                "y_min": 359.0,
+                "x_max": 191.0,
+                "y_max": 380.0
+            }
+        },
+        {
+            "text": "more",
+            "confidence": 0.4636290967464447,
+            "bounding_box": {
+                "x_min": 227.0,
+                "y_min": 369.0,
+                "x_max": 259.0,
+                "y_max": 383.0
+            }
+        },
+        {
+            "text": "Share",
+            "confidence": 0.9996678063212364,
+            "bounding_box": {
+                "x_min": 47.0,
+                "y_min": 396.0,
+                "x_max": 100.0,
+                "y_max": 420.0
+            }
+        },
+        {
+            "text": "Sovo ",
+            "confidence": 0.3861567508556066,
+            "bounding_box": {
+                "x_min": 253.0,
+                "y_min": 411.0,
+                "x_max": 289.0,
+                "y_max": 429.0
+            }
+        },
+        {
+            "text": "largest e",
+            "confidence": 0.4998336127921017,
+            "bounding_box": {
+                "x_min": 36.049057536930704,
+                "y_min": 295.1289267866996,
+                "x_max": 112.9509424630693,
+                "y_max": 333.8710732133004
+            }
+        },
+        {
+            "text": "industry",
+            "confidence": 0.995421372597563,
+            "bounding_box": {
+                "x_min": 18.03087119447724,
+                "y_min": 314.1219034952862,
+                "x_max": 106.96912880552276,
+                "y_max": 353.8780965047138
+            }
+        },
+        {
+            "text": "Visit",
+            "confidence": 0.3477233633135175,
+            "bounding_box": {
+                "x_min": 292.10862680139024,
+                "y_min": 335.2761315696845,
+                "x_max": 327.89137319860976,
+                "y_max": 355.7238684303155
+            }
+        },
+        {
+            "text": "aj",
+            "confidence": 0.19137171496673536,
+            "bounding_box": {
+                "x_min": 14.04552002196497,
+                "y_min": 349.1520016959949,
+                "x_max": 47.95447997803503,
+                "y_max": 366.8479983040051
+            }
+        },
+        {
+            "text": "Eudjecie",
+            "confidence": 0.16042672873617778,
+            "bounding_box": {
+                "x_min": 64.03737250064569,
+                "y_min": 351.21114561800016,
+                "x_max": 118.96262749935431,
+                "y_max": 374.78885438199984
+            }
+        },
+        {
+            "text": "Leam E",
+            "confidence": 0.17363690139329996,
+            "bounding_box": {
+                "x_min": 189.0203972993585,
+                "y_min": 363.12584272387846,
+                "x_max": 229.9796027006415,
+                "y_max": 382.87415727612154
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

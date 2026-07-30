@@ -1,0 +1,17 @@
+{
+    "replay_id": "6dee54e1-8a10-4d06-832b-13761f46d063",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "SC=",
+            "confidence": 0.15544770099663247,
+            "bounding_box": {
+                "x_min": 605.0,
+                "y_min": 2704.0,
+                "x_max": 734.0,
+                "y_max": 2768.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

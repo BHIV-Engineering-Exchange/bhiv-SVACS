@@ -1,0 +1,67 @@
+{
+    "replay_id": "2dec8803-e109-459e-963d-c0e441fd551d",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "Il",
+            "confidence": 0.39033898826769603,
+            "bounding_box": {
+                "x_min": 147.0,
+                "y_min": 351.0,
+                "x_max": 177.0,
+                "y_max": 371.0
+            }
+        },
+        {
+            "text": "7",
+            "confidence": 0.9999732972974016,
+            "bounding_box": {
+                "x_min": 597.0,
+                "y_min": 669.0,
+                "x_max": 617.0,
+                "y_max": 691.0
+            }
+        },
+        {
+            "text": "K",
+            "confidence": 0.2221788429429674,
+            "bounding_box": {
+                "x_min": 576.0,
+                "y_min": 688.0,
+                "x_max": 600.0,
+                "y_max": 712.0
+            }
+        },
+        {
+            "text": "Al modified",
+            "confidence": 0.987420483998256,
+            "bounding_box": {
+                "x_min": 66.0,
+                "y_min": 778.0,
+                "x_max": 214.0,
+                "y_max": 808.0
+            }
+        },
+        {
+            "text": "Search image",
+            "confidence": 0.9734051603431366,
+            "bounding_box": {
+                "x_min": 394.0,
+                "y_min": 776.0,
+                "x_max": 568.0,
+                "y_max": 808.0
+            }
+        },
+        {
+            "text": "It{UE",
+            "confidence": 0.17302508763791363,
+            "bounding_box": {
+                "x_min": 194.00162891025855,
+                "y_min": 346.0815813559439,
+                "x_max": 290.99837108974145,
+                "y_max": 393.9184186440561
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

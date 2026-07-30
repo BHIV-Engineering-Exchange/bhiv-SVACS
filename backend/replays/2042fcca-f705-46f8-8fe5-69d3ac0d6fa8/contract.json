@@ -1,0 +1,17 @@
+{
+    "replay_id": "2042fcca-f705-46f8-8fe5-69d3ac0d6fa8",
+    "detections": [
+        {
+            "label": "Ship",
+            "confidence": 0.6981511116027832,
+            "bounding_box": {
+                "x_min": 209.83609008789062,
+                "y_min": 161.2941436767578,
+                "x_max": 310.0657653808594,
+                "y_max": 256.68792724609375
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

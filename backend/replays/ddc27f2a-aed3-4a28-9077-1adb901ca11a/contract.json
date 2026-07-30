@@ -1,0 +1,99 @@
+{
+    "replay_id": "ddc27f2a-aed3-4a28-9077-1adb901ca11a",
+    "detections": [
+        {
+            "label": "Fishing Vessel (Medium Confidence)",
+            "confidence": 0.7926000000000001,
+            "bounding_box": {
+                "x_min": 109.2196044921875,
+                "y_min": 227.7611541748047,
+                "x_max": 326.6133728027344,
+                "y_max": 335.4946594238281
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 79.26
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 12.96
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 5.61
+                }
+            ]
+        },
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9856,
+            "bounding_box": {
+                "x_min": 360.8405456542969,
+                "y_min": 248.31105041503906,
+                "x_max": 531.8012084960938,
+                "y_max": 309.6878356933594
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 98.56
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.68
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.32
+                }
+            ]
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.5920119285583496,
+            "bounding_box": {
+                "x_min": 770.3856201171875,
+                "y_min": 210.34136962890625,
+                "x_max": 974.2078247070312,
+                "y_max": 259.7596435546875
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.49955490231513977,
+            "bounding_box": {
+                "x_min": 737.1400756835938,
+                "y_min": 232.46922302246094,
+                "x_max": 806.8784790039062,
+                "y_max": 295.26861572265625
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.40322721004486084,
+            "bounding_box": {
+                "x_min": 884.7844848632812,
+                "y_min": 208.04270935058594,
+                "x_max": 897.2203979492188,
+                "y_max": 236.7837371826172
+            },
+            "top_predictions": []
+        },
+        {
+            "label": "Unknown",
+            "confidence": 0.3896583318710327,
+            "bounding_box": {
+                "x_min": 474.32537841796875,
+                "y_min": 223.43124389648438,
+                "x_max": 631.9745483398438,
+                "y_max": 255.67727661132812
+            },
+            "top_predictions": []
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,142 @@
+{
+    "replay_id": "a7b330f6-cd13-4dac-a441-844cc03a1a9b",
+    "detections": [
+        {
+            "label": "Container Ship",
+            "confidence": 1.0,
+            "bounding_box": {
+                "x_min": 279.9331359863281,
+                "y_min": 87.63401794433594,
+                "x_max": 716.9391479492188,
+                "y_max": 267.2048034667969
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 100.0
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 0.0
+                },
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 0.0
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "S",
+            "confidence": 0.007141238445334486,
+            "bounding_box": {
+                "x_min": 641.0,
+                "y_min": 0.0,
+                "x_max": 685.0,
+                "y_max": 35.0
+            }
+        },
+        {
+            "text": "6",
+            "confidence": 0.3458439622222933,
+            "bounding_box": {
+                "x_min": 7.0,
+                "y_min": 289.0,
+                "x_max": 19.0,
+                "y_max": 317.0
+            }
+        },
+        {
+            "text": "1",
+            "confidence": 0.7499235787023828,
+            "bounding_box": {
+                "x_min": 7.0,
+                "y_min": 349.0,
+                "x_max": 21.0,
+                "y_max": 381.0
+            }
+        },
+        {
+            "text": "3",
+            "confidence": 0.8697323494652807,
+            "bounding_box": {
+                "x_min": 7.0,
+                "y_min": 379.0,
+                "x_max": 21.0,
+                "y_max": 407.0
+            }
+        },
+        {
+            "text": "2",
+            "confidence": 0.03434611107645957,
+            "bounding_box": {
+                "x_min": -3.613110017417159,
+                "y_min": -19.726310477940242,
+                "x_max": 83.61311001741716,
+                "y_max": 69.72631047794025
+            }
+        },
+        {
+            "text": "3",
+            "confidence": 0.06441758898774541,
+            "bounding_box": {
+                "x_min": 387.4855019617098,
+                "y_min": -19.592866888191107,
+                "x_max": 486.5144980382902,
+                "y_max": 81.59286688819111
+            }
+        },
+        {
+            "text": "2",
+            "confidence": 0.0845884949552067,
+            "bounding_box": {
+                "x_min": 1020.2343056288723,
+                "y_min": -20.856464119080734,
+                "x_max": 1094.7656943711277,
+                "y_max": 55.856464119080734
+            }
+        },
+        {
+            "text": "3",
+            "confidence": 0.0701204353525533,
+            "bounding_box": {
+                "x_min": 774.5458227176862,
+                "y_min": -14.550288232709077,
+                "x_max": 883.4541772823138,
+                "y_max": 95.55028823270908
+            }
+        },
+        {
+            "text": "  ~ock",
+            "confidence": 0.06157185688177066,
+            "bounding_box": {
+                "x_min": 80.51578249875584,
+                "y_min": 56.631870497206904,
+                "x_max": 209.48421750124416,
+                "y_max": 191.3681295027931
+            }
+        },
+        {
+            "text": "to",
+            "confidence": 0.15976842033873903,
+            "bounding_box": {
+                "x_min": 832.551366475519,
+                "y_min": 76.88352405619682,
+                "x_max": 994.448633524481,
+                "y_max": 246.11647594380318
+            }
+        },
+        {
+            "text": "6",
+            "confidence": 0.021722909591326278,
+            "bounding_box": {
+                "x_min": 1013.5157824987558,
+                "y_min": 128.6242769516938,
+                "x_max": 1142.484217501244,
+                "y_max": 264.3757230483062
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,37 @@
+{
+    "replay_id": "dfd0803f-f110-4cdf-af41-7d4d42554b4f",
+    "detections": [
+        {
+            "label": "Naval Vessel",
+            "confidence": 0.8794889450073242,
+            "bounding_box": {
+                "x_min": 862.6100463867188,
+                "y_min": 2251.98583984375,
+                "x_max": 2071.281982421875,
+                "y_max": 2761.38720703125
+            }
+        },
+        {
+            "label": "Fishing Vessel",
+            "confidence": 0.6369915008544922,
+            "bounding_box": {
+                "x_min": 2381.0,
+                "y_min": 2452.0126953125,
+                "x_max": 2592.308837890625,
+                "y_max": 2793.861328125
+            }
+        },
+        {
+            "label": "Fishing Vessel",
+            "confidence": 0.5019513368606567,
+            "bounding_box": {
+                "x_min": 6.982626914978027,
+                "y_min": 2501.35986328125,
+                "x_max": 178.11709594726562,
+                "y_max": 2655.008544921875
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

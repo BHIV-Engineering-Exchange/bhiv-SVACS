@@ -1,0 +1,17 @@
+{
+    "replay_id": "303f124d-d377-42ef-a6c5-bb032be3e662",
+    "detections": [
+        {
+            "label": "person",
+            "confidence": 0.9196138381958008,
+            "bounding_box": {
+                "x_min": 69.7772216796875,
+                "y_min": 1.22100830078125,
+                "x_max": 638.8088989257812,
+                "y_max": 478.82208251953125
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,48 @@
+{
+    "replay_id": "964d6348-38a9-4d08-8837-27e2580eaf66",
+    "detections": [
+        {
+            "label": "Cruise",
+            "confidence": 0.7479280233383179,
+            "bounding_box": {
+                "x_min": 425.93560791015625,
+                "y_min": 2291.5126953125,
+                "x_max": 2137.757080078125,
+                "y_max": 2991.981689453125
+            }
+        },
+        {
+            "label": "Tugboat",
+            "confidence": 0.407301127910614,
+            "bounding_box": {
+                "x_min": 2208.173828125,
+                "y_min": 2274.124755859375,
+                "x_max": 2600.0,
+                "y_max": 2969.343994140625
+            }
+        },
+        {
+            "label": "airplane",
+            "confidence": 0.35833069682121277,
+            "bounding_box": {
+                "x_min": 10.654108047485352,
+                "y_min": 2182.42529296875,
+                "x_max": 531.921142578125,
+                "y_max": 3148.731201171875
+            }
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "SC=",
+            "confidence": 0.15544770099663247,
+            "bounding_box": {
+                "x_min": 605.0,
+                "y_min": 2704.0,
+                "x_max": 734.0,
+                "y_max": 2768.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

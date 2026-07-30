@@ -1,0 +1,5 @@
+{
+    "timestamp": "2026-07-17T10:21:56.571595",
+    "model_version": "1.0.0",
+    "yolo_model": "vessel_front_model.pt"
+}

@@ -1,0 +1,12 @@
+{
+  "vessel_name": "Vessel_004",
+  "vessel_class": "Destroyer",
+  "confidence_score": 92,
+  "mmsi": "368080490",
+  "source": "Jane's Fighting Ships",
+  "replay_status": "VERIFIED",
+  "ttg_status": "ACTIVE",
+  "runtime_status": "OPERATIONAL",
+  "threat_level": "LOW",
+  "evidence": "AIS + Jane's Registry + Sensor Fusion"
+}

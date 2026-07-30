@@ -1,0 +1,117 @@
+=================================================================
+  SVACS — DAY 4: SCENARIO VALIDATION
+  Scenarios dir : C:\svacs-demo\services\data_layer\scenarios
+  Run at        : 2026-04-29T11:23:22Z
+=================================================================
+
+─────────────────────────────────────────────────────────────────
+  [SCENARIO 1] Normal Cargo Ship
+  [CHECK 1] trace_id              : PASS (fc5a605a...)
+  [CHECK 2] signal.vessel_type    : PASS (cargo)
+  [CHECK 3] confidence label      : PASS (high)
+  [CHECK 4] anomaly_flag          : PASS (labels=False, signal=False)
+  [CHECK 5] rule_classify         : PASS (predicted=cargo, conf=0.956, freq=59.0 Hz)
+  [CHECK 6] confidence_range      : PASS [0.8, 1.0]
+  [CHECK 7] pipeline_hints        : PASS (tag=vessel_detected_high_conf, detection=strong)
+
+  trace_id     : fc5a605a...
+  vessel_type  : cargo
+  confidence   : high
+  anomaly_flag : False
+  predicted    : cargo (conf=0.956)
+  RESULT       : PASS
+
+─────────────────────────────────────────────────────────────────
+  [SCENARIO 2] Speedboat -- Clear Classification
+  [CHECK 1] trace_id              : PASS (0d465847...)
+  [CHECK 2] signal.vessel_type    : PASS (speedboat)
+  [CHECK 3] confidence label      : PASS (medium_high)
+  [CHECK 4] anomaly_flag          : PASS (labels=False, signal=False)
+  [CHECK 5] rule_classify         : PASS (predicted=speedboat, conf=0.867, freq=707.0 Hz)
+  [CHECK 6] confidence_range      : PASS [0.65, 0.85]
+  [CHECK 7] pipeline_hints        : PASS (tag=vessel_detected_medium_conf, detection=strong)
+
+  trace_id     : 0d465847...
+  vessel_type  : speedboat
+  confidence   : medium_high
+  anomaly_flag : False
+  predicted    : speedboat (conf=0.867)
+  RESULT       : PASS
+
+─────────────────────────────────────────────────────────────────
+  [SCENARIO 3] Submarine / Stealth Object
+  [CHECK 1] trace_id              : PASS (a10f6c3d...)
+  [CHECK 2] signal.vessel_type    : PASS (submarine)
+  [CHECK 3] confidence label      : PASS (medium)
+  [CHECK 4] anomaly_flag          : PASS (labels=False, signal=False)
+  [CHECK 5] rule_classify         : PASS (predicted=submarine, conf=0.805, freq=30.0 Hz)
+  [CHECK 6] confidence_range      : PASS [0.45, 0.7]
+  [CHECK 7] pipeline_hints        : PASS (tag=stealth_object_detected, detection=weak)
+
+  trace_id     : a10f6c3d...
+  vessel_type  : submarine
+  confidence   : medium
+  anomaly_flag : False
+  predicted    : submarine (conf=0.805)
+  RESULT       : PASS
+
+─────────────────────────────────────────────────────────────────
+  [SCENARIO 4] Low Confidence Signal
+  [CHECK 1] trace_id              : PASS (ac65c0ea...)
+  [CHECK 2] signal.vessel_type    : PASS (unknown)
+  [CHECK 3] confidence label      : PASS (low)
+  [CHECK 4] anomaly_flag          : PASS (labels=False, signal=False)
+  [CHECK 5] rule_classify         : PASS (predicted=anomaly, conf=0.000, freq=418.0 Hz)
+  [CHECK 6] confidence_range      : PASS [0.1, 0.4]
+  [CHECK 7] pipeline_hints        : PASS (tag=low_confidence_detection, detection=uncertain)
+
+  trace_id     : ac65c0ea...
+  vessel_type  : unknown
+  confidence   : low
+  anomaly_flag : False
+  predicted    : anomaly (conf=0.000)
+  RESULT       : PASS
+
+─────────────────────────────────────────────────────────────────
+  [SCENARIO 5] Anomaly -- Unknown Pattern
+  [CHECK 1] trace_id              : PASS (b047ec8c...)
+  [CHECK 2] signal.vessel_type    : PASS (anomaly)
+  [CHECK 3] confidence label      : PASS (unknown)
+  [CHECK 4] anomaly_flag          : PASS (labels=True, signal=True)
+  [CHECK 5] rule_classify         : PASS (predicted=anomaly, conf=0.000, freq=331.0 Hz)
+  [CHECK 6] confidence_range      : PASS [0.0, 0.3]
+  [CHECK 7] pipeline_hints        : PASS (tag=anomaly_alert_triggered, detection=triggered)
+
+  trace_id     : b047ec8c...
+  vessel_type  : anomaly
+  confidence   : unknown
+  anomaly_flag : True
+  predicted    : anomaly (conf=0.000)
+  RESULT       : PASS
+
+=================================================================
+  SCENARIO VALIDATION SUMMARY
+=================================================================
+  ID   SCENARIO                            CONFIDENCE     ANOMALY  RESULT
+  ──────────────────────────────────────────────────────────────
+  1    Normal Cargo Ship                   high           False    PASS
+  2    Speedboat -- Clear Classification   medium_high    False    PASS
+  3    Submarine / Stealth Object          medium         False    PASS
+  4    Low Confidence Signal               low            False    PASS
+  5    Anomaly -- Unknown Pattern          unknown        True     PASS
+
+  Total: 5/5 scenarios passed all validation checks
+
+  Key checks:
+    cargo     → high confidence     : PASS
+    speedboat → medium_high conf    : PASS
+    submarine → medium confidence   : PASS
+    low_conf  → low confidence      : PASS
+    anomaly   → flagged (True)      : PASS
+
+  ALL SCENARIOS VALIDATED
+  Expected behaviors confirmed. Pipeline input layer is correct.
+
+  Log  : C:\svacs-demo\services\data_layer\scenario_validation_log.txt
+  JSON : C:\svacs-demo\services\data_layer\scenario_validation_results.json
+=================================================================

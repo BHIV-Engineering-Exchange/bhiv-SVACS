@@ -1,0 +1,28 @@
+{
+    "replay_id": "40cff2ed-b822-4845-ae41-afc265cea440",
+    "detections": [
+        {
+            "label": "airplane",
+            "confidence": 0.7087194919586182,
+            "bounding_box": {
+                "x_min": 268.2860412597656,
+                "y_min": 241.73178100585938,
+                "x_max": 597.2601928710938,
+                "y_max": 540.0703125
+            }
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "",
+            "confidence": 0.0,
+            "bounding_box": {
+                "x_min": 501.0,
+                "y_min": 353.0,
+                "x_max": 531.0,
+                "y_max": 367.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

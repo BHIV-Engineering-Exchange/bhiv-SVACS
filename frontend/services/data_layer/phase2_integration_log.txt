@@ -1,0 +1,105 @@
+=================================================================
+  SVACS — PHASE 2 SELF-SIMULATED INTEGRATION TEST
+  Run at: 2026-04-28T16:10:25Z
+  Simulating: Acoustic Node consuming signal chunks
+=================================================================
+
+─────────────────────────────────────────────────────────────────
+  Vessel Type : CARGO
+  trace_id     : 7b2a77e4...
+  samples      : 4000 floats (OK)
+  sample_rate  : 4000
+  snr_db       : 18.76 dB
+  freq_hz      : 194.46 (OK)
+  anomaly_flag : False (expected: False) OK
+  ── Rule Classifier Output ──
+     predicted  : cargo
+     confidence : 0.942
+     dom_freq   : 194.0 Hz
+     anomaly    : False
+
+  [PASS] All checks passed — chunk is parsable and classifiable
+
+─────────────────────────────────────────────────────────────────
+  Vessel Type : SPEEDBOAT
+  trace_id     : f1e51583...
+  samples      : 4000 floats (OK)
+  sample_rate  : 4000
+  snr_db       : 20.68 dB
+  freq_hz      : 812.13 (OK)
+  anomaly_flag : False (expected: False) OK
+  ── Rule Classifier Output ──
+     predicted  : speedboat
+     confidence : 0.84
+     dom_freq   : 812.0 Hz
+     anomaly    : False
+
+  [PASS] All checks passed — chunk is parsable and classifiable
+
+─────────────────────────────────────────────────────────────────
+  Vessel Type : SUBMARINE
+  trace_id     : 69e53b05...
+  samples      : 4000 floats (OK)
+  sample_rate  : 4000
+  snr_db       : 4.25 dB
+  freq_hz      : 36.47 (OK)
+  anomaly_flag : False (expected: False) OK
+  ── Rule Classifier Output ──
+     predicted  : submarine
+     confidence : 0.82
+     dom_freq   : 36.0 Hz
+     anomaly    : False
+
+  [PASS] All checks passed — chunk is parsable and classifiable
+
+─────────────────────────────────────────────────────────────────
+  Vessel Type : LOW_CONFIDENCE
+  trace_id     : b557d746...
+  samples      : 4000 floats (OK)
+  sample_rate  : 4000
+  snr_db       : 15.8 dB
+  freq_hz      : 298.07 (OK)
+  anomaly_flag : False (expected: False) OK
+  ── Rule Classifier Output ──
+     predicted  : anomaly
+     confidence : 0.0
+     dom_freq   : 298.0 Hz
+     anomaly    : True
+
+  [PASS] All checks passed — chunk is parsable and classifiable
+
+─────────────────────────────────────────────────────────────────
+  Vessel Type : ANOMALY
+  trace_id     : 2c669bf5...
+  samples      : 4000 floats (OK)
+  sample_rate  : 4000
+  snr_db       : 19.88 dB
+  freq_hz      : mixed (OK)
+  anomaly_flag : True (expected: True) OK
+  ── Rule Classifier Output ──
+     predicted  : anomaly
+     confidence : 0.0
+     dom_freq   : 220.0 Hz
+     anomaly    : True
+
+  [PASS] All checks passed — chunk is parsable and classifiable
+
+=================================================================
+  SUMMARY
+=================================================================
+  VESSEL TYPE          STATUS   PREDICTED          CONF     ANOMALY
+  ────────────────────────────────────────────────────────────
+  cargo                PASS     cargo              0.942    False
+  speedboat            PASS     speedboat          0.84     False
+  submarine            PASS     submarine          0.82     False
+  low_confidence       PASS     anomaly            0.0      False
+  anomaly              PASS     anomaly            0.0      True
+
+  Result : 5/5 vessel types passed all checks
+
+   SIGNAL LAYER IS READY FOR ACOUSTIC NODE CONSUMPTION
+     No schema or parsing issues found.
+     Downstream team can integrate without signal-side changes.
+
+  Log saved to: C:\svacs-demo\services\data_layer\phase2_integration_log.txt
+=================================================================

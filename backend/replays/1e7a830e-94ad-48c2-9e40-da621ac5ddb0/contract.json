@@ -1,0 +1,507 @@
+{
+    "replay_id": "1e7a830e-94ad-48c2-9e40-da621ac5ddb0",
+    "detections": [],
+    "ocr_results": [
+        {
+            "text": "Python",
+            "confidence": 0.9981581084034881,
+            "bounding_box": {
+                "x_min": 278.0,
+                "y_min": 16.0,
+                "x_max": 344.0,
+                "y_max": 40.0
+            }
+        },
+        {
+            "text": "DSE",
+            "confidence": 0.18076818574164458,
+            "bounding_box": {
+                "x_min": 541.0,
+                "y_min": 19.0,
+                "x_max": 575.0,
+                "y_max": 35.0
+            }
+        },
+        {
+            "text": "HOCs",
+            "confidence": 0.07045025378465652,
+            "bounding_box": {
+                "x_min": 783.0,
+                "y_min": 21.0,
+                "x_max": 823.0,
+                "y_max": 37.0
+            }
+        },
+        {
+            "text": "PyPI",
+            "confidence": 0.4557105004787445,
+            "bounding_box": {
+                "x_min": 1027.0,
+                "y_min": 19.0,
+                "x_max": 1067.0,
+                "y_max": 37.0
+            }
+        },
+        {
+            "text": "Job",
+            "confidence": 0.18458373441637188,
+            "bounding_box": {
+                "x_min": 1273.0,
+                "y_min": 21.0,
+                "x_max": 1313.0,
+                "y_max": 37.0
+            }
+        },
+        {
+            "text": "Python",
+            "confidence": 0.9999676850021785,
+            "bounding_box": {
+                "x_min": 74.0,
+                "y_min": 30.0,
+                "x_max": 146.0,
+                "y_max": 56.0
+            }
+        },
+        {
+            "text": "PSF",
+            "confidence": 0.9990972015051358,
+            "bounding_box": {
+                "x_min": 320.0,
+                "y_min": 30.0,
+                "x_max": 362.0,
+                "y_max": 54.0
+            }
+        },
+        {
+            "text": "Docs",
+            "confidence": 0.9999072551727295,
+            "bounding_box": {
+                "x_min": 548.0,
+                "y_min": 30.0,
+                "x_max": 600.0,
+                "y_max": 54.0
+            }
+        },
+        {
+            "text": "PyPI",
+            "confidence": 0.9885053634643555,
+            "bounding_box": {
+                "x_min": 782.0,
+                "y_min": 30.0,
+                "x_max": 830.0,
+                "y_max": 56.0
+            }
+        },
+        {
+            "text": "Jobs",
+            "confidence": 0.9999860525131226,
+            "bounding_box": {
+                "x_min": 1014.0,
+                "y_min": 30.0,
+                "x_max": 1062.0,
+                "y_max": 54.0
+            }
+        },
+        {
+            "text": "Community",
+            "confidence": 0.9999893903450887,
+            "bounding_box": {
+                "x_min": 1211.0,
+                "y_min": 26.0,
+                "x_max": 1326.0,
+                "y_max": 56.0
+            }
+        },
+        {
+            "text": "||",
+            "confidence": 0.018997612131287877,
+            "bounding_box": {
+                "x_min": 1034.0,
+                "y_min": 130.0,
+                "x_max": 1080.0,
+                "y_max": 138.0
+            }
+        },
+        {
+            "text": "python\"",
+            "confidence": 0.9965367027784778,
+            "bounding_box": {
+                "x_min": 102.0,
+                "y_min": 83.0,
+                "x_max": 354.0,
+                "y_max": 203.0
+            }
+        },
+        {
+            "text": "Donate",
+            "confidence": 0.999997177313762,
+            "bounding_box": {
+                "x_min": 678.0,
+                "y_min": 146.0,
+                "x_max": 750.0,
+                "y_max": 170.0
+            }
+        },
+        {
+            "text": "Search;",
+            "confidence": 0.8445756540887461,
+            "bounding_box": {
+                "x_min": 854.0,
+                "y_min": 142.0,
+                "x_max": 922.0,
+                "y_max": 166.0
+            }
+        },
+        {
+            "text": "GO",
+            "confidence": 0.6491452481447242,
+            "bounding_box": {
+                "x_min": 1180.0,
+                "y_min": 140.0,
+                "x_max": 1214.0,
+                "y_max": 164.0
+            }
+        },
+        {
+            "text": "Socialize",
+            "confidence": 0.9999824364208861,
+            "bounding_box": {
+                "x_min": 1256.0,
+                "y_min": 146.0,
+                "x_max": 1344.0,
+                "y_max": 170.0
+            }
+        },
+        {
+            "text": "About",
+            "confidence": 0.2261364205742556,
+            "bounding_box": {
+                "x_min": 421.0,
+                "y_min": 217.0,
+                "x_max": 481.0,
+                "y_max": 235.0
+            }
+        },
+        {
+            "text": "Downloads",
+            "confidence": 0.6500528552681527,
+            "bounding_box": {
+                "x_min": 529.0,
+                "y_min": 212.0,
+                "x_max": 642.0,
+                "y_max": 238.0
+            }
+        },
+        {
+            "text": "Documnentation",
+            "confidence": 0.5378928401744568,
+            "bounding_box": {
+                "x_min": 693.0,
+                "y_min": 217.0,
+                "x_max": 843.0,
+                "y_max": 235.0
+            }
+        },
+        {
+            "text": "Sonn",
+            "confidence": 0.1347508579492569,
+            "bounding_box": {
+                "x_min": 897.0,
+                "y_min": 217.0,
+                "x_max": 959.0,
+                "y_max": 235.0
+            }
+        },
+        {
+            "text": "Suecess Stores",
+            "confidence": 0.2051411395671201,
+            "bounding_box": {
+                "x_min": 1063.0,
+                "y_min": 217.0,
+                "x_max": 1209.0,
+                "y_max": 235.0
+            }
+        },
+        {
+            "text": "Neis",
+            "confidence": 0.2358594387769699,
+            "bounding_box": {
+                "x_min": 1259.0,
+                "y_min": 217.0,
+                "x_max": 1315.0,
+                "y_max": 235.0
+            }
+        },
+        {
+            "text": "About",
+            "confidence": 0.9998989731292101,
+            "bounding_box": {
+                "x_min": 130.0,
+                "y_min": 250.0,
+                "x_max": 200.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "Downloads",
+            "confidence": 0.9999019678249433,
+            "bounding_box": {
+                "x_min": 254.0,
+                "y_min": 250.0,
+                "x_max": 376.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "Documentation",
+            "confidence": 0.9995475941382403,
+            "bounding_box": {
+                "x_min": 432.0,
+                "y_min": 250.0,
+                "x_max": 602.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "Community",
+            "confidence": 0.9890091087989485,
+            "bounding_box": {
+                "x_min": 655.0,
+                "y_min": 246.0,
+                "x_max": 784.0,
+                "y_max": 278.0
+            }
+        },
+        {
+            "text": "Success Stories",
+            "confidence": 0.9930440504655295,
+            "bounding_box": {
+                "x_min": 840.0,
+                "y_min": 250.0,
+                "x_max": 1006.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "News",
+            "confidence": 0.9999381303787231,
+            "bounding_box": {
+                "x_min": 1062.0,
+                "y_min": 250.0,
+                "x_max": 1124.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "Events",
+            "confidence": 0.9999936246199173,
+            "bounding_box": {
+                "x_min": 1180.0,
+                "y_min": 250.0,
+                "x_max": 1256.0,
+                "y_max": 274.0
+            }
+        },
+        {
+            "text": "Python 3.11.9",
+            "confidence": 0.6651288838723899,
+            "bounding_box": {
+                "x_min": 211.0,
+                "y_min": 347.0,
+                "x_max": 489.0,
+                "y_max": 407.0
+            }
+        },
+        {
+            "text": "Python 3.11.9",
+            "confidence": 0.9995210120987844,
+            "bounding_box": {
+                "x_min": 22.0,
+                "y_min": 406.0,
+                "x_max": 326.0,
+                "y_max": 460.0
+            }
+        },
+        {
+            "text": "Note: Python 3.11.9 has been superseded by Pachonll",
+            "confidence": 0.1271888877006117,
+            "bounding_box": {
+                "x_min": 234.0,
+                "y_min": 452.0,
+                "x_max": 700.0,
+                "y_max": 478.0
+            }
+        },
+        {
+            "text": "Note: Python 3.11.9has been superseded by Python 3.11.15.",
+            "confidence": 0.6217900720316268,
+            "bounding_box": {
+                "x_min": 46.0,
+                "y_min": 516.0,
+                "x_max": 560.0,
+                "y_max": 546.0
+            }
+        },
+        {
+            "text": "Release date: April 2, 2024",
+            "confidence": 0.9725199985965038,
+            "bounding_box": {
+                "x_min": 22.0,
+                "y_min": 594.0,
+                "x_max": 286.0,
+                "y_max": 622.0
+            }
+        },
+        {
+            "text": ";",
+            "confidence": 0.8639496102478574,
+            "bounding_box": {
+                "x_min": 753.0,
+                "y_min": 837.0,
+                "x_max": 767.0,
+                "y_max": 869.0
+            }
+        },
+        {
+            "text": "ython",
+            "confidence": 0.4632877886241029,
+            "bounding_box": {
+                "x_min": 326.96045745888,
+                "y_min": 64.87144747873913,
+                "x_max": 503.03954254112,
+                "y_max": 167.12855252126087
+            }
+        },
+        {
+            "text": "!'",
+            "confidence": 0.0825745511712639,
+            "bounding_box": {
+                "x_min": 486.00992561958003,
+                "y_min": 597.7357465450564,
+                "x_max": 538.99007438042,
+                "y_max": 631.2642534549436
+            }
+        },
+        {
+            "text": "3..",
+            "confidence": 0.001141909291631002,
+            "bounding_box": {
+                "x_min": 581.0375023589578,
+                "y_min": 602.0569593224337,
+                "x_max": 640.9624976410422,
+                "y_max": 646.9430406775663
+            }
+        },
+        {
+            "text": ".",
+            "confidence": 0.07117669875416155,
+            "bounding_box": {
+                "x_min": 451.5857864376269,
+                "y_min": 610.2024631087122,
+                "x_max": 499.4142135623731,
+                "y_max": 654.7975368912878
+            }
+        },
+        {
+            "text": "0",
+            "confidence": 0.3291325230499389,
+            "bounding_box": {
+                "x_min": 621.8858279709377,
+                "y_min": 624.045128926061,
+                "x_max": 681.1141720290623,
+                "y_max": 686.954871073939
+            }
+        },
+        {
+            "text": "\"`",
+            "confidence": 0.011461728132512677,
+            "bounding_box": {
+                "x_min": 411.6546544120074,
+                "y_min": 630.4133813478195,
+                "x_max": 466.3453455879926,
+                "y_max": 676.5866186521805
+            }
+        },
+        {
+            "text": "notes",
+            "confidence": 0.8780255792058576,
+            "bounding_box": {
+                "x_min": 321.00992561958003,
+                "y_min": 672.7128001282499,
+                "x_max": 381.99007438041997,
+                "y_max": 712.2871998717501
+            }
+        },
+        {
+            "text": "Faster _",
+            "confidence": 0.37808919254692214,
+            "bounding_box": {
+                "x_min": 426.0301515190165,
+                "y_min": 677.0605878236588,
+                "x_max": 494.9698484809835,
+                "y_max": 731.9394121763412
+            }
+        },
+        {
+            "text": "'with",
+            "confidence": 0.35952568716521305,
+            "bounding_box": {
+                "x_min": 286.6546544120074,
+                "y_min": 690.1950379244327,
+                "x_max": 336.3453455879926,
+                "y_max": 737.8049620755673
+            }
+        },
+        {
+            "text": "~Python",
+            "confidence": 0.76972632636431,
+            "bounding_box": {
+                "x_min": 469.19422192578236,
+                "y_min": 703.0465132093975,
+                "x_max": 544.8057780742176,
+                "y_max": 775.9534867906025
+            }
+        },
+        {
+            "text": "Exceptions",
+            "confidence": 0.9994996088415069,
+            "bounding_box": {
+                "x_min": 207.15028142267582,
+                "y_min": 703.5973108516166,
+                "x_max": 301.84971857732415,
+                "y_max": 799.4026891483834
+            }
+        },
+        {
+            "text": "2R",
+            "confidence": 0.0022062473607953187,
+            "bounding_box": {
+                "x_min": 659.0253966160335,
+                "y_min": 778.1219034952862,
+                "x_max": 748.9746033839665,
+                "y_max": 817.8780965047138
+            }
+        },
+        {
+            "text": "1",
+            "confidence": 0.26906558529589475,
+            "bounding_box": {
+                "x_min": 203.17778449378636,
+                "y_min": 804.0322601798002,
+                "x_max": 227.82221550621364,
+                "y_max": 862.9677398201998
+            }
+        },
+        {
+            "text": "2",
+            "confidence": 0.12572861436842686,
+            "bounding_box": {
+                "x_min": 735.1723941113976,
+                "y_min": 805.0729641807401,
+                "x_max": 765.8276058886024,
+                "y_max": 844.9270358192599
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

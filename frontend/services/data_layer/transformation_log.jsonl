@@ -1,0 +1,5 @@
+{"trace_id": "0202e4c3-f593-4238-b3a5-6c81c2d47536", "input_vessel": "cargo", "predicted_vessel": "cargo", "confidence": 0.6389, "dominant_freq": 167.0, "anomaly": false}
+{"trace_id": "b9d08b68-f0c9-4b4a-81ba-9f57743e3b9b", "input_vessel": "speedboat", "predicted_vessel": "speedboat", "confidence": 0.3628, "dominant_freq": 1120.0, "anomaly": false}
+{"trace_id": "b4b4529e-530c-44dd-8fc7-ff0ba5f66731", "input_vessel": "submarine", "predicted_vessel": "unknown", "confidence": 0.5466, "dominant_freq": 24.0, "anomaly": true}
+{"trace_id": "72d30539-0967-4816-b28a-bbe042a97053", "input_vessel": "low_confidence", "predicted_vessel": "cargo", "confidence": 0.0301, "dominant_freq": 130.0, "anomaly": true}
+{"trace_id": "88cdb63f-b60c-4231-be3f-48da07ba9189", "input_vessel": "anomaly", "predicted_vessel": "speedboat", "confidence": 0.1674, "dominant_freq": 508.0, "anomaly": false}

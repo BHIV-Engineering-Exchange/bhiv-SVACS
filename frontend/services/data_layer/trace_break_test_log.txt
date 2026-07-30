@@ -1,0 +1,29 @@
+=================================================================
+  SVACS — PHASE 3: TRACE BREAK TEST
+  Run at: 2026-04-28T15:31:31Z
+=================================================================
+
+  Test  : Missing trace_id
+  HTTP  : 422 (expected 422)
+  Detail: reason=Missing required field: 'trace_id'
+  Result: PASS
+
+  Test  : Empty string trace_id
+  HTTP  : 422 (expected 422)
+  Detail: reason=trace_id must be a non-empty string
+  Result: PASS
+
+  Test  : Non-UUID trace_id
+  HTTP  : 422 (expected 422)
+  Detail: reason=trace_id is not a valid UUID4: 'not-a-uuid'
+  Result: PASS
+
+  Test  : Known fixed trace_id (preserved?)
+  HTTP  : 200 (expected 200)
+  Detail: returned=00000000-0000-4000-8... | preserved=YES 
+  Result: PASS
+
+=================================================================
+  [PASS] All break tests passed.
+  Server correctly rejects bad trace_ids and preserves valid ones.
+=================================================================

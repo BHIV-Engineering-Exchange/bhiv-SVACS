@@ -1,0 +1,41 @@
+============================================================
+SVACS — test_failures.py
+Target : http://localhost:8000/ingest/signal
+Time   : 2026-04-27T12:44:13Z
+============================================================
+
+ TEST 1: Bad JSON body 
+[PASS] Bad JSON → HTTP 400 (urllib raised: HTTP Error 400: Bad Request)
+
+ TEST 2: Missing required fields 
+[PASS] Missing fields
+       expected HTTP 422 | got HTTP 422
+       response: {'status': 'error', 'reason': "Missing required field: 'timestamp'"}
+
+ TEST 3: Empty samples array 
+[PASS] Empty samples
+       expected HTTP 422 | got HTTP 422
+       response: {'status': 'error', 'reason': 'samples array is empty'}
+
+ TEST 4: Invalid vessel_type 
+[PASS] Invalid vessel_type
+       expected HTTP 422 | got HTTP 422
+       response: {'status': 'error', 'reason': "vessel_type 'UNKNOWN_VESSEL' is not valid. Must be one of: {'speedboat', 'anomaly', 'cargo', 'submarine', 'low_confidence'}"}
+
+ TEST 5: Non-UUID trace_id 
+[PASS] Non-UUID trace_id
+       expected HTTP 422 | got HTTP 422
+       response: {'status': 'error', 'reason': "trace_id is not a valid UUID4: 'not-a-uuid'"}
+
+ TEST 6: Valid chunk (cargo) → expect 200 
+[PASS] Valid cargo chunk
+       expected HTTP 200 | got HTTP 200
+       response: {'status': 'ok', 'trace_id': '7eb547c8-2fae-4ff2-a032-925254d783a8'}
+
+ TEST 7: Health endpoint 
+[INFO] Health: {'status': 'alive', 'chunks_received': 2, 'chunks_rejected': 8, 'log_file': 'C:\\svacs-demo\\api\\ingestion_server\\ingestion_log.jsonl'}
+[PASS] Health check → alive | received=2 rejected=8
+
+============================================================
+FAILURE HANDLING TEST COMPLETE
+============================================================

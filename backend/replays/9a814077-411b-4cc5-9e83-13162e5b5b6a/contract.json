@@ -1,0 +1,31 @@
+{
+    "replay_id": "9a814077-411b-4cc5-9e83-13162e5b5b6a",
+    "detections": [
+        {
+            "label": "Oil Tanker (Medium Confidence)",
+            "confidence": 0.8104,
+            "bounding_box": {
+                "x_min": 200.64157104492188,
+                "y_min": 11.44101619720459,
+                "x_max": 839.5560913085938,
+                "y_max": 877.0360717773438
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 81.04
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 13.01
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 2.3
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

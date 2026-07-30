@@ -1,0 +1,47 @@
+{
+    "replay_id": "601f8c38-17d4-43bc-9665-52a740a6d108",
+    "detections": [
+        {
+            "label": "Barge",
+            "confidence": 0.8302881717681885,
+            "bounding_box": {
+                "x_min": 200.64157104492188,
+                "y_min": 11.44101619720459,
+                "x_max": 839.5560913085938,
+                "y_max": 877.0360717773438
+            }
+        },
+        {
+            "label": "bird (Low Confidence)",
+            "confidence": 0.06543131917715073,
+            "bounding_box": {
+                "x_min": 639.2722778320312,
+                "y_min": 149.72157287597656,
+                "x_max": 697.2128295898438,
+                "y_max": 224.88575744628906
+            }
+        },
+        {
+            "label": "Sailing Vessel",
+            "confidence": 0.05866706743836403,
+            "bounding_box": {
+                "x_min": 222.44444274902344,
+                "y_min": 379.13507080078125,
+                "x_max": 267.9124450683594,
+                "y_max": 427.8314208984375
+            }
+        },
+        {
+            "label": "bird (Low Confidence)",
+            "confidence": 0.05089465156197548,
+            "bounding_box": {
+                "x_min": 645.4403686523438,
+                "y_min": 149.49868774414062,
+                "x_max": 697.1881103515625,
+                "y_max": 185.3000030517578
+            }
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

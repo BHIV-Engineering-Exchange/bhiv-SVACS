@@ -1,0 +1,31 @@
+{
+    "replay_id": "17a519f5-55c2-42ff-ac81-2297c292c052",
+    "detections": [
+        {
+            "label": "Passenger Ferry",
+            "confidence": 0.9895,
+            "bounding_box": {
+                "x_min": 2.34954833984375,
+                "y_min": 16.961395263671875,
+                "x_max": 639.0023803710938,
+                "y_max": 479.1639099121094
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 98.95
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 0.71
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.21
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

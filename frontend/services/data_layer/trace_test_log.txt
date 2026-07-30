@@ -1,0 +1,99 @@
+=================================================================
+  SVACS — PHASE 3: TRACE ID CONTINUITY TEST
+  Endpoint : http://localhost:8000/ingest/signal
+  Run at   : 2026-04-28T16:12:26Z
+=================================================================
+
+  [CARGO #1]
+    HTTP status  : 200
+    sent         : 17a201b6-b73f-4530-82de-48ab5b350d7b
+    returned     : 17a201b6-b73f-4530-82de-48ab5b350d7b
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [CARGO #2]
+    HTTP status  : 200
+    sent         : 363697a5-a1ee-492e-997c-2bd5fac6ccbb
+    returned     : 363697a5-a1ee-492e-997c-2bd5fac6ccbb
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [SPEEDBOAT #1]
+    HTTP status  : 200
+    sent         : 5029fddd-8dab-4b2c-8535-22b0481760a8
+    returned     : 5029fddd-8dab-4b2c-8535-22b0481760a8
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [SPEEDBOAT #2]
+    HTTP status  : 200
+    sent         : d1cb51ba-88a2-4920-a065-00e08fbbdd76
+    returned     : d1cb51ba-88a2-4920-a065-00e08fbbdd76
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [SUBMARINE #1]
+    HTTP status  : 200
+    sent         : 03638d89-6a73-4ff5-9c4e-212038440512
+    returned     : 03638d89-6a73-4ff5-9c4e-212038440512
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [SUBMARINE #2]
+    HTTP status  : 200
+    sent         : 3bd50d72-d5c6-4da4-ad37-6a0d438e0080
+    returned     : 3bd50d72-d5c6-4da4-ad37-6a0d438e0080
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [LOW_CONFIDENCE #1]
+    HTTP status  : 200
+    sent         : 83035a28-d6d9-4899-b2b0-2438cd27be0c
+    returned     : 83035a28-d6d9-4899-b2b0-2438cd27be0c
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [LOW_CONFIDENCE #2]
+    HTTP status  : 200
+    sent         : 384f782a-5530-4b33-8281-495a1a05e979
+    returned     : 384f782a-5530-4b33-8281-495a1a05e979
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [ANOMALY #1]
+    HTTP status  : 200
+    sent         : 60dab16f-c024-4d0f-b58b-1ba5a1a1a987
+    returned     : 60dab16f-c024-4d0f-b58b-1ba5a1a1a987
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+  [ANOMALY #2]
+    HTTP status  : 200
+    sent         : f02f68bb-4090-4473-aa03-0e9838a13d39
+    returned     : f02f68bb-4090-4473-aa03-0e9838a13d39
+    match        : YES 
+    UUID4 valid  : YES
+    result       : PASS
+
+=================================================================
+  TRACE CONTINUITY SUMMARY
+=================================================================
+  Total chunks sent     : 10
+  trace_id matches      : 10/10
+  All trace_ids unique  : YES  (10 unique out of 10)
+
+  [PASS] TRACE CONTINUITY CONFIRMED
+  Every trace_id was preserved exactly through ingestion.
+  No drops. No overwrites. No duplicates.
+
+  Log saved: C:\svacs-demo\services\data_layer\trace_test_log.txt
+=================================================================

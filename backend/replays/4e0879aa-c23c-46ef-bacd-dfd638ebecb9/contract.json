@@ -1,0 +1,72 @@
+{
+    "replay_id": "4e0879aa-c23c-46ef-bacd-dfd638ebecb9",
+    "detections": [
+        {
+            "label": "Oil Tanker",
+            "confidence": 1.0,
+            "bounding_box": {
+                "x_min": 17.889484405517578,
+                "y_min": 172.4541778564453,
+                "x_max": 693.1510009765625,
+                "y_max": 367.2973937988281
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Oil Tanker",
+                    "confidence": 100.0
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 0.0
+                },
+                {
+                    "class_name": "Fishing Vessel",
+                    "confidence": 0.0
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "04z64e3",
+            "confidence": 0.0022976784180688886,
+            "bounding_box": {
+                "x_min": 195.0,
+                "y_min": 395.0,
+                "x_max": 413.0,
+                "y_max": 439.0
+            }
+        },
+        {
+            "text": "RN",
+            "confidence": 0.2540301452723397,
+            "bounding_box": {
+                "x_min": 426.0,
+                "y_min": 394.0,
+                "x_max": 492.0,
+                "y_max": 426.0
+            }
+        },
+        {
+            "text": "03t*H",
+            "confidence": 0.0018162287893189377,
+            "bounding_box": {
+                "x_min": 306.0,
+                "y_min": 422.0,
+                "x_max": 474.0,
+                "y_max": 450.0
+            }
+        },
+        {
+            "text": "W~CSeko",
+            "confidence": 0.015727079085847206,
+            "bounding_box": {
+                "x_min": 310.0,
+                "y_min": 450.0,
+                "x_max": 562.0,
+                "y_max": 478.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}

@@ -1,0 +1,52 @@
+{
+    "replay_id": "d9de8685-0992-4bed-84cc-3b65fdd6b34c",
+    "detections": [
+        {
+            "label": "Container Ship",
+            "confidence": 0.955,
+            "bounding_box": {
+                "x_min": 228.71681213378906,
+                "y_min": 157.93023681640625,
+                "x_max": 517.7848510742188,
+                "y_max": 319.4217224121094
+            },
+            "top_predictions": [
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 95.5
+                },
+                {
+                    "class_name": "Cruise Ship",
+                    "confidence": 4.27
+                },
+                {
+                    "class_name": "Passenger Ferry",
+                    "confidence": 0.17
+                }
+            ]
+        }
+    ],
+    "ocr_results": [
+        {
+            "text": "643",
+            "confidence": 0.993865966796875,
+            "bounding_box": {
+                "x_min": 631.0,
+                "y_min": 379.0,
+                "x_max": 657.0,
+                "y_max": 393.0
+            }
+        },
+        {
+            "text": "360",
+            "confidence": 0.999906191412006,
+            "bounding_box": {
+                "x_min": 665.0,
+                "y_min": 379.0,
+                "x_max": 687.0,
+                "y_max": 393.0
+            }
+        }
+    ],
+    "explainable_image_base64": null
+}
