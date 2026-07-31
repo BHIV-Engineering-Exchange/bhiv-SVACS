@@ -20,6 +20,3 @@ backend/runs/
 
 # Dataset images — never commit, re-download with scrape_wikimedia.py
 backend/dataset/
-
-# Trained classifier weights (commit manually when ready)
-backend/efficientnet_vessel_best.pth
