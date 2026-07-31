@@ -11,6 +11,8 @@ services:
     envVars:
       - key: CLASSIFIER_MODEL_PATH
         value: efficientnet_vessel_best.pth
+      - key: CLASSIFIER_MIN_CONFIDENCE
+        value: 0.60
       - key: OCR_ENABLED
         value: false
 

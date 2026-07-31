@@ -449,6 +449,14 @@ class InferenceService:
                             final_label = global_label
                             final_conf = global_conf
                             top_preds = global_preds
+                            if final_conf < settings.CLASSIFIER_MIN_CONFIDENCE:
+                                logger.info(
+                                    "Classifier confidence %.3f is below the acceptance threshold %.3f; returning Unknown.",
+                                    final_conf,
+                                    settings.CLASSIFIER_MIN_CONFIDENCE,
+                                )
+                                final_label = "Unknown"
+                                final_conf = 0.0
                             logger.info(
                                 "Whole-image classification => %s (%.2f)",
                                 final_label,
@@ -534,7 +542,7 @@ class InferenceService:
                         final_label, final_conf, top_preds = self.classify_full_image(image)
 
                 # --- Whole-image fallback if label is still Unknown ---
-                if (final_label == "Unknown" or not top_preds) and self.classifier_model is not None:
+                if not top_preds and self.classifier_model is not None:
                     try:
                         global_label, global_conf, global_preds = self.classify_full_image(image)
                         logger.info(

@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     CLASSIFIER_MODEL_PATH: str = os.getenv(
         "CLASSIFIER_MODEL_PATH", DEFAULT_CLASSIFIER_MODEL_PATH
     )
+    CLASSIFIER_MIN_CONFIDENCE: float = float(
+        os.getenv("CLASSIFIER_MIN_CONFIDENCE", "0.60")
+    )
 
     # OCR config
     OCR_LANGUAGES: list[str] = ["en"]
