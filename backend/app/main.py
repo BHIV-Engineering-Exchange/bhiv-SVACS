@@ -3,7 +3,8 @@
 import logging
 import traceback
 import uuid
-from datetime import datetime, timezone  # BUG FIX (Bug 1): moved to top — was imported on line 209
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from typing import List
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Query
@@ -29,6 +30,39 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 vessel_store: list = []
 
+
+# ---------------------------------------------------------------------------
+# Startup lifespan — pre-warm ALL models before serving any requests.
+# Without this, the first POST /intelligence/image triggers YOLO + EfficientNet
+# + EasyOCR to load simultaneously, which exceeds Render's 30s request timeout
+# and causes a 502.  Loading them at startup (which has no timeout) fixes this.
+# ---------------------------------------------------------------------------
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Pre-warm every ML model so the first request is fast."""
+    logger.info("=== SVACS startup: pre-warming ML models ===")
+
+    # 1. YOLO + EfficientNet
+    try:
+        from app.services.inference_service import inference_service
+        inference_service.initialize()
+        logger.info("Startup: YOLO + EfficientNet loaded OK")
+    except Exception as exc:
+        logger.error("Startup: YOLO/EfficientNet failed to load — %s", exc)
+
+    # 2. EasyOCR
+    try:
+        from app.services.ocr_service import ocr_service
+        ocr_service.initialize()
+        logger.info("Startup: EasyOCR loaded OK")
+    except Exception as exc:
+        logger.error("Startup: EasyOCR failed to load — %s", exc)
+
+    logger.info("=== SVACS startup complete — ready to serve requests ===")
+    yield
+    # (shutdown hooks can go here if needed)
+
+
 # ---------------------------------------------------------------------------
 # App factory
 # ---------------------------------------------------------------------------
@@ -36,6 +70,7 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description="Vision Intelligence Runtime for Samachar and SVACS integration.",
+    lifespan=lifespan,
 )
 
 # Allow the local Vite app and deployed Render frontend to call this API.
