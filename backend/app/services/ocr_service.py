@@ -125,8 +125,19 @@ class OCRService:
             logger.warning("OCR reader is None — skipping OCR stage.")
             return []
 
+        # Scale image down for OCR if larger than 1000px on longest side to save RAM and CPU time
+        h, w = image.shape[:2]
+        max_dim = 1000
+        scale = 1.0
+        ocr_input = image
+        if max(h, w) > max_dim:
+            scale = max_dim / float(max(h, w))
+            new_w, new_h = int(w * scale), int(h * scale)
+            import cv2
+            ocr_input = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
         try:
-            results = self.reader.readtext(image)
+            results = self.reader.readtext(ocr_input)
         except Exception as exc:
             logger.exception("EasyOCR readtext() raised an exception: %s", exc)
             return []
@@ -134,9 +145,9 @@ class OCRService:
         ocr_results = []
         for (bbox, text, prob) in results:
             try:
-                # bbox is a list of 4 points: [top-left, top-right, bottom-right, bottom-left]
-                x_coords = [p[0] for p in bbox]
-                y_coords = [p[1] for p in bbox]
+                # Rescale bounding box coordinates back to original image dimensions
+                x_coords = [p[0] / scale for p in bbox]
+                y_coords = [p[1] / scale for p in bbox]
                 bounding_box = BoundingBox(
                     x_min=float(min(x_coords)),
                     y_min=float(min(y_coords)),

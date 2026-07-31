@@ -22,6 +22,19 @@ import threading
 from typing import Optional
 
 import numpy as np
+import torch
+
+# PyTorch 2.6+ changed the default of weights_only in torch.load from False to True.
+# Ultralytics YOLO checkpoints contain custom class unpickling (ultralytics.nn.tasks.DetectionModel).
+# We patch torch.load globally so all model unpickling (YOLO & EfficientNet) succeeds cleanly.
+_orig_torch_load = torch.load
+
+def _patched_torch_load(*args, **kwargs):
+    if "weights_only" not in kwargs:
+        kwargs["weights_only"] = False
+    return _orig_torch_load(*args, **kwargs)
+
+torch.load = _patched_torch_load
 
 from app.core.config import settings
 from app.models.schemas import DetectionResult, BoundingBox, TopPrediction
