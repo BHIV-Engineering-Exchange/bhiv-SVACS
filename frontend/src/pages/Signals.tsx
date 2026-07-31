@@ -118,23 +118,54 @@ export default function Signals() {
     setUploadError(null);
     setUploading(true);
 
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      const res = await fetch(`${SVACS_API}/intelligence/image`, {
-        method: "POST",
-        body: form,
-      });
-      if (!res.ok) throw new Error(`Error: ${res.status}`);
-      const result = await res.json();
-      console.log("DEBUG FRONTEND API RESPONSE (from /intelligence/image):", result);
-      console.log("DEBUG FRONTEND vessel_class parsed:", result.vessel_class);
-      setUploadResult(result);
-    } catch (err: any) {
-      setUploadError(err.message || "Upload failed");
-    } finally {
-      setUploading(false);
+    const endpoints = [
+      SVACS_API ? `${SVACS_API}/intelligence/image` : null,
+      "http://localhost:8000/intelligence/image",
+      "http://127.0.0.1:8000/intelligence/image",
+      "https://bhiv-svacs.onrender.com/intelligence/image",
+    ].filter(Boolean) as string[];
+
+    const uniqueEndpoints = Array.from(new Set(endpoints));
+
+    let lastError: Error | null = null;
+    let successResult = null;
+
+    for (const endpoint of uniqueEndpoints) {
+      try {
+        console.log(`[SVACS Frontend] Uploading image to: ${endpoint}`);
+        const form = new FormData();
+        form.append("file", file);
+        const res = await fetch(endpoint, {
+          method: "POST",
+          body: form,
+        });
+
+        if (res.ok) {
+          successResult = await res.json();
+          console.log(`[SVACS Frontend] Upload succeeded via ${endpoint}:`, successResult);
+          break;
+        } else {
+          lastError = new Error(`Server returned HTTP ${res.status}`);
+        }
+      } catch (err: any) {
+        console.warn(`[SVACS Frontend] Connection to ${endpoint} failed:`, err);
+        lastError = err;
+      }
     }
+
+    if (successResult) {
+      setUploadResult(successResult);
+      if (successResult.explainable_image_base64) {
+        setPreviewUrl(`data:image/jpeg;base64,${successResult.explainable_image_base64}`);
+      }
+    } else {
+      setUploadError(
+        lastError?.message === "Failed to fetch"
+          ? "Failed to fetch: Cannot connect to backend server. Please ensure the backend is running at http://localhost:8000."
+          : lastError?.message || "Upload failed"
+      );
+    }
+    setUploading(false);
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -227,7 +258,7 @@ export default function Signals() {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              accept="image/*,image/jpeg,image/png,image/webp,image/gif"
               className="hidden"
               onChange={handleImageUpload}
             />
@@ -338,7 +369,7 @@ export default function Signals() {
                         <div className="flex flex-col mt-2">
                           {uploadResult.top_predictions.map((p: any, idx: number) => (
                             <span key={idx} className="text-fg-1 text-xs">
-                              {idx + 1}. {p.class} ({p.confidence.toFixed(1)}%)
+                              {idx + 1}. {p.class} ({(p.confidence * 100).toFixed(1)}%)
                             </span>
                           ))}
                         </div>
