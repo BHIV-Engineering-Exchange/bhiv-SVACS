@@ -1,7 +1,7 @@
 services:
   # ─── Backend (FastAPI) ───────────────────────────────────────────────────
   - type: web
-    name: svacs-backend
+    name: bhiv-svacs
     env: python
     rootDir: backend
     # OCR model weights are now committed to git (ocr_models/).
@@ -18,7 +18,7 @@ services:
 
   # ─── Frontend (Vite + React static site) ─────────────────────────────────
   - type: web
-    name: svacs-frontend
+    name: bhiv-svacs-1
     env: static
     rootDir: frontend
     buildCommand: npm install && npm run build

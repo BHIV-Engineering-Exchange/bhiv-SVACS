@@ -141,10 +141,14 @@ export default function Signals() {
         console.log(`[SVACS Frontend] Uploading image to: ${endpoint}`);
         const form = new FormData();
         form.append("file", file);
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 150000);
         const res = await fetch(endpoint, {
           method: "POST",
           body: form,
+          signal: controller.signal,
         });
+        window.clearTimeout(timeoutId);
 
         const payload = await res.json().catch(() => null);
 
@@ -163,7 +167,9 @@ export default function Signals() {
         }
       } catch (err: any) {
         console.warn(`[SVACS Frontend] Connection to ${endpoint} failed:`, err);
-        lastError = err;
+        lastError = err?.name === "AbortError"
+          ? new Error("Backend image analysis timed out after 150 seconds. Check the Render backend deployment logs.")
+          : err;
       }
     }
 
