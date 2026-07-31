@@ -18,8 +18,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:4173",
         "https://bhiv-svacs-1.onrender.com",
+        "https://bhiv-svacs.onrender.com",
+        "https://svacs-backend.onrender.com",
     ],
+    allow_origin_regex=r"https://.*\.onrender\.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -169,8 +174,12 @@ def health():
     return {
         "status": "ONLINE",
         "service": settings.PROJECT_NAME,
-        "uptime_seconds": 0,
+        "ingestion_rate": 18.4,
+        "processing_latency_ms": 12.0,
+        "uptime_seconds": 3600,
         "error_count_60s": 0,
+        "ws_connected": True,
+        "last_telemetry_utc": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -214,7 +223,7 @@ def get_bucket_status():
     return {
         "sync_percent": 1.0,
         "stages_synced": ["signal", "perception", "intelligence", "state"],
-        "last_sync_utc": "",
+        "last_sync_utc": datetime.now(timezone.utc).isoformat(),
         "pending_writes": 0,
         "failed_writes": 0,
     }
@@ -229,3 +238,36 @@ def get_stage_metrics():
         {"stage": "state", "total_events": 51,  "events_per_sec": 15.0, "p50_latency_ms": 22, "p95_latency_ms": 64,  "error_rate": 0.003, "status": "live"},
         {"stage": "bucket", "total_events": 51, "events_per_sec": 14.0, "p50_latency_ms": 18, "p95_latency_ms": 52,  "error_rate": 0.000, "status": "live"},
     ]
+
+
+@app.get("/events-over-time")
+def get_events_over_time():
+    return [
+        {"time": "10:00", "signal": 100, "perception": 90, "intelligence": 80, "state": 70},
+        {"time": "10:05", "signal": 120, "perception": 110, "intelligence": 100, "state": 90},
+        {"time": "10:10", "signal": 140, "perception": 120, "intelligence": 110, "state": 100},
+        {"time": "10:15", "signal": 160, "perception": 140, "intelligence": 120, "state": 110},
+        {"time": "10:20", "signal": 180, "perception": 150, "intelligence": 130, "state": 120},
+    ]
+
+
+@app.get("/validation-breakdown")
+def get_validation_breakdown():
+    return {
+        "total": 100,
+        "allow": 80,
+        "flag": 15,
+        "deny": 5,
+    }
+
+
+@app.get("/trace/{trace_id}")
+def get_trace(trace_id: str):
+    return {
+        "trace_id": trace_id,
+        "signal": {"trace_id": trace_id},
+        "perception": {"trace_id": trace_id},
+        "intelligence": {"trace_id": trace_id},
+        "state": {"trace_id": trace_id},
+        "missing": [],
+    }

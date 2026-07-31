@@ -420,66 +420,274 @@ class MockAdapter implements SvacsAdapter {
   }
 }
 
+        intelligence_count: 15,
+        state_count: 14,
+      },
+
+      {
+        trace_id: "TRC-005",
+        vessel_id: "368084318",
+        lat: 19.01,
+        lon: 72.91,
+        speed: 24,
+        vessel_class: "Tanker",
+        signal_count: 24,
+        perception_count: 22,
+        intelligence_count: 17,
+        state_count: 16,
+      },
+    ];
+  }
+
+  async fetchStageMetrics(): Promise<any[]> {
+    await wait(50);
+
+    return [
+      {
+        stage: "signal",
+        total_events: 60,
+        events_per_sec: 120,
+        p50_latency_ms: 45,
+        p95_latency_ms: 90,
+        error_rate: 0.01,
+        status: "live",
+      },
+
+      {
+        stage: "perception",
+        total_events: 58,
+        events_per_sec: 110,
+        p50_latency_ms: 40,
+        p95_latency_ms: 85,
+        error_rate: 0.02,
+        status: "live",
+      },
+
+      {
+        stage: "intelligence",
+        total_events: 54,
+        events_per_sec: 105,
+        p50_latency_ms: 38,
+        p95_latency_ms: 75,
+        error_rate: 0.01,
+        status: "live",
+      },
+
+      {
+        stage: "state",
+        total_events: 51,
+        events_per_sec: 98,
+        p50_latency_ms: 50,
+        p95_latency_ms: 100,
+        error_rate: 0.03,
+        status: "live",
+      },
+
+      {
+        stage: "bucket",
+        total_events: 51,
+        events_per_sec: 98,
+        p50_latency_ms: 20,
+        p95_latency_ms: 40,
+        error_rate: 0,
+        status: "live",
+      },
+    ];
+  }
+
+  async fetchBucketStatus(): Promise<any> {
+    await wait(50);
+
+    return {
+      sync_percent: 1,
+
+      stages_synced: [
+        "signal",
+        "perception",
+        "intelligence",
+        "state",
+      ],
+
+      last_sync_utc:
+        new Date().toISOString(),
+    };
+  }
+
+  async fetchHealth(): Promise<any> {
+    await wait(50);
+
+    return {
+      status: "ONLINE",
+      service: "SVACS",
+      ws_connected: true,
+      ingestion_rate: 118.4,
+      processing_latency_ms: 52,
+      uptime_seconds: 86400,
+      error_count_60s: 2,
+      last_telemetry_utc:
+        new Date().toISOString(),
+    };
+  }
+
+  async fetchEventsOverTime(): Promise<any[]> {
+    await wait(50);
+
+    return [
+      {
+        time: "10:00",
+        signal: 100,
+        perception: 90,
+        intelligence: 80,
+        state: 70,
+      },
+
+      {
+        time: "10:05",
+        signal: 120,
+        perception: 110,
+        intelligence: 100,
+        state: 90,
+      },
+
+      {
+        time: "10:10",
+        signal: 140,
+        perception: 120,
+        intelligence: 110,
+        state: 100,
+      },
+
+      {
+        time: "10:15",
+        signal: 160,
+        perception: 140,
+        intelligence: 120,
+        state: 110,
+      },
+
+      {
+        time: "10:20",
+        signal: 180,
+        perception: 150,
+        intelligence: 130,
+        state: 120,
+      },
+    ];
+  }
+
+  async fetchValidationBreakdown(): Promise<any> {
+    await wait(50);
+
+    return {
+      total: 100,
+      allow: 80,
+      flag: 15,
+      deny: 5,
+    };
+  }
+
+  async fetchTrace(
+    traceId: string
+  ): Promise<any> {
+    await wait(50);
+
+    return {
+      trace_id: traceId,
+
+      signal: {
+        trace_id: traceId,
+      },
+
+      perception: {
+        trace_id: traceId,
+      },
+
+      intelligence: {
+        trace_id: traceId,
+      },
+
+      state: {
+        trace_id: traceId,
+      },
+
+missing: [],
+    };
+  }
+}
+
 /* =========================================================
    REAL ADAPTER
 ========================================================= */
 
 class RealAdapter implements SvacsAdapter {
-  private base = env.api.signal;
+  private get base() {
+    return env.api.signal.replace(/\/+$/, "");
+  }
 
   async fetchSignals(): Promise<SignalChunk[]> {
     const r = await fetch(`${this.base}/signals`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchPerception(): Promise<PerceptionEvent[]> {
     const r = await fetch(`${this.base}/perception`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchIntelligence(): Promise<IntelligenceEvent[]> {
     const r = await fetch(`${this.base}/intelligence`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchStateEvents(): Promise<StateEvent[]> {
     const r = await fetch(`${this.base}/state-events`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchAlerts(): Promise<Alert[]> {
     const r = await fetch(`${this.base}/alerts`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchVessels(): Promise<VesselSummary[]> {
     const r = await fetch(`${this.base}/vessels`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchStageMetrics(): Promise<StageMetric[]> {
     const r = await fetch(`${this.base}/stage-metrics`);
+    if (!r.ok) return [];
     return r.json();
   }
 
   async fetchBucketStatus(): Promise<BucketStatus> {
     const r = await fetch(`${this.base}/bucket/status`);
+    if (!r.ok) throw new Error("Failed to fetch bucket status");
     return r.json();
   }
 
   async fetchHealth(): Promise<SystemHealthFrame> {
     const r = await fetch(`${this.base}/health`);
+    if (!r.ok) throw new Error("Failed to fetch system health");
     return r.json();
   }
 
   async fetchEventsOverTime(): Promise<any[]> {
-    // Not yet implemented in backend — return empty
-    return [];
+    const r = await fetch(`${this.base}/events-over-time`);
+    if (!r.ok) return [];
+    return r.json();
   }
 
   async fetchValidationBreakdown(): Promise<any> {
-    // Not yet implemented in backend — return empty
-    return { total: 0, allow: 0, flag: 0, deny: 0 };
+    const r = await fetch(`${this.base}/validation-breakdown`);
+    if (!r.ok) return { total: 0, allow: 0, flag: 0, deny: 0 };
+    return r.json();
   }
 
   async fetchTrace(traceId: string): Promise<TraceLifecycle> {

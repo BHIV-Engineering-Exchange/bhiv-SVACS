@@ -6,7 +6,10 @@ import { fmtUtc } from "@/lib/time";
 import { truncId } from "@/lib/format";
 import { Search, Upload, Loader2, Camera, Image as ImageIcon, File as FileIcon, Scan, X } from "lucide-react";
 
-const SVACS_API = import.meta.env.VITE_API_URL;
+import { env } from "@/env";
+
+const rawApi = env.api.intelligence || env.api.signal;
+const SVACS_API = rawApi.replace(/\/+$/, "");
 const SAMACHAR_URL = "https://showing-wizard-buffer.ngrok-free.dev/api/v1/intelligence/image";
 
 export default function Signals() {
