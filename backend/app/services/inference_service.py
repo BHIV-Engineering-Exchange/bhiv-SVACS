@@ -211,26 +211,9 @@ class InferenceService:
                     logger.exception("EfficientNetV2-S classifier failed to load: %s", exc)
                     raise RuntimeError(f"EfficientNet load failed: {exc}") from exc
 
-            # ── Stage 0: Base COCO OOD filter (optional) ─────────────────
-            if self.ood_model is None:
-                ood_path = os.path.abspath(
-                    os.path.join(
-                        os.path.dirname(__file__), "..", "..", "yolov8n.pt"
-                    )
-                )
-                if os.path.exists(ood_path):
-                    try:
-                        from ultralytics import YOLO as _YOLO
-                        self.ood_model = _YOLO(ood_path, task="detect", verbose=False)
-                        logger.info("OOD filter model loaded from: %s", ood_path)
-                    except Exception as exc:
-                        logger.warning("OOD model failed to load (non-fatal): %s", exc)
-                        self.ood_model = None
-                else:
-                    logger.info(
-                        "OOD model not found at '%s' — OOD filter disabled.", ood_path
-                    )
-                    self.ood_model = None
+            # The optional COCO OOD model is intentionally not loaded. It is
+            # not used by detect() and would duplicate YOLO memory on Render.
+            self.ood_model = None
 
             # Mark fully initialised
             self._initialized = True
