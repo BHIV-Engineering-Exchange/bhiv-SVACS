@@ -1,0 +1,79 @@
+{
+    "replay_id": "e239f8e1-4cc4-41ba-a270-188cc24bc446",
+    "detections": [
+        {
+            "label": "LPG Carrier",
+            "confidence": 0.1281,
+            "bounding_box": {
+                "x_min": 937.3136596679688,
+                "y_min": 956.1494140625,
+                "x_max": 1012.9046630859375,
+                "y_max": 1082.4351806640625
+            },
+            "top_predictions": [
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 12.81
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 12.73
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 12.65
+                }
+            ]
+        },
+        {
+            "label": "LPG Carrier",
+            "confidence": 0.1281,
+            "bounding_box": {
+                "x_min": 591.0173950195312,
+                "y_min": 1001.6129760742188,
+                "x_max": 865.6439208984375,
+                "y_max": 1127.89306640625
+            },
+            "top_predictions": [
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 12.81
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 12.73
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 12.65
+                }
+            ]
+        },
+        {
+            "label": "LPG Carrier",
+            "confidence": 0.1281,
+            "bounding_box": {
+                "x_min": 165.089599609375,
+                "y_min": 940.1729736328125,
+                "x_max": 413.4373779296875,
+                "y_max": 1149.3651123046875
+            },
+            "top_predictions": [
+                {
+                    "class_name": "LPG Carrier",
+                    "confidence": 12.81
+                },
+                {
+                    "class_name": "Container Ship",
+                    "confidence": 12.73
+                },
+                {
+                    "class_name": "Fishing Trawler",
+                    "confidence": 12.65
+                }
+            ]
+        }
+    ],
+    "ocr_results": [],
+    "explainable_image_base64": null
+}

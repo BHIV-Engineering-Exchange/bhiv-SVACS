@@ -39,7 +39,7 @@ TRACE_LOG    = os.path.join(ROOT, "..", "api", "ingestion_server", "trace_log.js
 BUCKET_LOG   = os.path.join(DATA_LAYER, "bucket_verification_log.jsonl")
 OBS_LOG      = os.path.join(DATA_LAYER, "execution_observability.jsonl")
 
-SAMACHAR_URL = "https://showing-wizard-buffer.ngrok-free.dev/api/v1/intelligence/image"
+SAMACHAR_URL = "https://c6e7-2409-40c2-1048-4c4f-d40e-1f12-f5dd-755a.ngrok-free.app/api/v1/intelligence/image"
 
 
 def load_jsonl(path: str, limit: int = 100) -> list:
