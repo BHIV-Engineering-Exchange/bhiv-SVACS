@@ -10,7 +10,6 @@ import { env } from "@/env";
 
 const rawApi = env.api.intelligence || env.api.signal;
 const SVACS_API = rawApi.replace(/\/+$/, "");
-const SAMACHAR_URL = "https://showing-wizard-buffer.ngrok-free.dev/api/v1/intelligence/image";
 
 export default function Signals() {
   const [q, setQ] = useState("");
@@ -113,17 +112,24 @@ export default function Signals() {
   }, []);
 
   async function processFile(file: globalThis.File) {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Please select a valid image file.");
+      return;
+    }
+
+    if (file.size === 0) {
+      setUploadError("The selected image is empty.");
+      return;
+    }
+
     setPreviewUrl(URL.createObjectURL(file));
     setUploadResult(null);
     setUploadError(null);
     setUploading(true);
 
-    const endpoints = [
-      SVACS_API ? `${SVACS_API}/intelligence/image` : null,
-      "http://localhost:8000/intelligence/image",
-      "http://127.0.0.1:8000/intelligence/image",
-      "https://bhiv-svacs.onrender.com/intelligence/image",
-    ].filter(Boolean) as string[];
+    const endpoints = SVACS_API
+      ? [`${SVACS_API}/intelligence/image`]
+      : ["http://localhost:8000/intelligence/image"];
 
     const uniqueEndpoints = Array.from(new Set(endpoints));
 
@@ -140,12 +146,20 @@ export default function Signals() {
           body: form,
         });
 
+        const payload = await res.json().catch(() => null);
+
         if (res.ok) {
-          successResult = await res.json();
+          successResult = payload;
           console.log(`[SVACS Frontend] Upload succeeded via ${endpoint}:`, successResult);
           break;
         } else {
-          lastError = new Error(`Server returned HTTP ${res.status}`);
+          const detail = payload?.detail;
+          const message = typeof detail === "string"
+            ? detail
+            : detail?.message || detail?.error;
+          lastError = new Error(
+            message || `Server returned HTTP ${res.status}`,
+          );
         }
       } catch (err: any) {
         console.warn(`[SVACS Frontend] Connection to ${endpoint} failed:`, err);
@@ -153,7 +167,7 @@ export default function Signals() {
       }
     }
 
-    if (successResult) {
+    if (successResult !== null) {
       setUploadResult(successResult);
       if (successResult.explainable_image_base64) {
         setPreviewUrl(`data:image/jpeg;base64,${successResult.explainable_image_base64}`);
