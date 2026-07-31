@@ -430,7 +430,10 @@ class InferenceService:
                 y_max = int(coords[3])
 
                 top_preds: list[TopPrediction] = []
-                final_label = "Unknown"
+                # The bundled YOLO checkpoint is COCO-trained, so its vessel
+                # class is the generic "boat". Preserve that detection when
+                # the optional ship-type classifier is unavailable.
+                final_label = "Boat" if self.classifier_model is None else "Unknown"
                 final_conf = confidence
 
                 if is_ood:
@@ -551,9 +554,10 @@ class InferenceService:
                     y_max=coords[3],
                 )
 
-                final_label, final_conf, top_preds = self.refine_detection_label(
-                    final_label, top_preds, bounding_box
-                )
+                if top_preds:
+                    final_label, final_conf, top_preds = self.refine_detection_label(
+                        final_label, top_preds, bounding_box
+                    )
 
                 detections.append(
                     DetectionResult(
