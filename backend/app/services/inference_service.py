@@ -441,6 +441,20 @@ class InferenceService:
                 # --- Stage 2: EfficientNet crop classification ---
                 if confidence >= CLASSIFICATION_THRESHOLD and self.classifier_model is not None:
                     try:
+                        # The classifier was trained on complete vessel images
+                        # with Resize(256) + CenterCrop(224). Use that same
+                        # distribution as the authoritative prediction.
+                        global_label, global_conf, global_preds = self.classify_full_image(image)
+                        if global_preds:
+                            final_label = global_label
+                            final_conf = global_conf
+                            top_preds = global_preds
+                            logger.info(
+                                "Whole-image classification => %s (%.2f)",
+                                final_label,
+                                final_conf,
+                            )
+
                         import cv2
 
                         h = y_max - y_min
@@ -491,10 +505,11 @@ class InferenceService:
                                 probabilities = F.softmax(outputs, dim=1)[0]
                                 top3_prob, top3_catid = torch.topk(probabilities, 3)
 
+                                crop_preds: list[TopPrediction] = []
                                 for i in range(3):
                                     prob = top3_prob[i].item()
                                     cat_name = self.classifier_classes[top3_catid[i].item()]
-                                    top_preds.append(
+                                    crop_preds.append(
                                         TopPrediction(
                                             **{
                                                 "class": cat_name,
@@ -503,24 +518,11 @@ class InferenceService:
                                         )
                                     )
 
-                                final_label = top_preds[0].class_name
-                                final_conf = top_preds[0].confidence / 100.0
+                                crop_label = crop_preds[0].class_name
+                                crop_conf = crop_preds[0].confidence / 100.0
                                 logger.debug(
-                                    "Crop classification => %s (%.2f)", final_label, final_conf
+                                    "Crop classification => %s (%.2f)", crop_label, crop_conf
                                 )
-
-                                if final_conf < 0.20:
-                                    logger.debug(
-                                        "Crop confidence low (%.2f) — falling back to whole-image classifier.",
-                                        final_conf,
-                                    )
-                                    global_label, global_conf, global_preds = self.classify_full_image(image)
-                                    logger.info(
-                                        "Whole-image fallback => %s (%.2f)", global_label, global_conf
-                                    )
-                                    final_label = global_label
-                                    final_conf = global_conf
-                                    top_preds = global_preds
                         else:
                             logger.warning("Crop is empty — skipping classification for this box.")
 
@@ -552,11 +554,6 @@ class InferenceService:
                     x_max=coords[2],
                     y_max=coords[3],
                 )
-
-                if top_preds:
-                    final_label, final_conf, top_preds = self.refine_detection_label(
-                        final_label, top_preds, bounding_box
-                    )
 
                 detections.append(
                     DetectionResult(

@@ -383,7 +383,7 @@ export default function Signals() {
                         <div className="flex flex-col mt-2">
                           {uploadResult.top_predictions.map((p: any, idx: number) => (
                             <span key={idx} className="text-fg-1 text-xs">
-                              {idx + 1}. {p.class} ({(p.confidence * 100).toFixed(1)}%)
+                              {idx + 1}. {p.class} ({Number(p.confidence).toFixed(1)}%)
                             </span>
                           ))}
                         </div>
