@@ -1,11 +1,27 @@
 services:
+  # ─── Backend (FastAPI) ───────────────────────────────────────────────────
   - type: web
     name: svacs-backend
     env: python
     rootDir: backend
-    # Build step: install deps AND pre-download EasyOCR models into ocr_models/.
-    # The build environment has no RAM cap, so the download is safe here.
-    # At runtime, ocr_service.py reads from ocr_models/ with download_enabled=False
-    # — no network calls during the 512 MB container startup.
+    # OCR model weights are now committed to git (ocr_models/).
+    # No network download needed at build time.
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --timeout-keep-alive 120 --workers 1
+
+  # ─── Frontend (Vite + React static site) ─────────────────────────────────
+  - type: web
+    name: svacs-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://bhiv-svacs.onrender.com
+      - key: VITE_USE_MOCK
+        value: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
