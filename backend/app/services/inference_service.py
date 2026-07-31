@@ -63,6 +63,7 @@ class InferenceService:
             "Oil Tanker",
             "Passenger Ferry",
         ]
+        self.classifier_classes = self.classes.copy()
 
         # Build the transform once at construction time — it is pure Python/
         # torchvision and costs negligible memory (no model weights).
@@ -166,23 +167,38 @@ class InferenceService:
                         self.classifier_model = None
                     else:
                         logger.info("Building EfficientNetV2-S classifier architecture ...")
-                        self.classifier_model = models.efficientnet_v2_s(weights=None)
-                        num_ftrs = self.classifier_model.classifier[1].in_features
-                        self.classifier_model.classifier[1] = nn.Linear(
-                            num_ftrs, len(self.classes)
-                        )
-
-                        # Apply the weights_only=False patch locally — only here
-                        # where it is needed, not as a global monkey-patch.
+                        # Apply the weights_only=False patch locally for
+                        # checkpoints created by the training script.
                         _orig_load = torch.load
 
                         def _safe_load(*args, **kwargs):
                             kwargs["weights_only"] = False
                             return _orig_load(*args, **kwargs)
 
-                        self.classifier_model.load_state_dict(
-                            _safe_load(model_path, map_location=device)
+                        checkpoint = _safe_load(model_path, map_location=device)
+                        checkpoint_state = (
+                            checkpoint.get("model_state_dict", checkpoint)
+                            if isinstance(checkpoint, dict)
+                            else checkpoint
                         )
+                        checkpoint_classes = (
+                            checkpoint.get("classes")
+                            if isinstance(checkpoint, dict)
+                            else None
+                        )
+                        if checkpoint_classes:
+                            self.classifier_classes = list(checkpoint_classes)
+                            logger.info(
+                                "Using classifier labels from checkpoint: %s",
+                                self.classifier_classes,
+                            )
+                        self.classifier_model = models.efficientnet_v2_s(weights=None)
+                        num_ftrs = self.classifier_model.classifier[1].in_features
+                        self.classifier_model.classifier[1] = nn.Linear(
+                            num_ftrs, len(self.classifier_classes)
+                        )
+
+                        self.classifier_model.load_state_dict(checkpoint_state)
                         logger.info(
                             "EfficientNetV2-S: fine-tuned weights loaded from %s", model_path
                         )
@@ -251,7 +267,7 @@ class InferenceService:
             top_predictions = []
             for idx in range(len(top3_prob)):
                 score = float(top3_prob[idx].item())
-                label = self.classes[int(top3_catid[idx].item())]
+                label = self.classifier_classes[int(top3_catid[idx].item())]
                 top_predictions.append(
                     TopPrediction(**{"class": label, "confidence": round(score * 100, 2)})
                 )
@@ -494,7 +510,7 @@ class InferenceService:
 
                                 for i in range(3):
                                     prob = top3_prob[i].item()
-                                    cat_name = self.classes[top3_catid[i].item()]
+                                    cat_name = self.classifier_classes[top3_catid[i].item()]
                                     top_preds.append(
                                         TopPrediction(
                                             **{

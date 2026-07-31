@@ -130,7 +130,13 @@ def train_classifier(data_dir="dataset/classifier", epochs=50, batch_size=32):
 
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                torch.save(model.state_dict(), 'efficientnet_vessel_best.pth')
+                torch.save(
+                    {
+                        "model_state_dict": model.state_dict(),
+                        "classes": class_names,
+                    },
+                    'efficientnet_vessel_best.pth',
+                )
                 print("Saved new best model!")
 
         print()
