@@ -74,7 +74,8 @@ class InferenceService:
             import torchvision.transforms as transforms
             self._transform = transforms.Compose(
                 [
-                    transforms.Resize((224, 224)),
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     transforms.Normalize(
                         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
@@ -154,28 +155,23 @@ class InferenceService:
             # ── Stage 2: EfficientNetV2-S classifier ─────────────────────
             if self.classifier_model is None:
                 try:
-                    logger.info("Building EfficientNetV2-S classifier architecture ...")
-
-                    # weights=None — do NOT download ImageNet pretrained weights.
-                    # This saves ~84 MB network + ~84 MB RAM on every cold start.
-                    # If efficientnet_vessel_best.pth is present, fine-tuned vessel
-                    # weights are loaded below; otherwise random init is used.
-                    self.classifier_model = models.efficientnet_v2_s(weights=None)
-                    num_ftrs = self.classifier_model.classifier[1].in_features
-                    self.classifier_model.classifier[1] = nn.Linear(
-                        num_ftrs, len(self.classes)
-                    )
-
-                    model_path = os.path.abspath(
-                        os.path.join(
-                            os.path.dirname(__file__),
-                            "..",
-                            "..",
-                            "efficientnet_vessel_best.pth",
+                    model_path = os.path.abspath(settings.CLASSIFIER_MODEL_PATH)
+                    if not os.path.exists(model_path):
+                        logger.error(
+                            "EfficientNet checkpoint not found at '%s'. "
+                            "Ship-type classification is unavailable; refusing "
+                            "to run random weights.",
+                            model_path,
                         )
-                    )
+                        self.classifier_model = None
+                    else:
+                        logger.info("Building EfficientNetV2-S classifier architecture ...")
+                        self.classifier_model = models.efficientnet_v2_s(weights=None)
+                        num_ftrs = self.classifier_model.classifier[1].in_features
+                        self.classifier_model.classifier[1] = nn.Linear(
+                            num_ftrs, len(self.classes)
+                        )
 
-                    if os.path.exists(model_path):
                         # Apply the weights_only=False patch locally — only here
                         # where it is needed, not as a global monkey-patch.
                         _orig_load = torch.load
@@ -190,17 +186,10 @@ class InferenceService:
                         logger.info(
                             "EfficientNetV2-S: fine-tuned weights loaded from %s", model_path
                         )
-                    else:
-                        logger.warning(
-                            "EfficientNetV2-S weight file not found at '%s'. "
-                            "Using random initialisation — vessel classifications "
-                            "will be unreliable until you add the .pth file.",
-                            model_path,
-                        )
 
-                    self.classifier_model = self.classifier_model.to(device)
-                    self.classifier_model.eval()
-                    logger.info("EfficientNetV2-S classifier ready (device=cpu).")
+                        self.classifier_model = self.classifier_model.to(device)
+                        self.classifier_model.eval()
+                        logger.info("EfficientNetV2-S classifier ready (device=cpu).")
 
                 except Exception as exc:
                     logger.exception("EfficientNetV2-S classifier failed to load: %s", exc)
@@ -239,6 +228,10 @@ class InferenceService:
         self, image: np.ndarray
     ) -> tuple[str, float, list[TopPrediction]]:
         """Use the EfficientNet classifier on the entire image as a fallback."""
+        if self.classifier_model is None:
+            logger.warning("Whole-image classification skipped: classifier is unavailable.")
+            return "Unknown", 0.0, []
+
         import cv2
         import torch
         import torch.nn.functional as F
@@ -444,7 +437,7 @@ class InferenceService:
                     confidence = 0.0  # Force skip classification
 
                 # --- Stage 2: EfficientNet crop classification ---
-                if confidence >= CLASSIFICATION_THRESHOLD:
+                if confidence >= CLASSIFICATION_THRESHOLD and self.classifier_model is not None:
                     try:
                         import cv2
 
@@ -537,7 +530,7 @@ class InferenceService:
                         final_label, final_conf, top_preds = self.classify_full_image(image)
 
                 # --- Whole-image fallback if label is still Unknown ---
-                if final_label == "Unknown" or not top_preds:
+                if (final_label == "Unknown" or not top_preds) and self.classifier_model is not None:
                     try:
                         global_label, global_conf, global_preds = self.classify_full_image(image)
                         logger.info(

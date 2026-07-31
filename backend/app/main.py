@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.models.schemas import VisionAnalysisRequest, VisionAnalysisResponse
+from app.services.inference_service import inference_service
 from app.services.vision_orchestrator import vision_orchestrator
 
 # ---------------------------------------------------------------------------
@@ -229,7 +230,11 @@ async def upload_image(file: UploadFile = File(...)):
             "ocr_text": ocr_text,
             "operator": ocr_text,
             "risk_level": "LOW",
-            "classification_source": "YOLOv11 + EfficientNetV2",
+            "classification_source": (
+                "YOLO + EfficientNetV2"
+                if inference_service.classifier_model is not None
+                else "YOLO boat detection; ship-type classifier unavailable"
+            ),
             "detections": [
                 {
                     "class": det.label,

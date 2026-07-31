@@ -8,6 +8,9 @@ services:
     # No network download needed at build time.
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --timeout-keep-alive 120 --workers 1
+    envVars:
+      - key: CLASSIFIER_MODEL_PATH
+        value: efficientnet_vessel_best.pth
 
   # ─── Frontend (Vite + React static site) ─────────────────────────────────
   - type: web
