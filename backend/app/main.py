@@ -47,9 +47,15 @@ vessel_store: list = []
 # ---------------------------------------------------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lightweight startup — no model loading. Models load lazily on first request."""
-    logger.info("=== SVACS startup — lazy-loading mode (Render Free 512 MB) ===")
-    logger.info("No models will be loaded until the first image request.")
+    """Load the detector and classifier before accepting image requests."""
+    logger.info("=== SVACS startup — initializing vision models ===")
+    try:
+        inference_service.initialize()
+        logger.info("Vision models initialized during startup.")
+    except Exception:
+        logger.exception(
+            "Vision model startup initialization failed; image requests will retry lazily."
+        )
     logger.info("=== SVACS startup complete — ready to serve requests ===")
     yield
     logger.info("=== SVACS shutdown ===")
