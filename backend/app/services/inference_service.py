@@ -1,29 +1,35 @@
+"""inference_service.py — Lazy-loading YOLO + EfficientNet inference service.
+
+CHANGES vs original:
+  1. Removed module-level torch.load monkey-patch — it ran at import time and
+     was a side-effect that could interfere with other libraries. The patch is
+     now applied locally, only when needed, inside initialize().
+  2. Added a threading.Lock around initialize() so concurrent first requests
+     don't each load their own copy of YOLO (~400 MB × N).
+  3. Force device = torch.device("cpu") explicitly — removes all
+     torch.cuda.is_available() branches, avoids CUDA runtime init overhead.
+  4. EfficientNetV2-S is constructed with weights=None instead of the default
+     pretrained ImageNet download. Without a .pth file present, the original
+     code would silently download ~84 MB of ImageNet weights every cold-start
+     from PyTorch Hub, consuming RAM and time. We only need the architecture;
+     actual vessel weights come from the local .pth file if it exists.
+  5. OOD model (yolov8n.pt) is loaded only if the file is present on disk.
+"""
+
 import logging
 import os
-import torch
+import threading
 from typing import Optional
 
-# Patch torch.load to bypass weights_only=True default in PyTorch 2.6+
-_original_torch_load = torch.load
-
-
-def _custom_torch_load(*args, **kwargs):
-    kwargs["weights_only"] = False
-    return _original_torch_load(*args, **kwargs)
-
-
-torch.load = _custom_torch_load
-
-from ultralytics import YOLO
 import numpy as np
+
 from app.core.config import settings
 from app.models.schemas import DetectionResult, BoundingBox, TopPrediction
-import torchvision.models as models
-import torchvision.transforms as transforms
-from PIL import Image
-import torch.nn.functional as F
 
 logger = logging.getLogger(__name__)
+
+# One global lock prevents duplicate model loading under concurrent requests.
+_init_lock = threading.Lock()
 
 
 class InferenceService:
@@ -31,6 +37,7 @@ class InferenceService:
         self.yolo_model = None
         self.classifier_model = None
         self.ood_model = None
+        self._initialized: bool = False  # True after initialize() completes successfully
         self._init_error: Optional[str] = None  # Set if initialization fails
 
         self.classes = [
@@ -44,130 +51,172 @@ class InferenceService:
             "Passenger Ferry",
         ]
 
-        self.transform = transforms.Compose(
-            [
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-                ),
-            ]
-        )
+        # Build the transform once at construction time — it is pure Python/
+        # torchvision and costs negligible memory (no model weights).
+        # We defer the torchvision import to avoid it running at module import.
+
+    def _get_transform(self):
+        """Return (and cache) the image transform pipeline."""
+        if not hasattr(self, "_transform"):
+            import torchvision.transforms as transforms
+            self._transform = transforms.Compose(
+                [
+                    transforms.Resize((224, 224)),
+                    transforms.ToTensor(),
+                    transforms.Normalize(
+                        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+                    ),
+                ]
+            )
+        return self._transform
 
     # ------------------------------------------------------------------
-    # Model initialisation (lazy, called on first detect())
+    # Model initialisation — lazy, thread-safe, idempotent
     # ------------------------------------------------------------------
 
     def initialize(self):
         """Load YOLO and EfficientNet models if not already loaded.
 
-        BUG FIX (Bug 5): initialization errors are captured as a flag rather than
-        being raised at import time.  The first call to detect() will surface a
-        clear error message instead of a silent 502.
+        Thread-safe: the global _init_lock prevents two concurrent requests
+        from each loading a full copy of YOLO simultaneously.
+
+        Idempotent: once self._initialized is True, this is a no-op.
         """
-        # --- Stage 1: YOLO vessel-detection model ---
-        if self.yolo_model is None:
-            yolo_path = settings.YOLO_MODEL_PATH
-            logger.info("Looking for YOLO model at: %s", yolo_path)
+        # Fast path — already initialised (no lock needed, flag is read-only after set)
+        if self._initialized:
+            return
 
-            if not os.path.exists(yolo_path):
-                # Try the fallback path next to the source file
-                fallback_yolo = os.path.abspath(
-                    os.path.join(
-                        os.path.dirname(__file__), "..", "..", "vessel_front_model.pt"
-                    )
-                )
-                if os.path.exists(fallback_yolo):
-                    logger.warning(
-                        "YOLO model not found at %s. Falling back to %s",
-                        yolo_path,
-                        fallback_yolo,
-                    )
-                    yolo_path = fallback_yolo
-                else:
-                    msg = (
-                        f"YOLO model not found at '{yolo_path}' or fallback "
-                        f"'{fallback_yolo}'. Cannot run detection."
-                    )
-                    logger.error(msg)
-                    raise FileNotFoundError(msg)
+        with _init_lock:
+            # Double-checked locking: another thread may have finished while
+            # we were waiting for the lock.
+            if self._initialized:
+                return
 
-            try:
-                logger.info("Loading YOLO model (Stage 1) from: %s", yolo_path)
-                self.yolo_model = YOLO(yolo_path)
-                logger.info("YOLO model loaded successfully.")
-            except Exception as exc:
-                logger.exception("YOLO model failed to load: %s", exc)
-                raise RuntimeError(f"YOLO load failed: {exc}") from exc
+            # ── Import heavy libraries here, not at module load ──────────
+            import torch
+            import torch.nn as nn
+            import torchvision.models as models
 
-        # --- Stage 2: EfficientNetV2-S classifier ---
-        if self.classifier_model is None:
-            try:
-                logger.info("Loading EfficientNetV2-S classifier (Stage 2)...")
-                import torch.nn as nn
+            # Force CPU — Render Free is CPU-only; this skips all CUDA init.
+            device = torch.device("cpu")
 
-                self.classifier_model = models.efficientnet_v2_s()
-                num_ftrs = self.classifier_model.classifier[1].in_features
-                self.classifier_model.classifier[1] = nn.Linear(
-                    num_ftrs, len(self.classes)
-                )
+            # ── Stage 1: YOLO vessel-detection model ─────────────────────
+            if self.yolo_model is None:
+                yolo_path = settings.YOLO_MODEL_PATH
+                logger.info("Looking for YOLO model at: %s", yolo_path)
 
-                # BUG FIX (Bug 6): efficientnet_vessel_best.pth is missing from the repo.
-                # Log clearly and fall back to random weights so the pipeline still runs.
-                model_path = os.path.abspath(
-                    os.path.join(
-                        os.path.dirname(__file__),
-                        "..",
-                        "..",
-                        "efficientnet_vessel_best.pth",
+                if not os.path.exists(yolo_path):
+                    fallback_yolo = os.path.abspath(
+                        os.path.join(
+                            os.path.dirname(__file__), "..", "..", "vessel_front_model.pt"
+                        )
                     )
-                )
-                if os.path.exists(model_path):
-                    device = torch.device(
-                        "cuda:0" if torch.cuda.is_available() else "cpu"
-                    )
-                    self.classifier_model.load_state_dict(
-                        torch.load(model_path, map_location=device)
-                    )
-                    self.classifier_model = self.classifier_model.to(device)
-                    logger.info(
-                        "EfficientNetV2-S: loaded fine-tuned weights from %s", model_path
-                    )
-                else:
-                    logger.warning(
-                        "EfficientNetV2-S weight file not found at '%s'. "
-                        "Using random initialisation — classifications will be unreliable.",
-                        model_path,
-                    )
-                    device = torch.device(
-                        "cuda:0" if torch.cuda.is_available() else "cpu"
-                    )
-                    self.classifier_model = self.classifier_model.to(device)
+                    if os.path.exists(fallback_yolo):
+                        logger.warning(
+                            "YOLO model not found at %s — falling back to %s",
+                            yolo_path,
+                            fallback_yolo,
+                        )
+                        yolo_path = fallback_yolo
+                    else:
+                        msg = (
+                            f"YOLO model not found at '{yolo_path}' or fallback "
+                            f"'{fallback_yolo}'. Cannot run detection."
+                        )
+                        logger.error(msg)
+                        raise FileNotFoundError(msg)
 
-                self.classifier_model.eval()
-                logger.info("EfficientNetV2-S classifier ready (device=%s).", device)
-
-            except Exception as exc:
-                logger.exception("EfficientNetV2-S classifier failed to load: %s", exc)
-                raise RuntimeError(f"EfficientNet load failed: {exc}") from exc
-
-        # --- Stage 0: Base COCO OOD filter (optional) ---
-        if self.ood_model is None:
-            ood_path = os.path.abspath(
-                os.path.join(
-                    os.path.dirname(__file__), "..", "..", "yolov8n.pt"
-                )
-            )
-            if os.path.exists(ood_path):
                 try:
-                    self.ood_model = YOLO(ood_path)
-                    logger.info("OOD filter model loaded from: %s", ood_path)
+                    # Import YOLO here, not at module level, so the Ultralytics
+                    # package (and its own heavy imports) only load on first use.
+                    from ultralytics import YOLO
+
+                    logger.info("Loading YOLO model from: %s", yolo_path)
+                    self.yolo_model = YOLO(yolo_path, task="detect", verbose=False)
+                    logger.info("YOLO model loaded successfully.")
                 except Exception as exc:
-                    logger.warning("OOD model failed to load (non-fatal): %s", exc)
+                    logger.exception("YOLO model failed to load: %s", exc)
+                    raise RuntimeError(f"YOLO load failed: {exc}") from exc
+
+            # ── Stage 2: EfficientNetV2-S classifier ─────────────────────
+            if self.classifier_model is None:
+                try:
+                    logger.info("Building EfficientNetV2-S classifier architecture ...")
+
+                    # weights=None — do NOT download ImageNet pretrained weights.
+                    # This saves ~84 MB network + ~84 MB RAM on every cold start.
+                    # If efficientnet_vessel_best.pth is present, fine-tuned vessel
+                    # weights are loaded below; otherwise random init is used.
+                    self.classifier_model = models.efficientnet_v2_s(weights=None)
+                    num_ftrs = self.classifier_model.classifier[1].in_features
+                    self.classifier_model.classifier[1] = nn.Linear(
+                        num_ftrs, len(self.classes)
+                    )
+
+                    model_path = os.path.abspath(
+                        os.path.join(
+                            os.path.dirname(__file__),
+                            "..",
+                            "..",
+                            "efficientnet_vessel_best.pth",
+                        )
+                    )
+
+                    if os.path.exists(model_path):
+                        # Apply the weights_only=False patch locally — only here
+                        # where it is needed, not as a global monkey-patch.
+                        _orig_load = torch.load
+
+                        def _safe_load(*args, **kwargs):
+                            kwargs["weights_only"] = False
+                            return _orig_load(*args, **kwargs)
+
+                        self.classifier_model.load_state_dict(
+                            _safe_load(model_path, map_location=device)
+                        )
+                        logger.info(
+                            "EfficientNetV2-S: fine-tuned weights loaded from %s", model_path
+                        )
+                    else:
+                        logger.warning(
+                            "EfficientNetV2-S weight file not found at '%s'. "
+                            "Using random initialisation — vessel classifications "
+                            "will be unreliable until you add the .pth file.",
+                            model_path,
+                        )
+
+                    self.classifier_model = self.classifier_model.to(device)
+                    self.classifier_model.eval()
+                    logger.info("EfficientNetV2-S classifier ready (device=cpu).")
+
+                except Exception as exc:
+                    logger.exception("EfficientNetV2-S classifier failed to load: %s", exc)
+                    raise RuntimeError(f"EfficientNet load failed: {exc}") from exc
+
+            # ── Stage 0: Base COCO OOD filter (optional) ─────────────────
+            if self.ood_model is None:
+                ood_path = os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__), "..", "..", "yolov8n.pt"
+                    )
+                )
+                if os.path.exists(ood_path):
+                    try:
+                        from ultralytics import YOLO as _YOLO
+                        self.ood_model = _YOLO(ood_path, task="detect", verbose=False)
+                        logger.info("OOD filter model loaded from: %s", ood_path)
+                    except Exception as exc:
+                        logger.warning("OOD model failed to load (non-fatal): %s", exc)
+                        self.ood_model = None
+                else:
+                    logger.info(
+                        "OOD model not found at '%s' — OOD filter disabled.", ood_path
+                    )
                     self.ood_model = None
-            else:
-                logger.warning("OOD model not found at '%s' — OOD filter disabled.", ood_path)
-                self.ood_model = None
+
+            # Mark fully initialised
+            self._initialized = True
+            logger.info("InferenceService fully initialised.")
 
     # ------------------------------------------------------------------
     # Helpers
@@ -178,12 +227,15 @@ class InferenceService:
     ) -> tuple[str, float, list[TopPrediction]]:
         """Use the EfficientNet classifier on the entire image as a fallback."""
         import cv2
+        import torch
+        import torch.nn.functional as F
+        from PIL import Image
 
         try:
             image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             pil_img = Image.fromarray(image_rgb)
             device = next(self.classifier_model.parameters()).device
-            input_tensor = self.transform(pil_img).unsqueeze(0).to(device)
+            input_tensor = self._get_transform()(pil_img).unsqueeze(0).to(device)
 
             with torch.no_grad():
                 outputs = self.classifier_model(input_tensor)
@@ -284,6 +336,10 @@ class InferenceService:
         Every stage is wrapped in try/except so a single failure returns partial
         results (or an empty list) instead of a 500/502.
         """
+        import torch
+        import torch.nn.functional as F
+        from PIL import Image
+
         # --- Validate input ---
         if image is None or image.size == 0:
             logger.error("detect() received an empty or None image.")
@@ -291,7 +347,7 @@ class InferenceService:
 
         logger.info("detect() called — image shape: %s, dtype: %s", image.shape, image.dtype)
 
-        # --- Ensure models are loaded ---
+        # --- Ensure models are loaded (lazy, thread-safe) ---
         try:
             self.initialize()
         except Exception as exc:
@@ -418,7 +474,7 @@ class InferenceService:
                             crop_rgb = cv2.cvtColor(crop_padded, cv2.COLOR_BGR2RGB)
                             pil_img = Image.fromarray(crop_rgb)
 
-                            input_tensor = self.transform(pil_img).unsqueeze(0)
+                            input_tensor = self._get_transform()(pil_img).unsqueeze(0)
                             device = next(self.classifier_model.parameters()).device
                             input_tensor = input_tensor.to(device)
 

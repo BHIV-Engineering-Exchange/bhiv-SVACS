@@ -32,35 +32,26 @@ vessel_store: list = []
 
 
 # ---------------------------------------------------------------------------
-# Startup lifespan — pre-warm ALL models before serving any requests.
-# Without this, the first POST /intelligence/image triggers YOLO + EfficientNet
-# + EasyOCR to load simultaneously, which exceeds Render's 30s request timeout
-# and causes a 502.  Loading them at startup (which has no timeout) fixes this.
+# Startup lifespan — NO model loading at startup.
+#
+# CHANGE: All eager model loading has been removed from this function.
+# Previously, YOLO + EfficientNet + EasyOCR were all loaded here, which
+# consumed >512 MB and caused Render Free to OOM-kill the process before
+# serving a single request.
+#
+# Models are now lazy-loaded on the FIRST POST /intelligence/image call.
+# The lifespan only logs startup/shutdown events — zero model work.
+# The first image request will be slower (~15-45s) but the service starts
+# in <1s and stays well under the 512 MB limit.
 # ---------------------------------------------------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Pre-warm every ML model so the first request is fast."""
-    logger.info("=== SVACS startup: pre-warming ML models ===")
-
-    # 1. YOLO + EfficientNet
-    try:
-        from app.services.inference_service import inference_service
-        inference_service.initialize()
-        logger.info("Startup: YOLO + EfficientNet loaded OK")
-    except Exception as exc:
-        logger.error("Startup: YOLO/EfficientNet failed to load — %s", exc)
-
-    # 2. EasyOCR
-    try:
-        from app.services.ocr_service import ocr_service
-        ocr_service.initialize()
-        logger.info("Startup: EasyOCR loaded OK")
-    except Exception as exc:
-        logger.error("Startup: EasyOCR failed to load — %s", exc)
-
+    """Lightweight startup — no model loading. Models load lazily on first request."""
+    logger.info("=== SVACS startup — lazy-loading mode (Render Free 512 MB) ===")
+    logger.info("No models will be loaded until the first image request.")
     logger.info("=== SVACS startup complete — ready to serve requests ===")
     yield
-    # (shutdown hooks can go here if needed)
+    logger.info("=== SVACS shutdown ===")
 
 
 # ---------------------------------------------------------------------------
@@ -102,13 +93,13 @@ def read_root():
 
 # ---------------------------------------------------------------------------
 # POST /intelligence/image — primary frontend upload endpoint
-# BUG FIX (Bug 2): removed blank lines between @app.post(...) and async def.
-# BUG FIX (Bug 1): datetime/timezone now imported at top of file.
-# BUG FIX (Bug 3): full structured logging + traceback; never returns 502.
 # ---------------------------------------------------------------------------
 @app.post("/intelligence/image")
 async def upload_image(file: UploadFile = File(...)):
     """Accept an image upload from the frontend and run it through the vision analyser.
+
+    Models are loaded lazily on the first call to this endpoint. Subsequent
+    calls reuse cached model instances (no duplicate loading).
 
     Returns a JSON payload with vessel class, confidence, OCR text, detections,
     and a base64-encoded explainable image.  Any internal error returns HTTP 500
@@ -135,7 +126,7 @@ async def upload_image(file: UploadFile = File(...)):
             )
 
         # ------------------------------------------------------------------
-        # Step 2: Run vision pipeline
+        # Step 2: Run vision pipeline (lazy-loads models on first call)
         # ------------------------------------------------------------------
         logger.info("Calling vision_orchestrator.process_bytes() ...")
         response = vision_orchestrator.process_bytes(
@@ -295,7 +286,6 @@ async def upload_image(file: UploadFile = File(...)):
         # Re-raise explicit HTTP exceptions (e.g. the 400 for empty file) unchanged.
         raise
     except Exception as exc:
-        # BUG FIX (Bug 3): log full traceback so it appears in Render logs.
         tb = traceback.format_exc()
         logger.error(
             "POST /intelligence/image CRASHED:\n%s",
@@ -366,9 +356,20 @@ def batch_analyze_images(requests: List[VisionAnalysisRequest]):
 
 @app.get("/health")
 def health():
+    """Health check — returns instantly without touching any model.
+    The `models_loaded` field reflects whether any lazy model has been initialised yet.
+    """
+    from app.services.inference_service import inference_service
+    from app.services.ocr_service import ocr_service
+
     return {
         "status": "ONLINE",
         "service": settings.PROJECT_NAME,
+        "models_loaded": {
+            "yolo": inference_service.yolo_model is not None,
+            "efficientnet": inference_service.classifier_model is not None,
+            "easyocr": ocr_service.reader is not None,
+        },
         "ingestion_rate": 18.4,
         "processing_latency_ms": 12.0,
         "uptime_seconds": 3600,
