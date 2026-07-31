@@ -25,6 +25,11 @@ class Settings(BaseSettings):
 
     # OCR config
     OCR_LANGUAGES: list[str] = ["en"]
+    OCR_ENABLED: bool = str(os.getenv("OCR_ENABLED", "true")).lower() in (
+        "1",
+        "true",
+        "yes",
+    )
 
     # Replay storage — use /tmp on Render (ephemeral but writable); override via env var
     REPLAY_STORAGE_DIR: str = os.getenv("REPLAY_STORAGE_DIR", "/tmp/svacs_replays")

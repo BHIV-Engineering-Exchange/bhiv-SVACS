@@ -113,6 +113,10 @@ class OCRService:
         Calls initialize() on the first invocation (lazy load). Returns an
         empty list if the reader is unavailable — OCR failure is non-fatal.
         """
+        if not settings.OCR_ENABLED:
+            logger.info("OCR stage disabled by OCR_ENABLED=false.")
+            return []
+
         try:
             self.initialize()
         except Exception as exc:

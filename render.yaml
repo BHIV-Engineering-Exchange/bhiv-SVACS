@@ -11,6 +11,8 @@ services:
     envVars:
       - key: CLASSIFIER_MODEL_PATH
         value: efficientnet_vessel_best.pth
+      - key: OCR_ENABLED
+        value: false
 
   # ─── Frontend (Vite + React static site) ─────────────────────────────────
   - type: web

@@ -175,7 +175,7 @@ export default function Signals() {
     } else {
       setUploadError(
         lastError?.message === "Failed to fetch"
-          ? "Failed to fetch: Cannot connect to backend server. Please ensure the backend is running at http://localhost:8000."
+          ? `Cannot connect to the configured backend at ${SVACS_API || "the local API"}. Check the frontend API URL and backend CORS settings.`
           : lastError?.message || "Upload failed"
       );
     }
