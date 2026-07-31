@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "BHIV Vision Intelligence Runtime"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
-    
+
     # Model config
     YOLO_MODEL_PATH: str = os.getenv("YOLO_MODEL_PATH", DEFAULT_YOLO_MODEL_PATH)
     YOLO_IMAGE_SIZE: int = int(os.getenv("YOLO_IMAGE_SIZE", "640"))
@@ -18,16 +18,20 @@ class Settings(BaseSettings):
     YOLO_IOU_THRESHOLD: float = float(os.getenv("YOLO_IOU_THRESHOLD", "0.45"))
     YOLO_MAX_DETECTIONS: int = int(os.getenv("YOLO_MAX_DETECTIONS", "100"))
     YOLO_MIN_ACCEPTED_CONFIDENCE: float = float(os.getenv("YOLO_MIN_ACCEPTED_CONFIDENCE", "0.25"))
+
     # OCR config
     OCR_LANGUAGES: list[str] = ["en"]
-    
-    # Replay storage
-    REPLAY_STORAGE_DIR: str = os.getenv("REPLAY_STORAGE_DIR", "replays")
-    
+
+    # Replay storage — use /tmp on Render (ephemeral but writable); override via env var
+    REPLAY_STORAGE_DIR: str = os.getenv("REPLAY_STORAGE_DIR", "/tmp/svacs_replays")
+
     class Config:
         case_sensitive = True
 
 settings = Settings()
 
-# Ensure replay directory exists
-os.makedirs(settings.REPLAY_STORAGE_DIR, exist_ok=True)
+# Ensure replay directory exists — wrapped so a failure here never prevents startup
+try:
+    os.makedirs(settings.REPLAY_STORAGE_DIR, exist_ok=True)
+except Exception:
+    pass  # Non-fatal: replays will be skipped gracefully if the directory is not writable

@@ -1,16 +1,41 @@
+"""main.py — FastAPI application entry-point for BHIV SVACS Vision Intelligence Runtime."""
+
+import logging
+import traceback
 import uuid
+from datetime import datetime, timezone  # BUG FIX (Bug 1): moved to top — was imported on line 209
+from typing import List
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Query
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.core.config import settings
 from app.models.schemas import VisionAnalysisRequest, VisionAnalysisResponse
 from app.services.vision_orchestrator import vision_orchestrator
-from typing import List
 
+# ---------------------------------------------------------------------------
+# Logging — configure once at module level so every sub-logger inherits it.
+# Render captures stdout/stderr; INFO level ensures all key events are visible.
+# ---------------------------------------------------------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# In-memory vessel store (populated by POST /intelligence/image)
+# ---------------------------------------------------------------------------
+vessel_store: list = []
+
+# ---------------------------------------------------------------------------
+# App factory
+# ---------------------------------------------------------------------------
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="Vision Intelligence Runtime for Samachar and SVACS integration."
+    description="Vision Intelligence Runtime for Samachar and SVACS integration.",
 )
 
 # Allow the local Vite app and deployed Render frontend to call this API.
@@ -30,83 +55,149 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
+
 @app.get("/")
 def read_root():
     return {"message": f"{settings.PROJECT_NAME} is running", "version": settings.VERSION}
 
-@app.post(f"{settings.API_V1_STR}/analyze", response_model=VisionAnalysisResponse)
-async def analyze_image(
-    file: UploadFile = File(..., description="Image file to analyze (e.g. JPEG, PNG)"),
-    return_explainable_image: bool = Query(True, description="Whether to return the base64 encoded image with visual evidence")
-):
-    """
-    Analyzes an uploaded image file directly to extract text (OCR) and detect/classify vessels.
-    """
-    try:
-        image_bytes = await file.read()
-        response = vision_orchestrator.process_bytes(image_bytes, return_explainable_image)
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
-
+# ---------------------------------------------------------------------------
+# POST /intelligence/image — primary frontend upload endpoint
+# BUG FIX (Bug 2): removed blank lines between @app.post(...) and async def.
+# BUG FIX (Bug 1): datetime/timezone now imported at top of file.
+# BUG FIX (Bug 3): full structured logging + traceback; never returns 502.
+# ---------------------------------------------------------------------------
 @app.post("/intelligence/image")
 async def upload_image(file: UploadFile = File(...)):
-    """
-    Accept image uploads from the frontend and run them through the vision analyzer.
-    """
-    try:
-        image_bytes = await file.read()
-        print("DEBUG: Received upload", file.filename, file.content_type, len(image_bytes), "bytes")
-        response = vision_orchestrator.process_bytes(image_bytes, return_explainable_image=True)
+    """Accept an image upload from the frontend and run it through the vision analyser.
 
+    Returns a JSON payload with vessel class, confidence, OCR text, detections,
+    and a base64-encoded explainable image.  Any internal error returns HTTP 500
+    with a structured JSON body — never a bare 502.
+    """
+    logger.info(
+        "POST /intelligence/image — filename=%s content_type=%s",
+        file.filename,
+        file.content_type,
+    )
+
+    try:
+        # ------------------------------------------------------------------
+        # Step 1: Read uploaded bytes
+        # ------------------------------------------------------------------
+        image_bytes = await file.read()
+        logger.info("Uploaded file read — size=%d bytes", len(image_bytes))
+
+        if not image_bytes:
+            logger.error("Uploaded file is empty (0 bytes).")
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded file is empty. Please upload a valid image.",
+            )
+
+        # ------------------------------------------------------------------
+        # Step 2: Run vision pipeline
+        # ------------------------------------------------------------------
+        logger.info("Calling vision_orchestrator.process_bytes() ...")
+        response = vision_orchestrator.process_bytes(
+            image_bytes, return_explainable_image=True
+        )
+        logger.info("vision_orchestrator.process_bytes() completed successfully.")
+
+        # ------------------------------------------------------------------
+        # Step 3: Select best detection above the acceptance threshold
+        # ------------------------------------------------------------------
         vessel_class = "Unknown"
         confidence_score = 0.0
+        best_detection = None
+
         valid_detections = [
-            det for det in response.detections
+            det
+            for det in response.detections
             if det.confidence >= settings.YOLO_MIN_ACCEPTED_CONFIDENCE
         ]
+
         if valid_detections:
             best_detection = max(
-                valid_detections, 
-                key=lambda d: (d.bounding_box.x_max - d.bounding_box.x_min) * (d.bounding_box.y_max - d.bounding_box.y_min)
+                valid_detections,
+                key=lambda d: (
+                    (d.bounding_box.x_max - d.bounding_box.x_min)
+                    * (d.bounding_box.y_max - d.bounding_box.y_min)
+                ),
             )
             vessel_class = best_detection.label
             confidence_score = best_detection.confidence
+            logger.info(
+                "Best detection: class=%s confidence=%.3f", vessel_class, confidence_score
+            )
         else:
-            print("DEBUG: No valid detections above threshold. Returning Unknown.")
-            vessel_class = "Unknown"
-            confidence_score = 0.0
+            logger.info(
+                "No detections above threshold (%.2f) — returning Unknown.",
+                settings.YOLO_MIN_ACCEPTED_CONFIDENCE,
+            )
 
-        # Explainability Engine Logic
-        explanation_list = []
+        # ------------------------------------------------------------------
+        # Step 4: Explainability text generation
+        # ------------------------------------------------------------------
+        explanation_list: list[str] = []
         if vessel_class != "Unknown":
-            explanation_list.append(f"Detected distinct visual features matching a {vessel_class}.")
-            if "tanker" in vessel_class.lower() or "carrier" in vessel_class.lower():
-                explanation_list.append("Observed elongated flat deck typical of bulk/tanker cargo transport.")
-            elif "support" in vessel_class.lower() or "supply" in vessel_class.lower():
-                explanation_list.append("Identified forward bridge and large open working deck.")
-            elif "fishing" in vessel_class.lower():
+            explanation_list.append(
+                f"Detected distinct visual features matching a {vessel_class}."
+            )
+            vc_lower = vessel_class.lower()
+            if "tanker" in vc_lower or "carrier" in vc_lower:
+                explanation_list.append(
+                    "Observed elongated flat deck typical of bulk/tanker cargo transport."
+                )
+            elif "support" in vc_lower or "supply" in vc_lower:
+                explanation_list.append(
+                    "Identified forward bridge and large open working deck."
+                )
+            elif "fishing" in vc_lower:
                 explanation_list.append("Detected aft working deck and hauling equipment.")
-            elif "passenger" in vessel_class.lower() or "cruise" in vessel_class.lower():
-                explanation_list.append("Multiple deck levels and superstructure identified.")
-            elif "naval" in vessel_class.lower() or "patrol" in vessel_class.lower():
-                explanation_list.append("Stealth/gray hull geometry and weapon mountings detected.")
+            elif "passenger" in vc_lower or "cruise" in vc_lower:
+                explanation_list.append(
+                    "Multiple deck levels and superstructure identified."
+                )
+            elif "naval" in vc_lower or "patrol" in vc_lower:
+                explanation_list.append(
+                    "Stealth/gray hull geometry and weapon mountings detected."
+                )
             else:
-                explanation_list.append(f"Classified confidently as {vessel_class} based on YOLOv8 geometric features.")
+                explanation_list.append(
+                    f"Classified confidently as {vessel_class} based on YOLOv8 geometric features."
+                )
         else:
-            explanation_list.append("Confidence too low to determine specific vessel class from visual features.")
+            explanation_list.append(
+                "Confidence too low to determine specific vessel class from visual features."
+            )
 
+        # ------------------------------------------------------------------
+        # Step 5: Pick best OCR text
+        # ------------------------------------------------------------------
         ocr_text = None
-        if response.ocr_results and len(response.ocr_results) > 0:
+        if response.ocr_results:
             best_ocr = max(response.ocr_results, key=lambda x: x.confidence)
             if best_ocr.confidence >= 0.5:
                 ocr_text = best_ocr.text
-        
+                logger.info("Best OCR result: '%s' (conf=%.3f)", ocr_text, best_ocr.confidence)
+
+        # ------------------------------------------------------------------
+        # Step 6: Assemble result payload
+        # ------------------------------------------------------------------
+        trace_id = str(uuid.uuid4())
         result = {
-            "trace_id": str(uuid.uuid4()),
-            "validation_status": "FLAG" if vessel_class == "Unknown" or vessel_class == "Unknown Vessel Type" else "OK",
-            "vessel_detected": True if not valid_detections else len(valid_detections) > 0,
+            "trace_id": trace_id,
+            "validation_status": (
+                "FLAG"
+                if vessel_class in ("Unknown", "Unknown Vessel Type")
+                else "OK"
+            ),
+            "vessel_detected": len(valid_detections) > 0,
             "vessel_class": vessel_class,
             "confidence_score": confidence_score,
             "ocr_text": ocr_text,
@@ -126,48 +217,117 @@ async def upload_image(file: UploadFile = File(...)):
                 }
                 for det in valid_detections
             ],
-            "top_predictions": [
-                {"class": pred.class_name, "confidence": pred.confidence}
-                for pred in best_detection.top_predictions
-            ] if valid_detections and hasattr(best_detection, 'top_predictions') else [],
+            "top_predictions": (
+                [
+                    {"class": pred.class_name, "confidence": pred.confidence}
+                    for pred in best_detection.top_predictions
+                ]
+                if best_detection is not None and hasattr(best_detection, "top_predictions")
+                else []
+            ),
             "explanation": explanation_list,
-            "explainable_image_base64": response.explainable_image_base64
+            "explainable_image_base64": response.explainable_image_base64,
         }
-        
-        # Populate the global store for the /vessels dashboard
-        vessel_store.append({
-            "vessel_id": result["ocr_text"] if result["ocr_text"] else f"V-{result['trace_id'][:8]}",
-            "status": "WATCH" if vessel_class == "Unknown" else "OK",
-            "last_state": "Detected via Image Upload",
-            "signal_count": len(valid_detections),
-            "perception_count": 1,
-            "intelligence_count": 1,
-            "state_count": 1,
-            "last_seen_utc": datetime.now(timezone.utc).isoformat()
-        })
-        
-        print("DEBUG: upload response", result)
+
+        # ------------------------------------------------------------------
+        # Step 7: Populate vessel_store for the /vessels dashboard
+        # ------------------------------------------------------------------
+        vessel_store.append(
+            {
+                "vessel_id": (
+                    result["ocr_text"]
+                    if result["ocr_text"]
+                    else f"V-{result['trace_id'][:8]}"
+                ),
+                "status": "WATCH" if vessel_class == "Unknown" else "OK",
+                "last_state": "Detected via Image Upload",
+                "signal_count": len(valid_detections),
+                "perception_count": 1,
+                "intelligence_count": 1,
+                "state_count": 1,
+                "last_seen_utc": datetime.now(timezone.utc).isoformat(),
+            }
+        )
+
+        logger.info(
+            "POST /intelligence/image completed — trace_id=%s vessel_class=%s",
+            trace_id,
+            vessel_class,
+        )
         return result
-    except Exception as e:
-        print("ERROR /intelligence/image", str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+
+    except HTTPException:
+        # Re-raise explicit HTTP exceptions (e.g. the 400 for empty file) unchanged.
+        raise
+    except Exception as exc:
+        # BUG FIX (Bug 3): log full traceback so it appears in Render logs.
+        tb = traceback.format_exc()
+        logger.error(
+            "POST /intelligence/image CRASHED:\n%s",
+            tb,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": type(exc).__name__,
+                "message": str(exc),
+                "hint": (
+                    "Check Render logs for the full traceback. "
+                    "Common causes: model file missing, GPU not available, "
+                    "corrupt image, filesystem not writable."
+                ),
+            },
+        )
 
 
+# ---------------------------------------------------------------------------
+# POST /api/v1/analyze — base64 image analysis
+# ---------------------------------------------------------------------------
+@app.post(f"{settings.API_V1_STR}/analyze", response_model=VisionAnalysisResponse)
+async def analyze_image(
+    file: UploadFile = File(..., description="Image file to analyze (e.g. JPEG, PNG)"),
+    return_explainable_image: bool = Query(
+        True, description="Whether to return the base64 encoded image with visual evidence"
+    ),
+):
+    """Analyzes an uploaded image file directly to extract text (OCR) and detect/classify vessels."""
+    logger.info(
+        "POST %s/analyze — filename=%s", settings.API_V1_STR, file.filename
+    )
+    try:
+        image_bytes = await file.read()
+        if not image_bytes:
+            raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+        response = vision_orchestrator.process_bytes(image_bytes, return_explainable_image)
+        return response
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("POST /api/v1/analyze crashed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ---------------------------------------------------------------------------
+# POST /api/v1/batch-analyze
+# ---------------------------------------------------------------------------
 @app.post(f"{settings.API_V1_STR}/batch-analyze", response_model=List[VisionAnalysisResponse])
 def batch_analyze_images(requests: List[VisionAnalysisRequest]):
-    """
-    Analyzes a batch of images sequentially.
-    """
+    """Analyzes a batch of base64-encoded images sequentially."""
     responses = []
     for req in requests:
         try:
             responses.append(vision_orchestrator.process(req))
-        except Exception as e:
-            # Depending on requirements, we might want to continue or fail the batch.
-            # Here we let it fail for strictness.
-            raise HTTPException(status_code=500, detail=f"Batch failed on a request: {str(e)}")
+        except Exception as exc:
+            logger.exception("Batch analysis failed on a request: %s", exc)
+            raise HTTPException(
+                status_code=500, detail=f"Batch failed on a request: {str(exc)}"
+            )
     return responses
 
+
+# ---------------------------------------------------------------------------
+# GET endpoints
+# ---------------------------------------------------------------------------
 
 @app.get("/health")
 def health():
@@ -203,11 +363,6 @@ def get_state_events():
     return []
 
 
-from datetime import datetime, timezone
-
-# Simple in-memory store to populate the Vessels dashboard tab
-vessel_store = []
-
 @app.get("/vessels")
 def get_vessels():
     return vessel_store
@@ -232,22 +387,92 @@ def get_bucket_status():
 @app.get("/stage-metrics")
 def get_stage_metrics():
     return [
-        {"stage": "signal", "total_events": 60,  "events_per_sec": 18.4, "p50_latency_ms": 12, "p95_latency_ms": 36,  "error_rate": 0.002, "status": "live"},
-        {"stage": "perception", "total_events": 58,  "events_per_sec": 17.2, "p50_latency_ms": 28, "p95_latency_ms": 78,  "error_rate": 0.004, "status": "live"},
-        {"stage": "intelligence", "total_events": 54,  "events_per_sec": 16.1, "p50_latency_ms": 41, "p95_latency_ms": 110, "error_rate": 0.010, "status": "live"},
-        {"stage": "state", "total_events": 51,  "events_per_sec": 15.0, "p50_latency_ms": 22, "p95_latency_ms": 64,  "error_rate": 0.003, "status": "live"},
-        {"stage": "bucket", "total_events": 51, "events_per_sec": 14.0, "p50_latency_ms": 18, "p95_latency_ms": 52,  "error_rate": 0.000, "status": "live"},
+        {
+            "stage": "signal",
+            "total_events": 60,
+            "events_per_sec": 18.4,
+            "p50_latency_ms": 12,
+            "p95_latency_ms": 36,
+            "error_rate": 0.002,
+            "status": "live",
+        },
+        {
+            "stage": "perception",
+            "total_events": 58,
+            "events_per_sec": 17.2,
+            "p50_latency_ms": 28,
+            "p95_latency_ms": 78,
+            "error_rate": 0.004,
+            "status": "live",
+        },
+        {
+            "stage": "intelligence",
+            "total_events": 54,
+            "events_per_sec": 16.1,
+            "p50_latency_ms": 41,
+            "p95_latency_ms": 110,
+            "error_rate": 0.010,
+            "status": "live",
+        },
+        {
+            "stage": "state",
+            "total_events": 51,
+            "events_per_sec": 15.0,
+            "p50_latency_ms": 22,
+            "p95_latency_ms": 64,
+            "error_rate": 0.003,
+            "status": "live",
+        },
+        {
+            "stage": "bucket",
+            "total_events": 51,
+            "events_per_sec": 14.0,
+            "p50_latency_ms": 18,
+            "p95_latency_ms": 52,
+            "error_rate": 0.000,
+            "status": "live",
+        },
     ]
 
 
 @app.get("/events-over-time")
 def get_events_over_time():
     return [
-        {"time": "10:00", "signal": 100, "perception": 90, "intelligence": 80, "state": 70},
-        {"time": "10:05", "signal": 120, "perception": 110, "intelligence": 100, "state": 90},
-        {"time": "10:10", "signal": 140, "perception": 120, "intelligence": 110, "state": 100},
-        {"time": "10:15", "signal": 160, "perception": 140, "intelligence": 120, "state": 110},
-        {"time": "10:20", "signal": 180, "perception": 150, "intelligence": 130, "state": 120},
+        {
+            "time": "10:00",
+            "signal": 100,
+            "perception": 90,
+            "intelligence": 80,
+            "state": 70,
+        },
+        {
+            "time": "10:05",
+            "signal": 120,
+            "perception": 110,
+            "intelligence": 100,
+            "state": 90,
+        },
+        {
+            "time": "10:10",
+            "signal": 140,
+            "perception": 120,
+            "intelligence": 110,
+            "state": 100,
+        },
+        {
+            "time": "10:15",
+            "signal": 160,
+            "perception": 140,
+            "intelligence": 120,
+            "state": 110,
+        },
+        {
+            "time": "10:20",
+            "signal": 180,
+            "perception": 150,
+            "intelligence": 130,
+            "state": 120,
+        },
     ]
 
 
