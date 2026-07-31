@@ -11,26 +11,15 @@ __pycache__/
 
 # Node
 node_modules/
-dist/
-
-# YOLO training outputs (optional)
-backend/runs/
-
-# Ignore only temporary training outputs, not your final model
-# backend/runs/detect/
-
-# If you WANT to keep best.pt in Git, DO NOT use:
-# *.pt
-
-# Node
-node_modules/
 frontend/node_modules/
 backend/node_modules/
+dist/
 
-# Python
-.venv/
-backend/.venv/
+# YOLO training outputs
+backend/runs/
 
-# Python cache
-__pycache__/
-*.pyc
+# Dataset images — never commit, re-download with scrape_wikimedia.py
+backend/dataset/
+
+# Trained classifier weights (commit manually when ready)
+backend/efficientnet_vessel_best.pth
