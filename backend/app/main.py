@@ -47,16 +47,8 @@ vessel_store: list = []
 # ---------------------------------------------------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load the detector and classifier before accepting image requests."""
-    logger.info("=== SVACS startup — initializing vision models ===")
-    try:
-        inference_service.initialize()
-        logger.info("Vision models initialized during startup.")
-    except Exception:
-        logger.exception(
-            "Vision model startup initialization failed; image requests will retry lazily."
-        )
-    logger.info("=== SVACS startup complete — ready to serve requests ===")
+    """Start the API without blocking on large CPU model loads."""
+    logger.info("=== SVACS startup complete — models will load on demand ===")
     yield
     logger.info("=== SVACS shutdown ===")
 
@@ -102,7 +94,7 @@ def read_root():
 # POST /intelligence/image — primary frontend upload endpoint
 # ---------------------------------------------------------------------------
 @app.post("/intelligence/image")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(file: UploadFile = File(...), quick: bool = Query(False)):
     """Accept an image upload from the frontend and run it through the vision analyser.
 
     Models are loaded lazily on the first call to this endpoint. Subsequent
@@ -137,7 +129,7 @@ async def upload_image(file: UploadFile = File(...)):
         # ------------------------------------------------------------------
         logger.info("Calling vision_orchestrator.process_bytes() ...")
         response = vision_orchestrator.process_bytes(
-            image_bytes, return_explainable_image=True
+            image_bytes, return_explainable_image=True, quick=quick
         )
         logger.info("vision_orchestrator.process_bytes() completed successfully.")
 

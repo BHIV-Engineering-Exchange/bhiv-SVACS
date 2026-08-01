@@ -128,8 +128,8 @@ export default function Signals() {
     setUploading(true);
 
     const endpoints = SVACS_API
-      ? [`${SVACS_API}/intelligence/image`]
-      : ["http://localhost:8000/intelligence/image"];
+      ? [`${SVACS_API}/intelligence/image?quick=true`]
+      : ["http://localhost:8000/intelligence/image?quick=true"];
 
     const uniqueEndpoints = Array.from(new Set(endpoints));
 

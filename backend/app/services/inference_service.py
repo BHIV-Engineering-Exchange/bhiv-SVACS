@@ -51,6 +51,7 @@ class InferenceService:
         self.classifier_model = None
         self.ood_model = None
         self._initialized: bool = False  # True after initialize() completes successfully
+        self._classifier_initialized: bool = False
         self._init_error: Optional[str] = None  # Set if initialization fails
 
         self.classes = [
@@ -89,7 +90,7 @@ class InferenceService:
     # Model initialisation — lazy, thread-safe, idempotent
     # ------------------------------------------------------------------
 
-    def initialize(self):
+    def initialize(self, load_classifier: bool = True):
         """Load YOLO and EfficientNet models if not already loaded.
 
         Thread-safe: the global _init_lock prevents two concurrent requests
@@ -98,13 +99,13 @@ class InferenceService:
         Idempotent: once self._initialized is True, this is a no-op.
         """
         # Fast path — already initialised (no lock needed, flag is read-only after set)
-        if self._initialized:
+        if self._initialized and (not load_classifier or self._classifier_initialized):
             return
 
         with _init_lock:
             # Double-checked locking: another thread may have finished while
             # we were waiting for the lock.
-            if self._initialized:
+            if self._initialized and (not load_classifier or self._classifier_initialized):
                 return
 
             # ── Import heavy libraries here, not at module load ──────────
@@ -154,7 +155,7 @@ class InferenceService:
                     raise RuntimeError(f"YOLO load failed: {exc}") from exc
 
             # ── Stage 2: EfficientNetV2-S classifier ─────────────────────
-            if self.classifier_model is None:
+            if load_classifier and self.classifier_model is None:
                 try:
                     model_path = os.path.abspath(settings.CLASSIFIER_MODEL_PATH)
                     if not os.path.exists(model_path):
@@ -215,9 +216,16 @@ class InferenceService:
             # not used by detect() and would duplicate YOLO memory on Render.
             self.ood_model = None
 
-            # Mark fully initialised
+            if load_classifier:
+                self._classifier_initialized = True
+
+            # Mark the detector as initialised. The classifier is independently
+            # lazy-loaded so quick predictions do not pay its startup cost.
             self._initialized = True
-            logger.info("InferenceService fully initialised.")
+            logger.info(
+                "InferenceService initialised (classifier=%s).",
+                self._classifier_initialized,
+            )
 
     # ------------------------------------------------------------------
     # Helpers
@@ -335,7 +343,7 @@ class InferenceService:
     # Main detection entry-point
     # ------------------------------------------------------------------
 
-    def detect(self, image: np.ndarray) -> list[DetectionResult]:
+    def detect(self, image: np.ndarray, quick: bool = False) -> list[DetectionResult]:
         """Run YOLO detection + EfficientNet classification on a BGR numpy image.
 
         Every stage is wrapped in try/except so a single failure returns partial
@@ -354,7 +362,7 @@ class InferenceService:
 
         # --- Ensure models are loaded (lazy, thread-safe) ---
         try:
-            self.initialize()
+            self.initialize(load_classifier=not quick)
         except Exception as exc:
             logger.exception("Model initialisation failed in detect(): %s", exc)
             raise
@@ -370,8 +378,8 @@ class InferenceService:
                 conf=settings.YOLO_CONFIDENCE_THRESHOLD,
                 iou=settings.YOLO_IOU_THRESHOLD,
                 verbose=False,
-                imgsz=settings.YOLO_IMAGE_SIZE,
-                max_det=settings.YOLO_MAX_DETECTIONS,
+                imgsz=320 if quick else settings.YOLO_IMAGE_SIZE,
+                max_det=3 if quick else settings.YOLO_MAX_DETECTIONS,
             )
             res = results[0]
             logger.info("YOLO returned %d raw boxes.", len(res.boxes))
@@ -386,8 +394,8 @@ class InferenceService:
                     conf=settings.YOLO_FALLBACK_CONFIDENCE_THRESHOLD,
                     iou=settings.YOLO_IOU_THRESHOLD,
                     verbose=False,
-                    imgsz=settings.YOLO_IMAGE_SIZE,
-                    max_det=settings.YOLO_MAX_DETECTIONS,
+                    imgsz=320 if quick else settings.YOLO_IMAGE_SIZE,
+                    max_det=3 if quick else settings.YOLO_MAX_DETECTIONS,
                 )[0]
                 logger.info("Fallback YOLO returned %d boxes.", len(res.boxes))
         except Exception as exc:
@@ -398,6 +406,11 @@ class InferenceService:
         CLASSIFICATION_THRESHOLD = 0.01
 
         detections: list[DetectionResult] = []
+        quick_label = "Unknown"
+        quick_conf = 0.0
+        quick_preds: list[TopPrediction] = []
+        if quick and self.classifier_model is not None:
+            quick_label, quick_conf, quick_preds = self.classify_full_image(image)
 
         for box in res.boxes:
             try:
@@ -435,11 +448,19 @@ class InferenceService:
                 final_label = "Boat" if self.classifier_model is None else "Unknown"
                 final_conf = confidence
 
+                if quick and quick_preds:
+                    final_label = quick_label
+                    final_conf = quick_conf
+                    top_preds = quick_preds
+                    if final_conf < settings.CLASSIFIER_MIN_CONFIDENCE:
+                        final_label = "Unknown"
+                        final_conf = 0.0
+
                 if is_ood:
                     confidence = 0.0  # Force skip classification
 
                 # --- Stage 2: EfficientNet crop classification ---
-                if confidence >= CLASSIFICATION_THRESHOLD and self.classifier_model is not None:
+                if not quick and confidence >= CLASSIFICATION_THRESHOLD and self.classifier_model is not None:
                     try:
                         # The classifier was trained on complete vessel images
                         # with Resize(256) + CenterCrop(224). Use that same

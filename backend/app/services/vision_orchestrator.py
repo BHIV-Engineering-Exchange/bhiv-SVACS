@@ -30,7 +30,7 @@ class VisionOrchestrator:
     # ------------------------------------------------------------------
 
     def process_image(
-        self, raw_image: np.ndarray, return_explainable_image: bool
+        self, raw_image: np.ndarray, return_explainable_image: bool, quick: bool = False
     ) -> VisionAnalysisResponse:
         """Run the full pipeline on a decoded BGR numpy image.
 
@@ -72,7 +72,7 @@ class VisionOrchestrator:
         # ----------------------------------------------------------------
         ocr_results = []
         try:
-            ocr_results = ocr_service.extract_text(processed_image)
+            ocr_results = [] if quick else ocr_service.extract_text(processed_image)
             logger.info("Stage 2 (OCR) OK — %d results", len(ocr_results))
         except Exception as exc:
             logger.exception("Stage 2 (OCR) FAILED (non-fatal, continuing): %s", exc)
@@ -82,7 +82,7 @@ class VisionOrchestrator:
         # Stage 3: YOLO detection + EfficientNet classification
         # ----------------------------------------------------------------
         try:
-            detections = inference_service.detect(processed_image)
+            detections = inference_service.detect(processed_image, quick=quick)
             logger.info("Stage 3 (detection) OK — %d detection(s)", len(detections))
         except Exception as exc:
             logger.exception("Stage 3 (detection) FAILED: %s", exc)
@@ -138,7 +138,7 @@ class VisionOrchestrator:
         return self.process_image(raw_image, request.return_explainable_image)
 
     def process_bytes(
-        self, image_bytes: bytes, return_explainable_image: bool
+        self, image_bytes: bytes, return_explainable_image: bool, quick: bool = False
     ) -> VisionAnalysisResponse:
         """Accepts raw image bytes (e.g. from an UploadFile.read())."""
         logger.info("process_bytes() called — received %d bytes", len(image_bytes))
@@ -164,7 +164,7 @@ class VisionOrchestrator:
             )
 
         logger.info("Image decoded OK — shape: %s", raw_image.shape)
-        return self.process_image(raw_image, return_explainable_image)
+        return self.process_image(raw_image, return_explainable_image, quick=quick)
 
 
 vision_orchestrator = VisionOrchestrator()
