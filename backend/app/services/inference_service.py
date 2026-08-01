@@ -90,7 +90,7 @@ class InferenceService:
     # Model initialisation — lazy, thread-safe, idempotent
     # ------------------------------------------------------------------
 
-    def initialize(self, load_classifier: bool = True):
+    def initialize(self, load_classifier: bool = True, load_detector: bool = True):
         """Load YOLO and EfficientNet models if not already loaded.
 
         Thread-safe: the global _init_lock prevents two concurrent requests
@@ -99,13 +99,17 @@ class InferenceService:
         Idempotent: once self._initialized is True, this is a no-op.
         """
         # Fast path — already initialised (no lock needed, flag is read-only after set)
-        if self._initialized and (not load_classifier or self._classifier_initialized):
+        if (not load_detector or self._initialized) and (
+            not load_classifier or self._classifier_initialized
+        ):
             return
 
         with _init_lock:
             # Double-checked locking: another thread may have finished while
             # we were waiting for the lock.
-            if self._initialized and (not load_classifier or self._classifier_initialized):
+            if (not load_detector or self._initialized) and (
+                not load_classifier or self._classifier_initialized
+            ):
                 return
 
             # ── Import heavy libraries here, not at module load ──────────
@@ -117,7 +121,7 @@ class InferenceService:
             device = torch.device("cpu")
 
             # ── Stage 1: YOLO vessel-detection model ─────────────────────
-            if self.yolo_model is None:
+            if load_detector and self.yolo_model is None:
                 yolo_path = settings.YOLO_MODEL_PATH
                 logger.info("Looking for YOLO model at: %s", yolo_path)
 
@@ -221,7 +225,7 @@ class InferenceService:
 
             # Mark the detector as initialised. The classifier is independently
             # lazy-loaded so quick predictions do not pay its startup cost.
-            self._initialized = True
+            self._initialized = self._initialized or load_detector
             logger.info(
                 "InferenceService initialised (classifier=%s).",
                 self._classifier_initialized,
@@ -364,13 +368,34 @@ class InferenceService:
         try:
             # Quick mode skips OCR and repeated crop inference, but still loads
             # the trained classifier so the result is a specific vessel type.
-            self.initialize(load_classifier=True)
+            self.initialize(load_classifier=True, load_detector=not quick)
         except Exception as exc:
             logger.exception("Model initialisation failed in detect(): %s", exc)
             raise
 
         # --- OOD filter (disabled — kept for reference) ---
         is_ood = False
+
+        # Fast path: the trained classifier provides the specific vessel type.
+        # Avoid loading/running the generic COCO detector on Render's CPU tier.
+        if quick:
+            label, confidence, top_predictions = self.classify_full_image(image)
+            if not top_predictions:
+                return []
+            height, width = image.shape[:2]
+            return [
+                DetectionResult(
+                    label=label,
+                    confidence=confidence,
+                    bounding_box=BoundingBox(
+                        x_min=0.0,
+                        y_min=0.0,
+                        x_max=float(width),
+                        y_max=float(height),
+                    ),
+                    top_predictions=top_predictions,
+                )
+            ]
 
         # --- Stage 1: YOLO bounding-box detection ---
         try:

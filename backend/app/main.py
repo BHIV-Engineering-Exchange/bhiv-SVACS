@@ -194,7 +194,7 @@ async def upload_image(file: UploadFile = File(...), quick: bool = Query(False))
                 )
             else:
                 explanation_list.append(
-                    f"Classified confidently as {vessel_class} based on YOLOv8 geometric features."
+                    f"Classified as {vessel_class} using the trained vessel-type classifier."
                 )
         else:
             explanation_list.append(
@@ -229,7 +229,7 @@ async def upload_image(file: UploadFile = File(...), quick: bool = Query(False))
             "operator": ocr_text,
             "risk_level": "LOW",
             "classification_source": (
-                "YOLO + EfficientNetV2"
+                "EfficientNetV2 vessel-type classifier"
                 if inference_service.classifier_model is not None
                 else "YOLO boat detection; ship-type classifier unavailable"
             ),
