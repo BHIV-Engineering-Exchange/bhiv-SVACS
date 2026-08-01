@@ -50,7 +50,7 @@ def train_model():
     # We specify data.yaml, epochs, imgsz (image size), and project directory
     results = model.train(
         data='dataset/data.yaml',
-        epochs=5,
+        epochs=10,
         imgsz=640,
         batch=4,
         project='runs/detect',

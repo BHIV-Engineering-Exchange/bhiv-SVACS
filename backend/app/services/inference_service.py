@@ -362,7 +362,9 @@ class InferenceService:
 
         # --- Ensure models are loaded (lazy, thread-safe) ---
         try:
-            self.initialize(load_classifier=not quick)
+            # Quick mode skips OCR and repeated crop inference, but still loads
+            # the trained classifier so the result is a specific vessel type.
+            self.initialize(load_classifier=True)
         except Exception as exc:
             logger.exception("Model initialisation failed in detect(): %s", exc)
             raise
@@ -452,9 +454,6 @@ class InferenceService:
                     final_label = quick_label
                     final_conf = quick_conf
                     top_preds = quick_preds
-                    if final_conf < settings.CLASSIFIER_MIN_CONFIDENCE:
-                        final_label = "Unknown"
-                        final_conf = 0.0
 
                 if is_ood:
                     confidence = 0.0  # Force skip classification
