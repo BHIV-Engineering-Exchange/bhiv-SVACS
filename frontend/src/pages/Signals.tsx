@@ -213,7 +213,7 @@ export default function Signals() {
     <div className="flex flex-col gap-4">
 
       {/* ── Image Upload Panel ─────────────────────────────────── */}
-      <Panel title="Vessel Image Intelligence" noPad={false} overflowVisible>
+      <Panel title="Vessel Image Intelligence" noPad={false} overflowVisible className="relative z-30">
         <div className="flex flex-col gap-4">
           <p className="text-sm text-fg-2">
             Upload a vessel photograph to identify vessel class, operator, and risk level.

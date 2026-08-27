@@ -70,6 +70,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:3000",
         "http://localhost:4173",
+        "http://localhost:5174",
         "https://bhiv-svacs-1.onrender.com",
         "https://bhiv-svacs.onrender.com",
         "https://svacs-backend.onrender.com",
