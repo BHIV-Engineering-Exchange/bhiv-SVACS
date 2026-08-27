@@ -20,6 +20,7 @@ from app.services.ocr_service import ocr_service
 from app.services.inference_service import inference_service
 from app.services.explainability import draw_evidence
 from app.services.replay_service import replay_service
+from app.services.bucket_client import write_vision_artifact
 
 logger = logging.getLogger(__name__)
 
@@ -120,9 +121,37 @@ class VisionOrchestrator:
         except Exception as exc:
             logger.warning("Stage 6 (replay save) FAILED (non-fatal): %s", exc)
 
+        # ----------------------------------------------------------------
+        # Stage 7: Bucket write (non-fatal) — REAL Bucket service, same
+        # contract already proven in the acoustic pipeline.
+        # ----------------------------------------------------------------
+        try:
+            bucket_payload = {
+                "detections": [d.model_dump() for d in detections],
+                "ocr_results": [o.model_dump() for o in ocr_results],
+            }
+            bucket_result = write_vision_artifact(
+                trace_id=replay_id,
+                artifact_type="vision_detection",
+                payload=bucket_payload,
+            )
+            if bucket_result.get("success"):
+                logger.info(
+                    "Stage 7 (bucket write) OK — artifact_id=%s",
+                    bucket_result.get("artifact_id"),
+                )
+            else:
+                logger.warning(
+                    "Stage 7 (bucket write) FAILED (non-fatal): %s",
+                    bucket_result.get("reason"),
+                )
+        except Exception as exc:
+            logger.warning("Stage 7 (bucket write) FAILED (non-fatal): %s", exc)
+
         logger.info("process_image() completed successfully — replay_id=%s", replay_id)
         return response
 
+    
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------

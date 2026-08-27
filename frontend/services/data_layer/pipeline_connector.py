@@ -59,43 +59,38 @@ VESSEL_TYPES = ["cargo", "speedboat", "submarine", "low_confidence", "anomaly"]
 
 
 def send_to_nicai(perception_event: dict) -> dict:
-    """Send perception_event to Ankita's NICAI. Returns intelligence_event."""
+    """Run perception_event through SVACS's local intelligence engine
+    (vessel_intelligence_engine.process_intelligence). Fully local —
+    no network call, no dependency on Ankita's ngrok NICAI endpoint."""
     try:
-        r = requests.post(NICAI_ENDPOINT, json=perception_event,
-                         headers={"Content-Type": "application/json"}, timeout=15)
-        if r.status_code == 200:
-            full_response = r.json()
-
-            # Extract intelligence_event from Ankita's response wrapper
-            intel = full_response.get("intelligence_event", {})
-
-            # Pull vessel_type, confidence, anomaly_flag from perception_event
-            # block as intelligence_event doesn't include them directly
-            if not intel.get("vessel_type"):
-                intel["vessel_type"] = (
-                    full_response.get("perception_event", {}).get("vessel_type")
-                )
-            if not intel.get("confidence"):
-                intel["confidence"] = (
-                    full_response.get("perception_event", {}).get("confidence_score")
-                )
-            if intel.get("anomaly_flag") is None:
-                intel["anomaly_flag"] = (
-                    full_response.get("perception_event", {}).get("anomaly_flag")
-                )
-
-            # Verify trace_id was not changed
-            if intel.get("trace_id") != perception_event.get("trace_id"):
-                print(f"  [ERROR] trace_id mismatch after NICAI!")
-
-            return intel
-
-        return {
-            "error": True,
-            "reason": f"NICAI HTTP {r.status_code}",
-            "trace_id": perception_event.get("trace_id"),
-            "validation_status": "FLAG",
+        local_input = {
+            "trace_id":            perception_event.get("trace_id"),
+            "source_type":         "acoustic",
+            "vessel_class":        perception_event.get("vessel_type", "unknown"),
+            "confidence_score":    perception_event.get("confidence_score", 0.0),
+            "visual_features":     [],
+            "dimensions_estimate": {},
+            "ais_data":            {},
+            "ocr_results":         [],
         }
+        result = process_intelligence(local_input)
+
+        # Adapt field names to what the rest of this file expects
+        # (vessel_type/confidence, not vessel_class/confidence_score)
+        intel = {
+            "trace_id":          result.get("trace_id", perception_event.get("trace_id")),
+            "vessel_type":       result.get("vessel_class"),
+            "confidence":        result.get("confidence_score"),
+            "risk_level":        result.get("risk_level"),
+            "anomaly_flag":      perception_event.get("anomaly_flag"),
+            "explanation":       result.get("explanation"),
+            "validation_status": result.get("validation_status"),
+        }
+
+        if intel.get("trace_id") != perception_event.get("trace_id"):
+            print(f"  [ERROR] trace_id mismatch after intelligence engine!")
+
+        return intel
     except Exception as e:
         return {
             "error": True,
