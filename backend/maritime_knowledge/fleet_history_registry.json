@@ -1,0 +1,62 @@
+[
+  {
+    "nation": "India",
+    "fleet": "Indian Navy",
+    "class": "Delhi Class Destroyer",
+    "introduced": 1997
+  },
+  {
+    "nation": "India",
+    "fleet": "Indian Navy",
+    "class": "Kolkata Class Destroyer",
+    "introduced": 2014
+  },
+  {
+    "nation": "India",
+    "fleet": "Indian Navy",
+    "class": "Visakhapatnam Class Destroyer",
+    "introduced": 2021
+  },
+  {
+    "nation": "India",
+    "fleet": "Indian Navy",
+    "class": "Shivalik Class Frigate",
+    "introduced": 2010
+  },
+  {
+    "nation": "India",
+    "fleet": "Indian Navy",
+    "class": "Nilgiri Class Frigate",
+    "introduced": 2025
+  },
+  {
+    "nation": "USA",
+    "fleet": "US Navy",
+    "class": "Spruance Destroyer",
+    "introduced": 1975
+  },
+  {
+    "nation": "USA",
+    "fleet": "US Navy",
+    "class": "Arleigh Burke Destroyer",
+    "introduced": 1991
+  },
+  {
+    "nation": "USA",
+    "fleet": "US Navy",
+    "class": "Virginia Class Submarine",
+    "introduced": 2004
+  },
+  {
+    "nation": "UK",
+    "fleet": "Royal Navy",
+    "class": "Type 45 Destroyer",
+    "introduced": 2009
+  },
+  {
+    "nation": "France",
+    "fleet": "French Navy",
+    "class": "Aquitaine Frigate",
+    "introduced": 2012
+  }
+]

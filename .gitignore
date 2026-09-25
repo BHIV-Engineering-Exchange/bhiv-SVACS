@@ -20,3 +20,6 @@ backend/runs/
 
 # Dataset images — never commit, re-download with scrape_wikimedia.py
 backend/dataset/
+
+maritime_knowledge/images/
+backend/maritime_knowledge/images/

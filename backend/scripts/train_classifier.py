@@ -1,13 +1,14 @@
 import argparse
 import os
+from collections import Counter
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.utils.data import DataLoader, random_split, WeightedRandomSampler
 from torchvision import datasets, models, transforms
-from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-import time
 from PIL import ImageFile
 import PIL.Image
 
@@ -16,19 +17,25 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # Prevent PIL from crashing on massive high-resolution Wikimedia images (DecompressionBomb)
 PIL.Image.MAX_IMAGE_PIXELS = None
 
+
 def train_classifier(data_dir="dataset/classifier", epochs=50, batch_size=32):
     print("Initializing EfficientNetV2 training pipeline...")
-    
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    # Advanced Data Augmentation mapping phase 3/5 requirements
+    # Data augmentation. Widened slightly vs. the previous version to give
+    # more variety to classes with very few real images (some naval
+    # classes currently have only ~15-20 photos) — this only reshapes
+    # existing real images (crop/flip/rotate/jitter), it never invents
+    # new visual content.
     data_transforms = {
         'train': transforms.Compose([
-            transforms.RandomResizedCrop(224),
+            transforms.RandomResizedCrop(224, scale=(0.65, 1.0)),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(15),
-            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            transforms.RandomRotation(20),
+            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+            transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.1),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
@@ -41,9 +48,8 @@ def train_classifier(data_dir="dataset/classifier", epochs=50, batch_size=32):
     }
 
     print(f"Loading dataset from: {os.path.abspath(data_dir)}")
-    
+
     # ImageFolder throws FileNotFoundError if ANY directory is empty.
-    # We must delete empty class directories created by the interrupted scraper.
     for folder_name in os.listdir(data_dir):
         folder_path = os.path.join(data_dir, folder_name)
         if os.path.isdir(folder_path):
@@ -52,37 +58,73 @@ def train_classifier(data_dir="dataset/classifier", epochs=50, batch_size=32):
                 os.rmdir(folder_path)
 
     full_dataset = datasets.ImageFolder(data_dir)
-    
+
     train_size = int(0.8 * len(full_dataset))
     val_size = len(full_dataset) - train_size
     train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
 
-    # Apply specific transforms
     train_dataset.dataset.transform = data_transforms['train']
     val_dataset.dataset.transform = data_transforms['val']
 
+    class_names = full_dataset.classes
+    num_classes = len(class_names)
+
+    # ------------------------------------------------------------------
+    # Class-imbalance handling.
+    #
+    # This dataset currently ranges from ~11 images (LPG Carrier) to
+    # ~301 images (Offshore Support Vessel) per class — roughly a 27:1
+    # ratio, made worse by adding 11 naval classes at ~15-20 images
+    # each. Without correction, the model sees over-represented classes
+    # far more often and tends to be biased toward guessing them when
+    # uncertain.
+    #
+    # Two corrections, used together:
+    #   1. WeightedRandomSampler — oversamples minority-class images
+    #      during training so every class is seen roughly equally often
+    #      per epoch. This does NOT create new/fake images; it just
+    #      shows the same real minority-class photos more frequently.
+    #   2. Class-weighted loss — penalizes misclassifying minority
+    #      classes more heavily, using inverse-SQUARE-ROOT frequency
+    #      (softer than full inverse frequency, to avoid over-correcting
+    #      and destabilizing training on the well-represented classes).
+    # ------------------------------------------------------------------
+    train_targets = [full_dataset.targets[i] for i in train_dataset.indices]
+    class_counts = Counter(train_targets)
+
+    print("Training set class distribution:")
+    for idx, name in enumerate(class_names):
+        print(f"  {name}: {class_counts.get(idx, 0)} images")
+
+    sample_weights = [1.0 / class_counts[t] for t in train_targets]
+    sampler = WeightedRandomSampler(
+        sample_weights, num_samples=len(sample_weights), replacement=True
+    )
+
+    loss_weights = torch.tensor(
+        [1.0 / (class_counts.get(i, 1) ** 0.5) for i in range(num_classes)],
+        dtype=torch.float,
+    ).to(device)
+
     dataloaders = {
-        'train': DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4),
+        'train': DataLoader(train_dataset, batch_size=batch_size, sampler=sampler, num_workers=4),
         'val': DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
     }
 
     dataset_sizes = {'train': len(train_dataset), 'val': len(val_dataset)}
-    class_names = full_dataset.classes
-    num_classes = len(class_names)
-    
+
     print(f"Loaded {len(full_dataset)} total images across {num_classes} classes.")
     print(f"Classes: {class_names}")
 
     # Load EfficientNetV2 (Small)
     print("Loading pre-trained EfficientNetV2-S model...")
     model = models.efficientnet_v2_s(weights=models.EfficientNet_V2_S_Weights.DEFAULT)
-    
-    # Modify final layer for our 35 classes
+
     num_ftrs = model.classifier[1].in_features
     model.classifier[1] = nn.Linear(num_ftrs, num_classes)
     model = model.to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(weight=loss_weights)
     optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
     scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
 
@@ -144,6 +186,7 @@ def train_classifier(data_dir="dataset/classifier", epochs=50, batch_size=32):
     print(f'Training complete! Best val Acc: {best_acc:4f}')
     print("Weights saved to 'efficientnet_vessel_best.pth'")
 
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Train the ship classifier from the dataset directory."
@@ -176,6 +219,5 @@ if __name__ == '__main__':
 
     if not os.path.exists(data_path) or len(os.listdir(data_path)) == 0:
         print(f"ERROR: Dataset directory '{data_path}' is empty or does not exist.")
-        print("Please run 'python scripts/scrape_wikimedia.py' first to download the images!")
     else:
         train_classifier(data_dir=data_path, epochs=args.epochs, batch_size=args.batch_size)

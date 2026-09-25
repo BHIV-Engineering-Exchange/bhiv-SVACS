@@ -1,0 +1,32 @@
+[
+  {
+    "class": "Delhi Class",
+    "preceded_by": "Rajput Class",
+    "succeeded_by": "Kolkata Class",
+    "nation": "India"
+  },
+  {
+    "class": "Kolkata Class",
+    "preceded_by": "Delhi Class",
+    "succeeded_by": "Visakhapatnam Class",
+    "nation": "India"
+  },
+  {
+    "class": "Shivalik Class",
+    "preceded_by": "Godavari Class",
+    "succeeded_by": "Nilgiri Class",
+    "nation": "India"
+  },
+  {
+    "class": "Spruance",
+    "preceded_by": "Charles F. Adams",
+    "succeeded_by": "Arleigh Burke",
+    "nation": "USA"
+  },
+  {
+    "class": "Arleigh Burke",
+    "preceded_by": "Spruance",
+    "succeeded_by": "DDG(X)",
+    "nation": "USA"
+  }
+]

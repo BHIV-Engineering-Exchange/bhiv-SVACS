@@ -1,0 +1,60 @@
+{
+  "Vikrant": [
+    {"name": "INS Vikrant", "pennant": "R11"}
+  ],
+  "Vikramaditya": [
+    {"name": "INS Vikramaditya", "pennant": "R33"}
+  ],
+  "Visakhapatnam Class": [
+    {"name": "INS Visakhapatnam", "pennant": "D66"},
+    {"name": "INS Mormugao", "pennant": "D67"},
+    {"name": "INS Imphal", "pennant": "D68"},
+    {"name": "INS Surat", "pennant": "D69"}
+  ],
+  "Kolkata Class": [
+    {"name": "INS Kolkata", "pennant": "D63"},
+    {"name": "INS Kochi", "pennant": "D64"},
+    {"name": "INS Chennai", "pennant": "D65"}
+  ],
+  "Delhi Class": [
+    {"name": "INS Delhi", "pennant": "D61"},
+    {"name": "INS Mysore", "pennant": "D60"},
+    {"name": "INS Mumbai", "pennant": "D62"}
+  ],
+  "Rajput Class": [
+    {"name": "INS Rana", "pennant": "D52"},
+    {"name": "INS Ranvir", "pennant": "D54"},
+    {"name": "INS Ranvijay", "pennant": "D55"}
+  ],
+  "Nilgiri Class": [
+    {"name": "INS Nilgiri", "pennant": "F33"},
+    {"name": "INS Himgiri", "pennant": "F34"},
+    {"name": "INS Udaygiri", "pennant": "F35"},
+    {"name": "INS Taragiri", "pennant": "F41"},
+    {"name": "INS Dunagiri", "pennant": "F36"},
+    {"name": "INS Mahendragiri", "pennant": "F38"}
+  ],
+  "Shivalik Class": [
+    {"name": "INS Shivalik", "pennant": "F47"},
+    {"name": "INS Satpura", "pennant": "F48"},
+    {"name": "INS Sahyadri", "pennant": "F49"}
+  ],
+  "Brahmaputra Class": [
+    {"name": "INS Brahmaputra", "pennant": "F31"},
+    {"name": "INS Betwa", "pennant": "F39"},
+    {"name": "INS Beas", "pennant": "F37"}
+  ],
+  "Arihant Class": [
+    {"name": "INS Arihant", "pennant": "S2"},
+    {"name": "INS Arighaat", "pennant": "S3"},
+    {"name": "INS Aridhaman", "pennant": "S4"}
+  ],
+  "Kalvari Class": [
+    {"name": "INS Kalvari", "pennant": "S21"},
+    {"name": "INS Khanderi", "pennant": "S22"},
+    {"name": "INS Karanj", "pennant": "S23"},
+    {"name": "INS Vela", "pennant": "S24"},
+    {"name": "INS Vagir", "pennant": "S25"},
+    {"name": "INS Vagsheer", "pennant": "S26"}
+  ]
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "vessel_name": "Arleigh Burke",
+    "vessel_class": "Destroyer",
+    "nation": "USA",
+    "length": 155,
+    "beam": 20,
+    "displacement": 8300,
+    "source": "Jane's Fighting Ships",
+    "edition": "2024",
+    "page": 101
+  },
+  {
+    "vessel_name": "Talwar",
+    "vessel_class": "Frigate",
+    "nation": "India",
+    "length": 125,
+    "beam": 15,
+    "displacement": 4000,
+    "source": "Jane's Fighting Ships",
+    "edition": "2024",
+    "page": 205
+  }
+]

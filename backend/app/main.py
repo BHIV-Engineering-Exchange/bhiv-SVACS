@@ -7,13 +7,15 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import List
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Query
+from fastapi import FastAPI, HTTPException, File, UploadFile, Query, Form
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.models.schemas import VisionAnalysisRequest, VisionAnalysisResponse
 from app.services.inference_service import inference_service
 from app.services.vision_orchestrator import vision_orchestrator
+from app.services.naval_identifier import identify_candidates, load_knowledge_pack
+from app.services.ship_identifier import identify_ship
 
 # ---------------------------------------------------------------------------
 # Logging — configure once at module level so every sub-logger inherits it.
@@ -25,6 +27,35 @@ logging.basicConfig(
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Risk-level lookup — REPLACES a previously hardcoded "LOW" value.
+# Naval classes pull their risk_level from the curated knowledge pack;
+# civilian classes use a fixed reference map; anything unrecognized
+# (including "Unknown") defaults to MEDIUM rather than silently
+# claiming LOW.
+# ---------------------------------------------------------------------------
+CIVILIAN_RISK_LEVELS = {
+    "Container Ship": "LOW",
+    "Passenger Ferry": "LOW",
+    "Fishing Vessel": "LOW",
+    "OSV Class": "LOW",
+    "Oil Tanker": "MEDIUM",
+    "LPG Carrier": "HIGH",
+}
+
+
+def get_risk_level(vessel_class: str) -> str:
+    if vessel_class in CIVILIAN_RISK_LEVELS:
+        return CIVILIAN_RISK_LEVELS[vessel_class]
+    try:
+        for entry in load_knowledge_pack():
+            if entry.get("class_name") == vessel_class:
+                return entry.get("risk_level", "MEDIUM")
+    except Exception:
+        pass
+    return "MEDIUM"
+
 
 # ---------------------------------------------------------------------------
 # In-memory vessel store (populated by POST /intelligence/image)
@@ -95,11 +126,26 @@ def read_root():
 # POST /intelligence/image — primary frontend upload endpoint
 # ---------------------------------------------------------------------------
 @app.post("/intelligence/image")
-async def upload_image(file: UploadFile = File(...), quick: bool = Query(False)):
+async def upload_image(
+    file: UploadFile = File(...),
+    quick: bool = Query(False),
+    length_m: float = Form(None),
+    beam_m: float = Form(None),
+    displacement_tons: float = Form(None),
+    vessel_type: str = Form(None),
+    hull_color: str = Form(None),
+    description: str = Form(None),
+):
     """Accept an image upload from the frontend and run it through the vision analyser.
 
     Models are loaded lazily on the first call to this endpoint. Subsequent
     calls reuse cached model instances (no duplicate loading).
+
+    Optionally accepts user-supplied naval vessel details (length_m,
+    vessel_type, hull_color, description) — when any of these are provided,
+    the response also includes knowledge-based candidate matches from the
+    curated Indian Naval knowledge pack, separate from the trained model's
+    own classification.
 
     Returns a JSON payload with vessel class, confidence, OCR text, detections,
     and a base64-encoded explainable image.  Any internal error returns HTTP 500
@@ -228,7 +274,7 @@ async def upload_image(file: UploadFile = File(...), quick: bool = Query(False))
             "confidence_score": confidence_score,
             "ocr_text": ocr_text,
             "operator": ocr_text,
-            "risk_level": "LOW",
+            "risk_level": get_risk_level(vessel_class),
             "classification_source": (
                 "EfficientNetV2 vessel-type classifier"
                 if inference_service.classifier_model is not None
@@ -258,6 +304,39 @@ async def upload_image(file: UploadFile = File(...), quick: bool = Query(False))
             "explanation": explanation_list,
             "explainable_image_base64": response.explainable_image_base64,
         }
+
+        # ------------------------------------------------------------------
+        # Step 6b: Knowledge-based naval vessel candidate matching
+        # (only runs if the user supplied at least one optional field —
+        # this is a separate, non-vision-model matching layer, not part
+        # of the trained classifier's own result)
+        # ------------------------------------------------------------------
+        if any([length_m, vessel_type, hull_color, description]):
+            naval_candidates = identify_candidates(
+                length_m=length_m,
+                beam_m=beam_m,
+                displacement_tons=displacement_tons,
+                vessel_type=vessel_type,
+                hull_color=hull_color,
+                description=description,
+            )
+            result["naval_knowledge_candidates"] = naval_candidates
+            result["naval_knowledge_note"] = (
+                "These are knowledge-based candidate matches from curated Indian Naval "
+                "specs, based on the details you provided — separate from the trained "
+                "vision model's own classification above."
+            )
+        else:
+            result["naval_knowledge_candidates"] = None
+            result["naval_knowledge_note"] = None
+
+        # ------------------------------------------------------------------
+        # Step 6c: Ship-level identification via OCR pennant-number match
+        # (only meaningful for naval classes present in ship_registry.json;
+        # civilian classes return "not_applicable")
+        # ------------------------------------------------------------------
+        joined_ocr_text = " ".join([o.text for o in response.ocr_results if o.text])
+        result["ship_identification"] = identify_ship(vessel_class, joined_ocr_text)
 
         # ------------------------------------------------------------------
         # Step 7: Populate vessel_store for the /vessels dashboard
@@ -352,6 +431,38 @@ def batch_analyze_images(requests: List[VisionAnalysisRequest]):
                 status_code=500, detail=f"Batch failed on a request: {str(exc)}"
             )
     return responses
+
+
+# ---------------------------------------------------------------------------
+# POST endpoint - naval-vessel-identifier
+# ---------------------------------------------------------------------------
+@app.post("/naval/identify")
+async def naval_identify(
+    length_m: float = Form(None),
+    vessel_type: str = Form(None),
+    hull_color: str = Form(None),
+    description: str = Form(None),
+    image: UploadFile = File(None),
+):
+    """
+    Knowledge-based candidate identification for Indian Naval vessels.
+    All fields are optional — the user may supply any subset. The image,
+    if provided, is accepted for the record but does NOT currently feed
+    into the matching logic (that would require vision-model work, which
+    is out of scope here) — matching is based only on the text fields.
+    """
+    image_received = image is not None and image.filename
+    results = identify_candidates(
+        length_m=length_m,
+        vessel_type=vessel_type,
+        hull_color=hull_color,
+        description=description,
+    )
+    return {
+        "candidates": results,
+        "image_received": bool(image_received),
+        "note": "Matching is based on the provided text fields only; the image (if any) is not yet analyzed." if image_received else None,
+    }
 
 
 # ---------------------------------------------------------------------------
