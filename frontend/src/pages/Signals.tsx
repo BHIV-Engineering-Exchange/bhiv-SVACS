@@ -514,6 +514,42 @@ export default function Signals() {
                             : <li>{uploadResult.explanation}</li>}
                         </ul>
                       </div>
+
+                      <div className="mt-2 border-t border-line pt-2">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-xs text-fg-2">Detected Ships</p>
+                          <span className="text-xs text-fg-2">{uploadResult.ship_crops?.length ?? 0}</span>
+                        </div>
+                        {uploadResult.ship_crops?.length > 0 ? (
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {uploadResult.ship_crops.map((ship: any) => (
+                              <div key={ship.detection_id} className="overflow-hidden rounded border border-line bg-bg-1">
+                                {ship.crop_image_url ? (
+                                  <img
+                                    src={ship.crop_image_url}
+                                    alt={`${ship.label} detection`}
+                                    className="h-32 w-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex h-32 items-center justify-center text-xs text-fg-2">Invalid crop bounds</div>
+                                )}
+                                <div className="space-y-1 p-2 text-xs">
+                                  <div className="flex justify-between gap-2">
+                                    <span className="font-bold text-fg-0 uppercase">{ship.label}</span>
+                                    <span className="text-accent-cyan">{(ship.confidence * 100).toFixed(1)}%</span>
+                                  </div>
+                                  <div className="font-mono text-fg-2">{ship.detection_id}</div>
+                                  <div className="font-mono text-fg-2">
+                                    [{ship.bounding_box.x_min}, {ship.bounding_box.y_min}] - [{ship.bounding_box.x_max}, {ship.bounding_box.y_max}]
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-fg-2">No accepted ship detections.</p>
+                        )}
+                      </div>
                     </>
                   )}
 

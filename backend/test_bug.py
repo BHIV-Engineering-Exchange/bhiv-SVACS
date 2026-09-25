@@ -3,7 +3,7 @@ from app.main import upload_image
 from fastapi import UploadFile
 import io
 
-async def test():
+async def run_manual_test():
     with open("ship2.jpeg", "rb") as f:
         file_content = f.read()
     
@@ -18,4 +18,4 @@ async def test():
         print("Exception:", e)
 
 if __name__ == "__main__":
-    asyncio.run(test())
+    asyncio.run(run_manual_test())

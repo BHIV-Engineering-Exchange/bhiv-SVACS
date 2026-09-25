@@ -573,8 +573,14 @@ class InferenceService:
 
                                 crop_label = crop_preds[0].class_name
                                 crop_conf = crop_preds[0].confidence / 100.0
+
+                               # Use the classification result from THIS vessel crop
+                                final_label = crop_label
+                                final_conf = crop_conf
+                                top_preds = crop_preds
+
                                 logger.debug(
-                                    "Crop classification => %s (%.2f)", crop_label, crop_conf
+                                "Crop classification => %s (%.2f)", crop_label, crop_conf
                                 )
                         else:
                             logger.warning("Crop is empty — skipping classification for this box.")

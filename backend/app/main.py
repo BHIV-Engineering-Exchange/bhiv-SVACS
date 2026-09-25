@@ -1,13 +1,15 @@
 """main.py — FastAPI application entry-point for BHIV SVACS Vision Intelligence Runtime."""
 
 import logging
+import os
 import traceback
 import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import List
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Query, Form
+from fastapi import FastAPI, HTTPException, File, UploadFile, Query, Form, Request
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
@@ -16,6 +18,7 @@ from app.services.inference_service import inference_service
 from app.services.vision_orchestrator import vision_orchestrator
 from app.services.naval_identifier import identify_candidates, load_knowledge_pack
 from app.services.ship_identifier import identify_ship
+from app.services.ship_crop_service import extract_ship_crops
 
 # ---------------------------------------------------------------------------
 # Logging — configure once at module level so every sub-logger inherits it.
@@ -122,11 +125,24 @@ def read_root():
     return {"message": f"{settings.PROJECT_NAME} is running", "version": settings.VERSION}
 
 
+@app.get("/artifacts/{replay_id}/{filename}")
+def get_artifact(replay_id: str, filename: str):
+    """Serve generated replay crops without exposing arbitrary filesystem paths."""
+    if not filename.startswith("crop_") or not filename.endswith(".jpg"):
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    path = os.path.abspath(os.path.join(settings.REPLAY_STORAGE_DIR, replay_id, filename))
+    replay_root = os.path.abspath(settings.REPLAY_STORAGE_DIR)
+    if not path.startswith(replay_root + os.sep) or not os.path.isfile(path):
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    return FileResponse(path, media_type="image/jpeg")
+
+
 # ---------------------------------------------------------------------------
 # POST /intelligence/image — primary frontend upload endpoint
 # ---------------------------------------------------------------------------
 @app.post("/intelligence/image")
 async def upload_image(
+    request: Request = None,
     file: UploadFile = File(...),
     quick: bool = Query(False),
     length_m: float = Form(None),
@@ -262,6 +278,12 @@ async def upload_image(
         # Step 6: Assemble result payload
         # ------------------------------------------------------------------
         trace_id = str(uuid.uuid4())
+        ship_crops = extract_ship_crops(
+            image=decode_image_bytes(image_bytes),
+            detections=valid_detections,
+            replay_id=trace_id,
+            base_url=str(request.base_url).rstrip("/") if request else "",
+        )
         result = {
             "trace_id": trace_id,
             "validation_status": (
@@ -293,6 +315,7 @@ async def upload_image(
                 }
                 for det in valid_detections
             ],
+            "ship_crops": ship_crops,
             "top_predictions": (
                 [
                     {"class": pred.class_name, "confidence": pred.confidence}

@@ -6,7 +6,7 @@ import numpy as np
 import sys
 import os
 
-def test_vision_runtime(image_path: str):
+def run_vision_runtime(image_path: str):
     # 1. Check if file exists
     if not os.path.exists(image_path):
         print(f"Error: Could not find image at {image_path}")
@@ -60,4 +60,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python test_api.py <path_to_image.jpg>")
     else:
-        test_vision_runtime(sys.argv[1])
+        run_vision_runtime(sys.argv[1])
