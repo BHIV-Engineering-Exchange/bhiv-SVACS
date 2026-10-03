@@ -157,8 +157,8 @@ export default function Signals() {
     setUploading(true);
 
     const endpoints = SVACS_API
-      ? [`${SVACS_API}/intelligence/image?quick=true`]
-      : ["http://localhost:8000/intelligence/image?quick=true"];
+      ? [`${SVACS_API}/intelligence/image`]
+      : ["http://localhost:8000/intelligence/image"];
 
     const uniqueEndpoints = Array.from(new Set(endpoints));
 
@@ -543,6 +543,25 @@ export default function Signals() {
                                     [{ship.bounding_box.x_min}, {ship.bounding_box.y_min}] - [{ship.bounding_box.x_max}, {ship.bounding_box.y_max}]
                                   </div>
                                 </div>
+                                {ship.ship_identification && ship.ship_identification.method !== "not_applicable" && (
+                                  <div className="border-t border-line p-2 text-xs">
+                                    {ship.ship_identification.matched ? (
+                                      <p className="text-fg-0">
+                                        <span className="font-bold">{ship.ship_identification.ship_name}</span>
+                                        {" "}({ship.ship_identification.pennant})
+                                      </p>
+                                    ) : (
+                                      <p className="italic text-fg-2">
+                                        Pennant not legible — possible: {ship.ship_identification.roster.map((s: any) => s.name).join(", ")}
+                                      </p>
+                                    )}
+                                    {ship.pennant_type_check?.checked && !ship.pennant_type_check.consistent && (
+                                      <p className="text-red-400 font-bold mt-1">
+                                        Possible misclassification: pennant denotes {ship.pennant_type_check.ocr_implied_type}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             ))}
                           </div>
@@ -600,6 +619,17 @@ export default function Signals() {
                           </ul>
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {uploadResult.pennant_type_check?.checked && !uploadResult.pennant_type_check.consistent && (
+                    <div className="border-t border-line pt-2">
+                      <p className="text-xs text-red-400 font-bold mb-1">Possible Misclassification</p>
+                      <p className="text-xs text-fg-1">
+                        Pennant <span className="font-bold">{uploadResult.pennant_type_check.pennant}</span> denotes
+                        a <span className="font-bold">{uploadResult.pennant_type_check.ocr_implied_type}</span>, but the
+                        model predicted a <span className="font-bold">{uploadResult.pennant_type_check.predicted_class_type}</span>.
+                      </p>
                     </div>
                   )}
 

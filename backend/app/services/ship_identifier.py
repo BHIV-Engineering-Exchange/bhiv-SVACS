@@ -29,6 +29,45 @@ SHIP_REGISTRY_PATH = os.path.normpath(os.path.join(
 # S21, S2, R11 — we look for this pattern anywhere in the combined OCR text.
 PENNANT_PATTERN = re.compile(r"\b([A-Z])[\s\-]?(\d{1,3})\b")
 
+# Maps a pennant number's prefix letter to the vessel type it denotes.
+# Used to cross-check the visual classifier's own type against what the
+# pennant number actually implies, catching cases where the visual model
+# picked the wrong class but a real pennant number was read.
+PENNANT_PREFIX_TO_TYPE = {
+    "D": "Destroyer",
+    "F": "Frigate",
+    "S": "Submarine",
+    "R": "Aircraft Carrier",
+    "P": "Corvette",
+    "K": "Corvette",
+}
+
+# Maps each trained naval class label to its vessel type. Civilian
+# classes (Container Ship, OSV Class, etc.) are deliberately absent, so
+# the check below skips them.
+CLASS_TO_TYPE = {
+    "Vikrant": "Aircraft Carrier",
+    "Vikramaditya": "Aircraft Carrier",
+    "Visakhapatnam Class": "Destroyer",
+    "Kolkata Class": "Destroyer",
+    "Delhi Class": "Destroyer",
+    "Rajput Class": "Destroyer",
+    "Nilgiri Class": "Frigate",
+    "Shivalik Class": "Frigate",
+    "Talwar Class": "Frigate",
+    "Brahmaputra Class": "Frigate",
+    "Arihant Class": "Submarine",
+    "Kalvari Class": "Submarine",
+    "Shishumar Class": "Submarine",
+    "Sindhughosh Class": "Submarine",
+    "Arnala Class": "Corvette",
+    "Mahe Class": "Corvette",
+    "Kamorta Class": "Corvette",
+    "Kora Class": "Corvette",
+    "Khukri Class": "Corvette",
+    "Veer Class": "Corvette",
+}
+
 
 def load_ship_registry():
     with open(SHIP_REGISTRY_PATH, "r", encoding="utf-8") as f:
@@ -82,3 +121,41 @@ def identify_ship(vessel_class: str, ocr_text: str = None):
         "roster": roster,
         "method": "class_roster_fallback",
     }
+
+
+def check_pennant_type_consistency(vessel_class: str, ocr_text: str = None):
+    """
+    Cross-checks the predicted vessel_class's TYPE (destroyer, frigate,
+    etc.) against the TYPE implied by the prefix letter of any pennant
+    number found in the OCR text. This can catch a wrong visual
+    classification even when the class itself has no ship-registry
+    entry match, because it compares TYPES, not specific ships.
+
+    Returns one of:
+      {"checked": False, "reason": "not_a_naval_class" | "no_pennant_read" | "pennant_prefix_not_recognized"}
+      {"checked": True, "consistent": True, "pennant": ..., "expected_type": ...}
+      {"checked": True, "consistent": False, "pennant": ..., "predicted_class_type": ..., "ocr_implied_type": ...}
+    """
+    expected_type = CLASS_TO_TYPE.get(vessel_class)
+    if not expected_type:
+        return {"checked": False, "reason": "not_a_naval_class"}
+
+    candidates = extract_pennant_candidates(ocr_text)
+    if not candidates:
+        return {"checked": False, "reason": "no_pennant_read"}
+
+    for pennant in candidates:
+        implied_type = PENNANT_PREFIX_TO_TYPE.get(pennant[0])
+        if not implied_type:
+            continue
+        if implied_type == expected_type:
+            return {"checked": True, "consistent": True, "pennant": pennant, "expected_type": expected_type}
+        return {
+            "checked": True,
+            "consistent": False,
+            "pennant": pennant,
+            "predicted_class_type": expected_type,
+            "ocr_implied_type": implied_type,
+        }
+
+    return {"checked": False, "reason": "pennant_prefix_not_recognized"}

@@ -17,8 +17,9 @@ from app.models.schemas import VisionAnalysisRequest, VisionAnalysisResponse
 from app.services.inference_service import inference_service
 from app.services.vision_orchestrator import vision_orchestrator
 from app.services.naval_identifier import identify_candidates, load_knowledge_pack
-from app.services.ship_identifier import identify_ship
+from app.services.ship_identifier import identify_ship, check_pennant_type_consistency
 from app.services.ship_crop_service import extract_ship_crops
+from app.services.preprocessing import decode_image_bytes
 
 # ---------------------------------------------------------------------------
 # Logging — configure once at module level so every sub-logger inherits it.
@@ -59,6 +60,30 @@ def get_risk_level(vessel_class: str) -> str:
         pass
     return "MEDIUM"
 
+
+def ocr_text_for_detection(ocr_results, detection_box, pad_ratio=0.15):
+    """Returns only the OCR text whose bounding box center falls inside
+    the given detection's own box (with a small padding tolerance),
+    instead of every OCR reading in the whole image. This keeps a
+    pennant number on one ship from being applied to a different ship
+    when more than one vessel appears in the same photo."""
+    x_min, y_min = detection_box.x_min, detection_box.y_min
+    x_max, y_max = detection_box.x_max, detection_box.y_max
+    pad_x = (x_max - x_min) * pad_ratio
+    pad_y = (y_max - y_min) * pad_ratio
+    ex_min, ex_max = x_min - pad_x, x_max + pad_x
+    ey_min, ey_max = y_min - pad_y, y_max + pad_y
+
+    matched = []
+    for ocr in ocr_results:
+        if not ocr.text:
+            continue
+        b = ocr.bounding_box
+        cx = (b.x_min + b.x_max) / 2
+        cy = (b.y_min + b.y_max) / 2
+        if ex_min <= cx <= ex_max and ey_min <= cy <= ey_max:
+            matched.append(ocr.text)
+    return " ".join(matched)
 
 # ---------------------------------------------------------------------------
 # In-memory vessel store (populated by POST /intelligence/image)
@@ -354,12 +379,49 @@ async def upload_image(
             result["naval_knowledge_note"] = None
 
         # ------------------------------------------------------------------
-        # Step 6c: Ship-level identification via OCR pennant-number match
-        # (only meaningful for naval classes present in ship_registry.json;
-        # civilian classes return "not_applicable")
+        # Step 6c/6d: per-detection ship identification and pennant/type
+        # consistency check. Each detected ship gets its own OCR text,
+        # limited to OCR boxes whose center falls inside that specific
+        # detection's own bounding box, rather than every ship in the
+        # image being checked against the same pooled OCR text. Results
+        # are attached directly onto the matching ship_crops entry, so
+        # multiple ships in one photo each get their own name, pennant
+        # match, and misclassification warning. The top-level
+        # ship_identification and pennant_type_check fields mirror
+        # whichever detection was chosen as the overall "best" one, so
+        # the summary section and that ship's own thumbnail never
+        # disagree.
         # ------------------------------------------------------------------
-        joined_ocr_text = " ".join([o.text for o in response.ocr_results if o.text])
-        result["ship_identification"] = identify_ship(vessel_class, joined_ocr_text)
+        best_index = None
+        if best_detection is not None:
+            best_index = next(
+                (i for i, d in enumerate(valid_detections) if d is best_detection), None
+            )
+
+        for i, det in enumerate(valid_detections):
+            det_ocr_text = ocr_text_for_detection(response.ocr_results, det.bounding_box)
+            det_ship_id = identify_ship(det.label, det_ocr_text)
+            det_pennant_check = check_pennant_type_consistency(det.label, det_ocr_text)
+
+            if i < len(ship_crops):
+                ship_crops[i]["ship_identification"] = det_ship_id
+                ship_crops[i]["pennant_type_check"] = det_pennant_check
+
+            if i == best_index:
+                result["ship_identification"] = det_ship_id
+                result["pennant_type_check"] = det_pennant_check
+                if det_pennant_check.get("checked") and not det_pennant_check.get("consistent"):
+                    explanation_list.append(
+                        f"Warning: OCR read pennant {det_pennant_check['pennant']}, which denotes a "
+                        f"{det_pennant_check['ocr_implied_type']}, but the model predicted "
+                        f"{vessel_class} ({det_pennant_check['predicted_class_type']}). "
+                        "The class prediction may be wrong."
+                    )
+                    result["validation_status"] = "FLAG"
+
+        if best_index is None:
+            result["ship_identification"] = {"matched": False, "roster": [], "method": "not_applicable"}
+            result["pennant_type_check"] = {"checked": False, "reason": "not_a_naval_class"}
 
         # ------------------------------------------------------------------
         # Step 7: Populate vessel_store for the /vessels dashboard
