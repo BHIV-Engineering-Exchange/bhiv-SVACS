@@ -63,7 +63,9 @@
       "INS Tabar",
       "INS Teg",
       "INS Tarkash",
-      "INS Trikand"
+      "INS Trikand",
+      "INS Tushil",
+      "INS Tamal"
     ],
     "nation": "India",
     "vessel_type": "Frigate",
@@ -147,7 +149,8 @@
       "INS Udaygiri",
       "INS Dunagiri",
       "INS Vindhyagiri",
-      "INS Taragiri"
+      "INS Taragiri",
+      "INS Mahendragiri"
     ],
     "nation": "India",
     "vessel_type": "Stealth multi-role frigate",
@@ -251,7 +254,8 @@
     "class_name": "Arihant Class",
     "vessel_names": [
       "INS Arihant",
-      "INS Arighat"
+      "INS Arighaat",
+      "INS Aridhaman"
     ],
     "nation": "India",
     "vessel_type": "Nuclear-powered ballistic missile submarine (SSBN)",
