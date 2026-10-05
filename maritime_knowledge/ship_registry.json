@@ -1,60 +1,350 @@
 {
   "Vikrant": [
-    {"name": "INS Vikrant", "pennant": "R11"}
+    {
+      "name": "INS Vikrant",
+      "pennant": "R11"
+    }
   ],
   "Vikramaditya": [
-    {"name": "INS Vikramaditya", "pennant": "R33"}
+    {
+      "name": "INS Vikramaditya",
+      "pennant": "R33"
+    }
   ],
   "Visakhapatnam Class": [
-    {"name": "INS Visakhapatnam", "pennant": "D66"},
-    {"name": "INS Mormugao", "pennant": "D67"},
-    {"name": "INS Imphal", "pennant": "D68"},
-    {"name": "INS Surat", "pennant": "D69"}
+    {
+      "name": "INS Visakhapatnam",
+      "pennant": "D66"
+    },
+    {
+      "name": "INS Mormugao",
+      "pennant": "D67"
+    },
+    {
+      "name": "INS Imphal",
+      "pennant": "D68"
+    },
+    {
+      "name": "INS Surat",
+      "pennant": "D69"
+    }
   ],
   "Kolkata Class": [
-    {"name": "INS Kolkata", "pennant": "D63"},
-    {"name": "INS Kochi", "pennant": "D64"},
-    {"name": "INS Chennai", "pennant": "D65"}
+    {
+      "name": "INS Kolkata",
+      "pennant": "D63"
+    },
+    {
+      "name": "INS Kochi",
+      "pennant": "D64"
+    },
+    {
+      "name": "INS Chennai",
+      "pennant": "D65"
+    }
   ],
   "Delhi Class": [
-    {"name": "INS Delhi", "pennant": "D61"},
-    {"name": "INS Mysore", "pennant": "D60"},
-    {"name": "INS Mumbai", "pennant": "D62"}
+    {
+      "name": "INS Delhi",
+      "pennant": "D61"
+    },
+    {
+      "name": "INS Mysore",
+      "pennant": "D60"
+    },
+    {
+      "name": "INS Mumbai",
+      "pennant": "D62"
+    }
   ],
   "Rajput Class": [
-    {"name": "INS Rana", "pennant": "D52"},
-    {"name": "INS Ranvir", "pennant": "D54"},
-    {"name": "INS Ranvijay", "pennant": "D55"}
+    {
+      "name": "INS Rana",
+      "pennant": "D52"
+    },
+    {
+      "name": "INS Ranvir",
+      "pennant": "D54"
+    },
+    {
+      "name": "INS Ranvijay",
+      "pennant": "D55"
+    }
   ],
   "Nilgiri Class": [
-    {"name": "INS Nilgiri", "pennant": "F33"},
-    {"name": "INS Himgiri", "pennant": "F34"},
-    {"name": "INS Udaygiri", "pennant": "F35"},
-    {"name": "INS Taragiri", "pennant": "F41"},
-    {"name": "INS Dunagiri", "pennant": "F36"},
-    {"name": "INS Mahendragiri", "pennant": "F38"}
+    {
+      "name": "INS Nilgiri",
+      "pennant": "F33"
+    },
+    {
+      "name": "INS Himgiri",
+      "pennant": "F34"
+    },
+    {
+      "name": "INS Udaygiri",
+      "pennant": "F35"
+    },
+    {
+      "name": "INS Taragiri",
+      "pennant": "F41"
+    },
+    {
+      "name": "INS Dunagiri",
+      "pennant": "F36"
+    },
+    {
+      "name": "INS Mahendragiri",
+      "pennant": "F38"
+    }
   ],
   "Shivalik Class": [
-    {"name": "INS Shivalik", "pennant": "F47"},
-    {"name": "INS Satpura", "pennant": "F48"},
-    {"name": "INS Sahyadri", "pennant": "F49"}
+    {
+      "name": "INS Shivalik",
+      "pennant": "F47"
+    },
+    {
+      "name": "INS Satpura",
+      "pennant": "F48"
+    },
+    {
+      "name": "INS Sahyadri",
+      "pennant": "F49"
+    }
   ],
   "Brahmaputra Class": [
-    {"name": "INS Brahmaputra", "pennant": "F31"},
-    {"name": "INS Betwa", "pennant": "F39"},
-    {"name": "INS Beas", "pennant": "F37"}
+    {
+      "name": "INS Brahmaputra",
+      "pennant": "F31"
+    },
+    {
+      "name": "INS Betwa",
+      "pennant": "F39"
+    },
+    {
+      "name": "INS Beas",
+      "pennant": "F37"
+    }
   ],
   "Arihant Class": [
-    {"name": "INS Arihant", "pennant": "S2"},
-    {"name": "INS Arighaat", "pennant": "S3"},
-    {"name": "INS Aridhaman", "pennant": "S4"}
+    {
+      "name": "INS Arihant",
+      "pennant": "S2"
+    },
+    {
+      "name": "INS Arighaat",
+      "pennant": "S3"
+    },
+    {
+      "name": "INS Aridhaman",
+      "pennant": "S4"
+    }
   ],
   "Kalvari Class": [
-    {"name": "INS Kalvari", "pennant": "S21"},
-    {"name": "INS Khanderi", "pennant": "S22"},
-    {"name": "INS Karanj", "pennant": "S23"},
-    {"name": "INS Vela", "pennant": "S24"},
-    {"name": "INS Vagir", "pennant": "S25"},
-    {"name": "INS Vagsheer", "pennant": "S26"}
+    {
+      "name": "INS Kalvari",
+      "pennant": "S21"
+    },
+    {
+      "name": "INS Khanderi",
+      "pennant": "S22"
+    },
+    {
+      "name": "INS Karanj",
+      "pennant": "S23"
+    },
+    {
+      "name": "INS Vela",
+      "pennant": "S24"
+    },
+    {
+      "name": "INS Vagir",
+      "pennant": "S25"
+    },
+    {
+      "name": "INS Vagsheer",
+      "pennant": "S26"
+    }
+  ],
+  "Kamorta Class": [
+    {
+      "name": "INS Kamorta",
+      "pennant": "P28"
+    },
+    {
+      "name": "INS Kadmatt",
+      "pennant": "P29"
+    },
+    {
+      "name": "INS Kiltan",
+      "pennant": "P30"
+    },
+    {
+      "name": "INS Kavaratti",
+      "pennant": "P31"
+    }
+  ],
+  "Talwar Class": [
+    {
+      "name": "INS Talwar",
+      "pennant": "F40"
+    },
+    {
+      "name": "INS Trishul",
+      "pennant": "F43"
+    },
+    {
+      "name": "INS Tabar",
+      "pennant": "F44"
+    },
+    {
+      "name": "INS Teg",
+      "pennant": "F45"
+    },
+    {
+      "name": "INS Tarkash",
+      "pennant": "F50"
+    },
+    {
+      "name": "INS Trikand",
+      "pennant": "F51"
+    },
+    {
+      "name": "INS Tushil",
+      "pennant": "F70"
+    },
+    {
+      "name": "INS Tamal",
+      "pennant": "F71"
+    }
+  ],
+  "Shishumar Class": [
+    {
+      "name": "INS Shishumar",
+      "pennant": "S44"
+    },
+    {
+      "name": "INS Shankush",
+      "pennant": "S45"
+    },
+    {
+      "name": "INS Shalki",
+      "pennant": "S46"
+    },
+    {
+      "name": "INS Shankul",
+      "pennant": "S47"
+    }
+  ],
+  "Sindhughosh Class": [
+    {
+      "name": "INS Sindhuraj",
+      "pennant": "S57"
+    },
+    {
+      "name": "INS Sindhuratna",
+      "pennant": "S59"
+    },
+    {
+      "name": "INS Sindhukesari",
+      "pennant": "S60"
+    },
+    {
+      "name": "INS Sindhukirti",
+      "pennant": "S61"
+    },
+    {
+      "name": "INS Sindhuvijay",
+      "pennant": "S62"
+    },
+    {
+      "name": "INS Sindhurashtra",
+      "pennant": "S65"
+    }
+  ],
+  "Arnala Class": [
+    {
+      "name": "INS Arnala",
+      "pennant": "P68"
+    },
+    {
+      "name": "INS Androth",
+      "pennant": "P69"
+    },
+    {
+      "name": "INS Anjadip",
+      "pennant": "P73"
+    },
+    {
+      "name": "INS Agray",
+      "pennant": "P36"
+    }
+  ],
+  "Mahe Class": [
+    {
+      "name": "INS Mahe",
+      "pennant": "P80"
+    },
+    {
+      "name": "INS Malwan",
+      "pennant": "P81"
+    }
+  ],
+  "Kora Class": [
+    {
+      "name": "INS Kora",
+      "pennant": "P61"
+    },
+    {
+      "name": "INS Kirch",
+      "pennant": "P62"
+    },
+    {
+      "name": "INS Kulish",
+      "pennant": "P63"
+    },
+    {
+      "name": "INS Karmuk",
+      "pennant": "P64"
+    }
+  ],
+  "Khukri Class": [
+    {
+      "name": "INS Kuthar",
+      "pennant": "P46"
+    },
+    {
+      "name": "INS Khanjar",
+      "pennant": "P47"
+    }
+  ],
+  "Veer Class": [
+    {
+      "name": "INS Vibhuti",
+      "pennant": "K45"
+    },
+    {
+      "name": "INS Vipul",
+      "pennant": "K46"
+    },
+    {
+      "name": "INS Vinash",
+      "pennant": "K47"
+    },
+    {
+      "name": "INS Vidyut",
+      "pennant": "K48"
+    },
+    {
+      "name": "INS Nashak",
+      "pennant": "K83"
+    },
+    {
+      "name": "INS Pralaya",
+      "pennant": "K91"
+    },
+    {
+      "name": "INS Prabal",
+      "pennant": "K92"
+    }
   ]
 }
