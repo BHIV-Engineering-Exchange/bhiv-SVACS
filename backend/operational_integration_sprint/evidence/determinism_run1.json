@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-10-07T05:37:35.995322+00:00",
+  "endpoint": "http://localhost:8000/intelligence/image",
+  "image_sha256": "970f96d4505bdfc2657c81af8ab116262b5d23a8575c282d1df490ff24addfde",
+  "runs": 5,
+  "tolerance": 1e-06,
+  "compared_with_baseline_file": false,
+  "identical": true,
+  "largest_numeric_difference": 0.0,
+  "evidence_image_identical": true,
+  "differences": []
+}
