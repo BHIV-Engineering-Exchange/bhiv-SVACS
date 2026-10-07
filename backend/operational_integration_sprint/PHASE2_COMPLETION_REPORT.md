@@ -221,9 +221,10 @@ Observed through the dashboard with real models:
 | Destroyer | Visakhapatnam Class, 100 percent | CRITICAL |
 | Frigate | Nilgiri Class, 98.9 percent | HIGH |
 | Submarine | Kalvari Class, 95.9 percent | HIGH |
+| Carrier with a smaller ship behind it | Headline Vikrant, 100 percent; two ship cards (Vikrant 100 percent, Kora Class 87.3 percent) | CRITICAL |
 | Kolkata and Delhi alongside | Two detections and two crops returned | n/a |
 
-These confirm the class-name fix. Before it, the class names in the knowledge pack did not match the classifier's labels, so risk levels fell back to MEDIUM (observed earlier for Nilgiri Class and for Vikrant). Vikrant's own risk level (expected CRITICAL) has not been observed since the fix.
+These confirm the class-name fix. Before it, the class names in the knowledge pack did not match the classifier's labels, so risk levels fell back to MEDIUM (observed earlier for Nilgiri Class and for Vikrant). Vikrant's own risk level was observed after the fix as well (CRITICAL), so all five renamed classes (Vikrant, Vikramaditya, Visakhapatnam, Nilgiri and Kalvari) have now been seen returning the expected risk level.
 
 Model accuracy: **unrecorded**. The best validation accuracy of the 21-class training run was not retained. The checkpoint stores only weights and class names, and the training split was random and not saved, so the figure cannot be reconstructed from the repository. Dataset facts: 3,819 images across 21 classes (20 naval classes plus one civilian class), 61 to 461 images per class (ratio 7.6 to 1), trained with a weighted sampler and weighted loss to offset the imbalance. A fresh accuracy figure needs a held-out set of photographs never used in training.
 

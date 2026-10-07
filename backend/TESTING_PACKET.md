@@ -128,8 +128,8 @@ This packet documents how testing was carried out: environment, tools, methodolo
 
 ### 6. Classification and risk levels on the 21-class model
 **Method:** real photographs uploaded through the dashboard.
-**Result:** PASS for the cases observed: a two-carrier photo returned two separate ship cards (headline Vikramaditya, CRITICAL); a destroyer returned Visakhapatnam Class (CRITICAL); a frigate returned Nilgiri Class (HIGH); a submarine returned Kalvari Class (HIGH). These confirm the class-name fix; before it, risk levels fell back to MEDIUM (observed earlier for Nilgiri Class and Vikrant). A photo with Kolkata and Delhi alongside returned two detections and two crops.
-**Not observed:** Vikrant's own risk level since the fix.
+**Result:** PASS for the cases observed: a two-carrier photo returned two separate ship cards (headline Vikramaditya, CRITICAL); a destroyer returned Visakhapatnam Class (CRITICAL); a frigate returned Nilgiri Class (HIGH); a submarine returned Kalvari Class (HIGH). These confirm the class-name fix; before it, risk levels fell back to MEDIUM (observed earlier for Nilgiri Class and Vikrant). A photo with Kolkata and Delhi alongside returned two detections and two crops. A carrier with a smaller ship behind it returned Vikrant (100 percent, CRITICAL) as the headline and a second detection, Kora Class (87.3 percent).
+**Risk levels:** all five renamed classes (Vikrant, Vikramaditya, Visakhapatnam, Nilgiri, Kalvari) have now been seen returning the expected risk level.
 **Accuracy:** the best validation accuracy of the training run was not recorded, and no held-out evaluation has been done.
 
 ### 7. Error boundaries
@@ -145,7 +145,7 @@ This packet documents how testing was carried out: environment, tools, methodolo
 | Deterministic execution (5 runs, real models) | PASS |
 | Monitoring values on real models | PASS |
 | Bucket write (artifact count 22 to 27) | PASS |
-| Class names and risk levels on the 21-class model | PASS for 4 classes observed; Vikrant alone not observed |
+| Class names and risk levels on the 21-class model | PASS for all five renamed classes |
 | Error boundaries | PASS |
 | Model accuracy evaluation | Not done (figure unrecorded) |
 | Samachar-routed testing | Not possible (integration absent) |
