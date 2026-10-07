@@ -10,6 +10,8 @@ import { env } from "@/env";
 
 const rawApi = env.api.intelligence || env.api.signal;
 const SVACS_API = rawApi.replace(/\/+$/, "");
+const API_KEY: string = import.meta.env.VITE_API_KEY ?? "";
+const API_HEADERS: Record<string, string> = API_KEY ? { "X-API-Key": API_KEY } : {};
 
 export default function Signals() {
   const [q, setQ] = useState("");
@@ -180,6 +182,7 @@ export default function Signals() {
         const timeoutId = window.setTimeout(() => controller.abort(), 150000);
         const res = await fetch(endpoint, {
           method: "POST",
+          headers: API_HEADERS,
           body: form,
           signal: controller.signal,
         });
@@ -239,6 +242,7 @@ export default function Signals() {
       const timeoutId = window.setTimeout(() => controller.abort(), 30000);
       const res = await fetch(endpoint, {
         method: "POST",
+        headers: API_HEADERS,
         body: form,
         signal: controller.signal,
       });
@@ -528,7 +532,7 @@ export default function Signals() {
                                   <img
                                     src={ship.crop_image_url}
                                     alt={`${ship.label} detection`}
-                                    className="h-32 w-full object-cover"
+                                    className="h-32 w-full bg-black object-contain"
                                   />
                                 ) : (
                                   <div className="flex h-32 items-center justify-center text-xs text-fg-2">Invalid crop bounds</div>

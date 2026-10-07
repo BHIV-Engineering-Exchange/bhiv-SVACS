@@ -8,11 +8,13 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import List
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Query, Form, Request
+from fastapi import FastAPI, HTTPException, File, UploadFile, Query, Form, Request, Depends
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.core.metrics import MetricsMiddleware, install_stage_logging, metrics
+from app.core.security import auth_enabled, require_api_key
 from app.models.schemas import VisionAnalysisRequest, VisionAnalysisResponse
 from app.services.inference_service import inference_service
 from app.services.vision_orchestrator import vision_orchestrator
@@ -31,6 +33,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+install_stage_logging()  # stage timings for /stage-metrics
 
 # ---------------------------------------------------------------------------
 # Risk-level lookup — REPLACES a previously hardcoded "LOW" value.
@@ -107,6 +110,13 @@ vessel_store: list = []
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Start the API without blocking on large CPU model loads."""
+    if auth_enabled():
+        logger.info("API key authentication is ENABLED for POST endpoints.")
+    else:
+        logger.warning(
+            "SVACS_API_KEY is not set: POST endpoints are OPEN to anyone who "
+            "can reach this server. Set SVACS_API_KEY to enable authentication."
+        )
     logger.info("=== SVACS startup complete — models will load on demand ===")
     yield
     logger.info("=== SVACS shutdown ===")
@@ -140,6 +150,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Count and time every request. Added after CORS so it is outermost and
+# also sees preflights and authentication errors.
+app.add_middleware(MetricsMiddleware)
+
 
 # ---------------------------------------------------------------------------
 # Routes
@@ -165,7 +179,7 @@ def get_artifact(replay_id: str, filename: str):
 # ---------------------------------------------------------------------------
 # POST /intelligence/image — primary frontend upload endpoint
 # ---------------------------------------------------------------------------
-@app.post("/intelligence/image")
+@app.post("/intelligence/image", dependencies=[Depends(require_api_key)])
 async def upload_image(
     request: Request = None,
     file: UploadFile = File(...),
@@ -426,6 +440,8 @@ async def upload_image(
         # ------------------------------------------------------------------
         # Step 7: Populate vessel_store for the /vessels dashboard
         # ------------------------------------------------------------------
+        # Count this result in /validation-breakdown
+        metrics.record_validation(result["validation_status"])
         vessel_store.append(
             {
                 "vessel_id": (
@@ -476,7 +492,7 @@ async def upload_image(
 # ---------------------------------------------------------------------------
 # POST /api/v1/analyze — base64 image analysis
 # ---------------------------------------------------------------------------
-@app.post(f"{settings.API_V1_STR}/analyze", response_model=VisionAnalysisResponse)
+@app.post(f"{settings.API_V1_STR}/analyze", response_model=VisionAnalysisResponse, dependencies=[Depends(require_api_key)])
 async def analyze_image(
     file: UploadFile = File(..., description="Image file to analyze (e.g. JPEG, PNG)"),
     return_explainable_image: bool = Query(
@@ -503,7 +519,7 @@ async def analyze_image(
 # ---------------------------------------------------------------------------
 # POST /api/v1/batch-analyze
 # ---------------------------------------------------------------------------
-@app.post(f"{settings.API_V1_STR}/batch-analyze", response_model=List[VisionAnalysisResponse])
+@app.post(f"{settings.API_V1_STR}/batch-analyze", response_model=List[VisionAnalysisResponse], dependencies=[Depends(require_api_key)])
 def batch_analyze_images(requests: List[VisionAnalysisRequest]):
     """Analyzes a batch of base64-encoded images sequentially."""
     responses = []
@@ -521,7 +537,7 @@ def batch_analyze_images(requests: List[VisionAnalysisRequest]):
 # ---------------------------------------------------------------------------
 # POST endpoint - naval-vessel-identifier
 # ---------------------------------------------------------------------------
-@app.post("/naval/identify")
+@app.post("/naval/identify", dependencies=[Depends(require_api_key)])
 async def naval_identify(
     length_m: float = Form(None),
     vessel_type: str = Form(None),
@@ -556,25 +572,31 @@ async def naval_identify(
 
 @app.get("/health")
 def health():
-    """Health check — returns instantly without touching any model.
-    The `models_loaded` field reflects whether any lazy model has been initialised yet.
+    """Health check: returns instantly and never touches a model.
+
+    Every number is computed from live traffic (app/core/metrics.py).
+    ws_connected is False because this backend serves no WebSocket.
     """
+    from app.core.security import auth_enabled
     from app.services.inference_service import inference_service
     from app.services.ocr_service import ocr_service
 
+    snapshot = metrics.health_snapshot()
     return {
-        "status": "ONLINE",
+        "status": snapshot["status"],
         "service": settings.PROJECT_NAME,
+        "auth_enabled": auth_enabled(),
         "models_loaded": {
             "yolo": inference_service.yolo_model is not None,
             "efficientnet": inference_service.classifier_model is not None,
             "easyocr": ocr_service.reader is not None,
         },
-        "ingestion_rate": 18.4,
-        "processing_latency_ms": 12.0,
-        "uptime_seconds": 3600,
-        "error_count_60s": 0,
-        "ws_connected": True,
+        "ingestion_rate": snapshot["ingestion_rate"],
+        "processing_latency_ms": snapshot["processing_latency_ms"],
+        "latency_samples": snapshot["latency_samples"],
+        "uptime_seconds": snapshot["uptime_seconds"],
+        "error_count_60s": snapshot["error_count_60s"],
+        "ws_connected": False,
         "last_telemetry_utc": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -611,115 +633,38 @@ def get_alerts():
 
 @app.get("/bucket/status")
 def get_bucket_status():
-    return {
-        "sync_percent": 1.0,
-        "stages_synced": ["signal", "perception", "intelligence", "state"],
-        "last_sync_utc": datetime.now(timezone.utc).isoformat(),
-        "pending_writes": 0,
-        "failed_writes": 0,
-    }
+    """Bucket write outcomes since the server started."""
+    return metrics.bucket_status()
+
+
+@app.get("/metrics")
+def get_metrics():
+    """Full live metrics: per-route latency, per-stage timings, requests per
+    minute over the last hour, Bucket and validation counts. Like the other
+    GET endpoints it is not protected by the API key."""
+    return metrics.summary()
 
 
 @app.get("/stage-metrics")
 def get_stage_metrics():
-    return [
-        {
-            "stage": "signal",
-            "total_events": 60,
-            "events_per_sec": 18.4,
-            "p50_latency_ms": 12,
-            "p95_latency_ms": 36,
-            "error_rate": 0.002,
-            "status": "live",
-        },
-        {
-            "stage": "perception",
-            "total_events": 58,
-            "events_per_sec": 17.2,
-            "p50_latency_ms": 28,
-            "p95_latency_ms": 78,
-            "error_rate": 0.004,
-            "status": "live",
-        },
-        {
-            "stage": "intelligence",
-            "total_events": 54,
-            "events_per_sec": 16.1,
-            "p50_latency_ms": 41,
-            "p95_latency_ms": 110,
-            "error_rate": 0.010,
-            "status": "live",
-        },
-        {
-            "stage": "state",
-            "total_events": 51,
-            "events_per_sec": 15.0,
-            "p50_latency_ms": 22,
-            "p95_latency_ms": 64,
-            "error_rate": 0.003,
-            "status": "live",
-        },
-        {
-            "stage": "bucket",
-            "total_events": 51,
-            "events_per_sec": 14.0,
-            "p50_latency_ms": 18,
-            "p95_latency_ms": 52,
-            "error_rate": 0.000,
-            "status": "live",
-        },
-    ]
+    """Timings of the image pipeline stages, measured from live traffic."""
+    return metrics.stage_metrics()
 
 
 @app.get("/events-over-time")
 def get_events_over_time():
-    return [
-        {
-            "time": "10:00",
-            "signal": 100,
-            "perception": 90,
-            "intelligence": 80,
-            "state": 70,
-        },
-        {
-            "time": "10:05",
-            "signal": 120,
-            "perception": 110,
-            "intelligence": 100,
-            "state": 90,
-        },
-        {
-            "time": "10:10",
-            "signal": 140,
-            "perception": 120,
-            "intelligence": 110,
-            "state": 100,
-        },
-        {
-            "time": "10:15",
-            "signal": 160,
-            "perception": 140,
-            "intelligence": 120,
-            "state": 110,
-        },
-        {
-            "time": "10:20",
-            "signal": 180,
-            "perception": 150,
-            "intelligence": 130,
-            "state": 120,
-        },
-    ]
+    """The dashboard chart plots the acoustic pipeline's stages (signal,
+    perception, intelligence, state). This backend does not produce those
+    events, so there is nothing real to report and an empty list is returned
+    instead of invented numbers. Real request counts per minute are in
+    /metrics."""
+    return []
 
 
 @app.get("/validation-breakdown")
 def get_validation_breakdown():
-    return {
-        "total": 100,
-        "allow": 80,
-        "flag": 15,
-        "deny": 5,
-    }
+    """Outcomes (allow / flag / deny) of the images analysed since start."""
+    return metrics.validation_breakdown()
 
 
 @app.get("/trace/{trace_id}")

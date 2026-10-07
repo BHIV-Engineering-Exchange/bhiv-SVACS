@@ -23,3 +23,5 @@ backend/dataset/
 
 maritime_knowledge/images/
 backend/maritime_knowledge/images/
+
+frontend/.env.local
